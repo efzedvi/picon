@@ -1,0 +1,5 @@
+https://github.com/FreeRTOS/FreeRTOS-Kernel/tree/smp
+https://github.com/lowlevellearning/rp2040-FreeRTOS
+https://github.com/FreeRTOS/FreeRTOS-Kernel
+https://github.com/FreeRTOS/FreeRTOS-SMP-Demos
+
