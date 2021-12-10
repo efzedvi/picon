@@ -36,5 +36,4 @@ add_executable(picon)
 target_link_libraries(picon picon_common)
 pico_add_extra_outputs(picon)
 pico_enable_stdio_usb(picon 1)
-pico_enable_stdio_uart(picon 1)
 
