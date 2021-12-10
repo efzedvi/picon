@@ -17,23 +17,24 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
-add_library(pico_common INTERFACE)
-target_sources(pico_common INTERFACE
+add_library(picon_common INTERFACE)
+target_sources(picon_common INTERFACE
         src/main.c)
-target_include_directories(pico_common INTERFACE
+target_include_directories(picon_common INTERFACE
 	src/include
         ${CMAKE_CURRENT_LIST_DIR}
         )
-target_link_libraries(pico_common INTERFACE
+target_link_libraries(picon_common INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap5
         pico_stdlib
+	hardware_gpio
         pico_multicore)
 
-add_executable(pico)
+add_executable(picon)
 
-target_link_libraries(pico pico_common)
-pico_add_extra_outputs(pico)
-pico_enable_stdio_usb(pico 1)
-pico_enable_stdio_uart(pico 1)
+target_link_libraries(picon picon_common)
+pico_add_extra_outputs(picon)
+pico_enable_stdio_usb(picon 1)
+pico_enable_stdio_uart(picon 1)
 
