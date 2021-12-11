@@ -10,14 +10,14 @@
 #include "task.h"
 #include "rtos.h"
 
-#define LED_PIN 25
+#define PICO_DEFAULT_LED_PIN 25
 
 void heartbeat(void *param)
 {
 	while (1) {
-		gpio_put(LED_PIN, 0);
+		gpio_put(PICO_DEFAULT_LED_PIN, 0);
 		RTOS_TASK_DELAY(900);
-		gpio_put(LED_PIN, 1);
+		gpio_put(PICO_DEFAULT_LED_PIN, 1);
 		RTOS_TASK_DELAY(100);
 	}
 }
@@ -26,9 +26,9 @@ int main()
 {
 	stdio_init_all();
 
-	gpio_init(LED_PIN);
-	gpio_set_dir(LED_PIN, GPIO_OUT);
-	gpio_put(LED_PIN, 0);
+	gpio_init(PICO_DEFAULT_LED_PIN);
+	gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+	gpio_put(PICO_DEFAULT_LED_PIN, 0);
 
 	rtos_task_handle_t task_handle = NULL;
 
