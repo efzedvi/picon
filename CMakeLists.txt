@@ -26,7 +26,7 @@ target_include_directories(picon_common INTERFACE
         )
 target_link_libraries(picon_common INTERFACE
         FreeRTOS-Kernel
-        FreeRTOS-Kernel-Heap5
+        FreeRTOS-Kernel-Heap4
         pico_stdlib
 	hardware_gpio
         pico_multicore)
