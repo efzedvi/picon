@@ -1,7 +1,5 @@
 #include <stdio.h>
 
-#include <stdio.h>
-
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
 
@@ -19,6 +17,7 @@ void heartbeat(void *param)
 		RTOS_TASK_DELAY(900);
 		gpio_put(PICO_DEFAULT_LED_PIN, 1);
 		RTOS_TASK_DELAY(100);
+		printf("beep\n");
 	}
 }
 
