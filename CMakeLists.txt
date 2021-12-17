@@ -17,9 +17,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
-pico_enable_stdio_usb(picon 1)
-pico_enable_stdio_uart(picon 1)
-
 add_library(picon_common INTERFACE)
 target_sources(picon_common INTERFACE
         src/main.c)
@@ -30,13 +27,23 @@ target_include_directories(picon_common INTERFACE
 target_link_libraries(picon_common INTERFACE
         FreeRTOS-Kernel
         FreeRTOS-Kernel-Heap4
-        pico_stdlib
-        tinyusb_device
+	pico_platform
+        pico_runtime
+        pico_time
+        pico_stdlib_headers
+#        pico_stdlib
+#        tinyusb_device
 	hardware_gpio
 	hardware_uart
         pico_multicore)
 
-add_executable(picon)
+add_executable(picon
+	src/main.c
+	)
+
+#pico_enable_stdio_usb(picon 0)
+#pico_enable_stdio_uart(picon 1)
+
 
 target_link_libraries(picon picon_common)
 pico_add_extra_outputs(picon)
