@@ -19,7 +19,7 @@ pico_sdk_init()
 
 add_library(picon_common INTERFACE)
 target_sources(picon_common INTERFACE
-        src/main.c)
+        src/main/main.c)
 target_include_directories(picon_common INTERFACE
 	src/include
         ${CMAKE_CURRENT_LIST_DIR}
@@ -37,9 +37,7 @@ target_link_libraries(picon_common INTERFACE
 	hardware_uart
         pico_multicore)
 
-add_executable(picon
-	src/main.c
-	)
+add_executable(picon)
 
 #pico_enable_stdio_usb(picon 0)
 #pico_enable_stdio_uart(picon 1)
