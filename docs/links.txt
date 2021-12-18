@@ -3,3 +3,5 @@ https://github.com/lowlevellearning/rp2040-FreeRTOS
 https://github.com/FreeRTOS/FreeRTOS-Kernel
 https://github.com/FreeRTOS/FreeRTOS-SMP-Demos
 
+https://github.com/mpaland/printf
+
