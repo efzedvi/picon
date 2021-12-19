@@ -14,18 +14,13 @@
 #include <queue.h>
 #include "semphr.h"
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/usart.h>
-#include <libopencm3/cm3/nvic.h>
-
 #include "rtos.h"
 #include "picon/utils.h"
 #include "picon/ioctl.h"
 #include "picon/io.h"
 #include "picon/log.h"
 
-#include "uart.h"
+#include "hardware/uart.h"
 
 
 #define UART_QUEUE_SIZE		(64)
@@ -36,10 +31,7 @@ static volatile unsigned char initialized = 0;  // True when UART configured
 
 typedef struct _uart_t {
 	uint32_t		usart;		// USART address
-	uint32_t		rcc;		// RCC address
 	uint8_t			irq;		// IRQ number
-	uint32_t		rx_port;	// rx gpio PORT
-	uint32_t		tx_port;	// rx gpio PORT
 	uint16_t		rx_pin;		// rx gpio pin
 	uint16_t		tx_pin;		// rx gpio pin
 } uart_t;
@@ -49,18 +41,10 @@ typedef struct _uart_t {
 rtos_semaphore_handle_t  uart_sems[UART_MAX];
 
 static const uart_t uarts[UART_MAX] = {
-	{ .usart = USART1, .rcc = RCC_USART1, .irq = NVIC_USART1_IRQ,
-	  .rx_port = GPIO_BANK_USART1_RX, .rx_pin = GPIO_USART1_RX, 
-	  .tx_port = GPIO_BANK_USART1_TX, .tx_pin = GPIO_USART1_TX,
+	{ .usart = USART1,
+	  .rx_pin = GPIO_USART1_RX, 
+	  .tx_pin = GPIO_USART1_TX,
 	},
-	{ .usart = USART2, .rcc = RCC_USART2, .irq = NVIC_USART2_IRQ,
-	  .rx_port = GPIO_BANK_USART2_RX, .rx_pin = GPIO_USART2_RX, 
-	  .tx_port = GPIO_BANK_USART2_TX, .tx_pin = GPIO_USART2_TX,
-	},
-	{ .usart = USART3, .rcc = RCC_USART3, .irq = NVIC_USART3_IRQ,
-	  .rx_port = GPIO_BANK_USART3_RX, .rx_pin = GPIO_USART3_RX, 
-	  .tx_port = GPIO_BANK_USART3_TX, .tx_pin = GPIO_USART3_TX,
-	} 
 };
 
 // UART receive queues
@@ -110,12 +94,6 @@ void usart2_isr(void)
 	picon_uart_common_isr(1);
 }
 
-void usart3_isr(void)
-{
-	picon_uart_common_isr(2);
-}
-
-
 int picon_uart_init(uint8_t ux, void *params)
 {
 	const uart_t *uartp = uarts+ux;		// Access USART's buffer
@@ -131,30 +109,6 @@ int picon_uart_init(uint8_t ux, void *params)
 
 	if (uartq[ux])
 		return -EINVAL;			// already initialized
-
-	usart_disable_rx_interrupt(uart);
-
-	// GPIO clocks must have allready been enabled in board initialization
-
-	// setup the gpios
-	gpio_set_mode(uartp->rx_port, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN, uartp->rx_pin);
-	gpio_set(uartp->rx_port, uartp->rx_pin); // input pull up mode
-	gpio_set_mode(uartp->tx_port, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-		      uartp->tx_pin);
-
-	gpio_port_config_lock(uartp->rx_port, uartp->rx_pin);
-	gpio_port_config_lock(uartp->tx_port, uartp->tx_pin);
-
-	rcc_periph_clock_enable(uartp->rcc);
-	usart_set_baudrate(uart, bps);
-	usart_set_databits(uart, 8);
-	usart_set_parity(uart, USART_PARITY_NONE);
-	usart_set_stopbits(uart, USART_STOPBITS_1);
-	usart_set_mode(uart, USART_MODE_TX_RX);
-	usart_set_flow_control(uart, USART_FLOWCONTROL_NONE);
-
-	nvic_disable_irq(uartp->irq);
-	usart_disable(uart);
 
 	uart_sems[ux] = NULL;
 
@@ -180,17 +134,8 @@ const void *picon_uart_open(const DEVICE_FILE *devf, int flags)
 	if (uartq[ux])
 		return (const void *) devf;	// already initialized
 
-	usart_disable_rx_interrupt(uart);
-
 	uartq[ux] = RTOS_QUEUE_CREATE(UART_QUEUE_SIZE, sizeof(char));
 	if (!uartq[ux]) return NULL;
-
-	// we corrently ignore the flags for uart devices
-	usart_set_mode(uart, USART_MODE_TX_RX);
-
-	nvic_enable_irq(uartp->irq);
-	usart_enable(uart);
-	usart_enable_rx_interrupt(uart);
 
 	uart_flags[ux] = flags;
 
@@ -214,11 +159,6 @@ int picon_uart_close(const DEVICE_FILE *devf)
 
 	if (!uartq[ux])
 		return -EINVAL;	// not opened?
-
-	usart_disable_rx_interrupt(uart);
-
-	nvic_disable_irq(uartp->irq);
-	usart_disable(uart);
 
 	rtos_queue_delete(uartq[ux]);
 	uartq[ux] = NULL;
