@@ -19,6 +19,11 @@ pico_sdk_init()
 
 add_library(picon_common INTERFACE)
 target_sources(picon_common INTERFACE
+        src/core/dev.c
+        src/core/io.c
+        src/core/console.c
+        src/core/utils.c
+        src/core/printf-stdarg.c
         src/main/main.c)
 target_include_directories(picon_common INTERFACE
 	src/include
