@@ -23,17 +23,17 @@
 
 
 // configuration macros
-#define HEART_BEAT		1
-#define MCU_IWDG		1
-#define MCU_IWDG_PERIOD		(5000)
-#define HEART_BEAT_RATE		(500)
-#define HEART_BEAT_PRIORITY	(2)
-#define HEART_BEAT_STACK_SIZE   (32)
+#define CONFIG_HEART_BEAT		(1)
+#define CONFIG_WDG			(1)
+#define CONFIG_WDG_PERIOD		(5000)
+#define CONFIG_HEART_BEAT_RATE		(500)
+#define CONFIG_HEART_BEAT_PRIORITY	(2)
+#define CONFIG_HEART_BEAT_STACK_SIZE	(48)
 
-#define SHELL_CMD_PRIORITY	(2)
+#define CONFIG_SHELL_CMD_PRIORITY	(2)
 
-#define SHELL_EXPR		1
+#define CONFIG_SHELL_EXPR		(1)
 
-#define PICON_LOGGING		1
+#define CONFIG_LOGGING			(1)
 
 #endif /* end of include guard CONFIG_H */
