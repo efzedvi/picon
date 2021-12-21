@@ -21,13 +21,16 @@
 #include "picon/log.h"
 
 #include "hardware/uart.h"
+#include "hardware/irq.h"
+#include "hardware/gpio.h"
 
 
 #define UART_QUEUE_SIZE		(64)
-#define UART_MAX		(3)
+#define UART_MAX		(2)
 #define MIN_WAIT_TIME		(20)
 
-static volatile unsigned char initialized = 0;  // True when UART configured
+
+
 
 typedef struct _uart_t {
 	uint32_t		usart;		// USART address

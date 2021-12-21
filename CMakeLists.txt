@@ -40,6 +40,7 @@ target_link_libraries(picon_common INTERFACE
 #        tinyusb_device
 	hardware_gpio
 	hardware_uart
+	hardware_irq
         pico_multicore)
 
 add_executable(picon)
