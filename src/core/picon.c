@@ -5,6 +5,7 @@
  */
 
 #include "hardware/gpio.h"
+#include "hardware/watchdog.h"
 
 #include "rtos.h"
 #include "picon.h"
@@ -29,6 +30,7 @@ static void picon_heart_beat_task(void *args)
 
 #ifdef CONFIG_WDG
 		// kick the watchdog
+		watchdog_update();
 #endif
 	}
 }
@@ -47,6 +49,8 @@ int picon_init()
 
 #ifdef CONFIG_WDG
 	// set up the WDG
+	watchdog_enable(CONFIG_WDG_PERIOD, 1);
+
 #endif
 
 	return 0;

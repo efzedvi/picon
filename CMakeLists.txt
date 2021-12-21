@@ -42,6 +42,7 @@ target_link_libraries(picon_common INTERFACE
 	hardware_gpio
 	hardware_uart
 	hardware_irq
+	hardware_watchdog
         pico_multicore)
 
 add_executable(picon)

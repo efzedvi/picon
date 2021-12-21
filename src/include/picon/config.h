@@ -25,7 +25,7 @@
 // configuration macros
 #define CONFIG_HEART_BEAT		(1)
 #define CONFIG_WDG			(1)
-#define CONFIG_WDG_PERIOD		(5000)
+#define CONFIG_WDG_PERIOD		(2500)
 #define CONFIG_HEART_BEAT_PIN		PICO_DEFAULT_LED_PIN
 #define CONFIG_HEART_BEAT_RATE		(500)
 #define CONFIG_HEART_BEAT_PRIORITY	(2)
