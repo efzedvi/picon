@@ -10,25 +10,24 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "board.h"
+#include "picon.h"
 
 #include "picon/config.h"
-#include "picon/shell.h"
 #include "picon/console.h"
 #include "picon/printf.h"
 #include "picon/dev.h"
 #include "picon/io.h"
 #include "picon/ioctl.h"
 #include "picon/utils.h"
-#include "picon/shell.h"
-#include "picon/shell_gpio.h"
-#include "picon/shell_adc.h"
-#include "picon/shell_dac.h"
-#include "picon/shell_timer.h"
-#include "picon/shell_i2c.h"
-#include "picon/shell_spi.h"
-#include "picon/shell_rf.h"
-#include "picon/shell_log.h"
+#include "shell.h"
+//#include "picon/shell_gpio.h"
+//#include "picon/shell_adc.h"
+//#include "picon/shell_dac.h"
+//#include "picon/shell_timer.h"
+//#include "picon/shell_i2c.h"
+//#include "picon/shell_spi.h"
+//#include "picon/shell_rf.h"
+//#include "picon/shell_log.h"
 
 #define SHELL_PROMPT		"# "
 #define SHELL_MAX_LINE  	(60)
@@ -37,15 +36,15 @@
 
 const SHELL_COMMAND  shell_commands[] = {
 	SHELL_BASIC_COMMANDS
-	SHELL_GPIO_COMMAND
-	SHELL_ADC_COMMAND
-	//SHELL_DAC_COMMAND
-	SHELL_BOARD_REGDUMP
-	SHELL_TIMER_COMMAND
-	SHELL_I2C_COMMAND
-	SHELL_SPI_COMMAND
-	SHELL_LOG_COMMAND
-	SHELL_RF_COMMAND
+//	SHELL_GPIO_COMMAND
+//	SHELL_ADC_COMMAND
+//	//SHELL_DAC_COMMAND
+//	SHELL_BOARD_REGDUMP
+//	SHELL_TIMER_COMMAND
+//	SHELL_I2C_COMMAND
+//	SHELL_SPI_COMMAND
+//	SHELL_LOG_COMMAND
+//	SHELL_RF_COMMAND
 	{ NULL, 	NULL, 0, 0 },
 };
 
@@ -102,60 +101,10 @@ int shell_uname(int argc, char **argv)
 		PICON_VERSION, RTOS_TSK_KERNEL_VERSION_NUMBER, PICON_BUILD_DATE, PICON_BUILD_TIME);
 
 	if (argc > 1 && strcmp(argv[1], "-a")==0) {
-#ifdef PICON_BOARD_FLASH_SIZE_SUPPORTED
-		printf("Flash: %d KB\n", picon_board_flash_size());
-#endif
-
-#ifdef PICON_BOARD_ID_SUPPORTED
-		int i;
-		const uint8_t *ptr = picon_board_id();
-		printf("serial#: ");
-		for(i=0; i<PICON_BOARD_ID_SIZE; i++)
-			printf("%02x", ptr[i]);
-		printf("\n");
-#endif
-
-#ifdef GIT_COMMIT
-		printf("git: %s\n", GIT_COMMIT);
-#endif
 	}
 
 	return 0;
 }
-
-#ifdef PICON_BOARD_OPTION_DATA
-int shell_option(int argc, char **argv)
-{
-	uint8_t 	i, v;
-
-	switch (argc) {
-
-		case 1: // no args, print both data
-			for(i=0; i<2; i++) {
-				printf("%d: 0x%02x\n", i, picon_board_get_option_data(i));
-			}
-			break;
-
-		case 2:
-			i = atoi(argv[1]);
-			printf("%d: 0x%02x\n", i, picon_board_get_option_data(i));
-			break;
-
-		case 3:
-			i = atoi(argv[1]);
-			v = (uint8_t) strtol(argv[2], NULL, 0);
-			picon_board_set_option_data(i, v);
-
-			break;
-
-		default:
-			printf("usage: option [ [0|1] [value] ]\n");
-			return -1;
-	}
-
-	return 0;
-}
-#endif
 
 static void print_uptime(uint32_t now)
 {
@@ -172,7 +121,6 @@ static void print_uptime(uint32_t now)
 
 	printf("%d days, %d hours %d minutes, %d seconds\n", days, hours, minutes, seconds);
 }
-
 
 int shell_uptime(int argc, char **argv)
 {
@@ -214,7 +162,7 @@ int shell_reboot(int argc, char **argv)
 	UNUSED(argv);
 
 	printf("\n");
-	picon_board_reset();
+	//TODO: implement
 
 	return 0;
 }
@@ -482,7 +430,7 @@ void shell_task(void *args)
 					}
 
 					console_create_child(commands[i].cmd, shell_command_runner_task,
-							  commands[i].stack_size, SHELL_CMD_PRIORITY,
+							  commands[i].stack_size, CONFIG_SHELL_CMD_PRIORITY,
 							  (void *) &cmd, &child_handle, &child_console_info);
 
 					if (!child_handle) {
@@ -556,7 +504,7 @@ int shell_date(int argc, char **argv)
 #ifdef BOARD_HAS_CLOCK
 		if (argc == 3 && strcmp(argv[1], "-s") == 0) {
 			t = atoi(argv[2]);
-			board_set_time(t);
+			//board_set_time(t);
 		}
 #endif
 		else {

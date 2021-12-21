@@ -48,19 +48,11 @@ int shell_primes(int argc, char **argv);
 #define CMD(NAME)  #NAME, shell_ ## NAME
 #endif
 
-#ifdef SHELL_EXPR
+#ifdef CONFIG_SHELL_EXPR
 int shell_expr(int argc, char **argv);
 #define SHELL_EXPR_CMD_DEF	{ CMD(expr), SHELL_MIN_CMD_STACK_SIZE, 0 },
 #else
 #define SHELL_EXPR_CMD_DEF
-#endif
-
-
-#ifdef PICON_BOARD_OPTION_DATA
-int shell_option(int argc, char **argv);
-#define SHELL_OPTION_DATA_DEF	{ CMD(option), SHELL_MIN_CMD_STACK_SIZE, 0 },
-#else
-#define SHELL_OPTION_DATA_DEF
 #endif
 
 
@@ -75,7 +67,6 @@ int shell_option(int argc, char **argv);
 	{ CMD(uname),	SHELL_MIN_CMD_STACK_SIZE, 0 },\
 	{ CMD(uptime),	SHELL_MIN_CMD_STACK_SIZE, 0 },\
         SHELL_EXPR_CMD_DEF \
-	SHELL_OPTION_DATA_DEF \
 	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, SHELL_CMD_PROPERTY_CANCELABLE },
 
 #endif /* end of include guard SHELL_H */

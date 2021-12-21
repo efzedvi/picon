@@ -1,0 +1,5 @@
+TODO:
+-more ioctl for HW flow control and format changing and getting
+-couple ux and uart[01]
+-give void vTaskGetRunTimeStats and uxTaskGetSystemState a try
+
