@@ -10,8 +10,7 @@
 #include <time.h>
 #include "picon/config.h"
 
-int picon_board_init(void);
-void picon_board_reset(void);
+int picon_init(void);
 
 #endif /* end of include guard BOARD_H */
 
