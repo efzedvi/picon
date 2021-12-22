@@ -78,7 +78,8 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 		return;					// Not open for ISR receiving!
 
 	while (uart_is_readable(uart)) {
-		ch = uart_getc(uart);			// Read data
+		//ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
+		ch = uart_getc(uart);
 
 		// This is a lame way to handle control-c, but we keep it for now until I think
 		// of a better and more ellegant way
@@ -125,7 +126,7 @@ int picon_uart_init(uint8_t ux, void *params)
 
 	uart_sems[ux] = NULL;
 
-	if (uartp->rx_pin<0 && uartp->tx_pin<0 )
+	if (uartp->rx_pin < 0 && uartp->tx_pin < 0)
 		return -EINVAL;			// Invalid pins
 
 	uart_init(uart, PICON_DEFAULT_BAUD_RATE);

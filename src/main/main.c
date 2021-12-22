@@ -26,8 +26,7 @@ int main()
 	io_init();
         dev_init(dt);
 
-        console_create("/dev/uart1", "ttyS1", shell_task, 512, 2, (void *) shell_commands);
-
+        console_create("/dev/uart0", "ttyS0", shell_task, 544, CONFIG_SHELL_CMD_PRIORITY, (void *) shell_commands);
 
 	rtos_task_start_scheduler();
 
