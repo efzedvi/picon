@@ -26,6 +26,7 @@ target_sources(picon_common INTERFACE
         src/core/printf-stdarg.c
         src/core/picon.c
 	src/drivers/uart.c
+	src/drivers/mem.c
 	src/shell/shell.c
         src/main/main.c)
 target_include_directories(picon_common INTERFACE

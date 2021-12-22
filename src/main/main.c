@@ -6,6 +6,7 @@
 #include "picon/console.h"      
 #include "picon/ioctl.h"        
 #include "picon/uart.h"
+#include "picon/mem.h"
 #include "shell.h"        
 
 #include "FreeRTOS.h"
@@ -15,6 +16,7 @@
 
 
 static const DEVICE_FILE *dt[] = {
+	DEV_ENTRY("/dev/mem", MEM_DEV, 0, NULL)
         DEV_ENTRY("/dev/uart0", UART_DEV, 0, NULL)
         NULL
 };

@@ -14,8 +14,7 @@
 #include "picon/mem.h"
 #include "picon/io.h"
 #include "picon/log.h"
-#include "board.h"
-#include "gpio.h"
+#include "picon.h"
 
 
 int picon_mem_init(uint8_t ux, void *params)
