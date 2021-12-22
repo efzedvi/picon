@@ -26,9 +26,9 @@
 #include "hardware/gpio.h"
 
 
-#define UART_QUEUE_SIZE		(64)
+#define UART_QUEUE_SIZE		(80)
 #define UART_MAX		(2)
-#define MIN_WAIT_TIME		(20)
+#define MIN_WAIT_TIME		(40)
 
 #define PICON_DEFAULT_BAUD_RATE 	115200
 #define PICON_DEFAULT_DATA_BITS 	8
@@ -73,13 +73,17 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 	uint8_t 	ch;			// Read data byte
 	rtos_base_type_t	higher_priority_task_woken;
 	uint16_t must_yield=0;
+	int      uart_irq;
 
 	if ( ux >=UART_MAX || !uartp || !(uartq[ux]) )
 		return;					// Not open for ISR receiving!
 
+	uart_irq = ( uart == uart0) ? UART0_IRQ : UART1_IRQ;
+
+	irq_set_enabled(uart_irq, false); // in SMP mode ISRs can run concurrently
+
 	while (uart_is_readable(uart)) {
-		//ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
-		ch = uart_getc(uart);
+		ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
 
 		// This is a lame way to handle control-c, but we keep it for now until I think
 		// of a better and more ellegant way
@@ -94,6 +98,7 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 			must_yield = 1;
 		}
 	}
+	irq_set_enabled(uart_irq, true);
 
 	RTOS_PORT_YIELD_FROM_ISR(must_yield);
 }

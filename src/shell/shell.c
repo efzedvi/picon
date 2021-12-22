@@ -30,7 +30,7 @@
 //#include "picon/shell_log.h"
 
 #define SHELL_PROMPT		"# "
-#define SHELL_MAX_LINE  	(60)
+#define SHELL_MAX_LINE  	(80)
 #define SHELL_MAX_ARG_NUM 	(32)
 #define SHELL_HIST_SIZE		(5)
 

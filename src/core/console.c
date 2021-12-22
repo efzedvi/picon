@@ -17,7 +17,7 @@
 
 #define CONSOLE_MAX		(5)
 
-#define GETCHAR_DELAY		(50)
+#define GETCHAR_DELAY		(40)
 
 void *malloc(size_t size)
 {
@@ -228,6 +228,8 @@ int getline(char *buf, unsigned short bufsiz, char *hist[], unsigned char hist_s
 			RTOS_TASK_DELAY(RTOS_MS_TO_TICKS(GETCHAR_DELAY));
 			continue;
 		}
+		if (ch > 127)
+			ch &= 0x7F; // HACK: Pico sometimes sets the 8th bit for some reasons!
 
 		if ( ch == 27) { // esc
 			esc = 1;
