@@ -167,9 +167,6 @@ int picon_uart_init(uint8_t ux, void *params)
 			irq_set_exclusive_handler(uart_irq, picon_uart1_rx_isr);
 		}
 		irq_set_enabled(uart_irq, true);
-
-		// Now enable the UART to send interrupts - RX only
-		uart_set_irq_enables(uart, true, false);
 	}
 
 	return 0;
@@ -199,6 +196,11 @@ const void *picon_uart_open(const DEVICE_FILE *devf, int flags)
 
 	uart_flags[ux] = flags;
 
+	if (uartp->rx_pin >= 0) {
+		// Now enable the UART to send interrupts - RX only
+		uart_set_irq_enables(uart, true, false);
+	}
+
 	return (const void *) devf;
 }
 
@@ -219,6 +221,9 @@ int picon_uart_close(const DEVICE_FILE *devf)
 
 	if (!uartq[ux])
 		return -EINVAL;	// not opened?
+
+	// stop receiving interrupts
+	uart_set_irq_enables(uart, false ,false);
 
 	rtos_queue_delete(uartq[ux]);
 	uartq[ux] = NULL;
