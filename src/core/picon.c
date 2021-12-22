@@ -60,3 +60,9 @@ void picon_reboot()
 {
 	watchdog_reboot(0, 0, 0);
 }
+
+bool picon_watchdog_caused_reboot()
+{
+	return watchdog_caused_reboot();
+}
+

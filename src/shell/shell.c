@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "pico/unique_id.h"
+
 #include "picon.h"
 
 #include "picon/config.h"
@@ -101,6 +103,10 @@ int shell_uname(int argc, char **argv)
 		PICON_VERSION, RTOS_TSK_KERNEL_VERSION_NUMBER, PICON_BUILD_DATE, PICON_BUILD_TIME);
 
 	if (argc > 1 && strcmp(argv[1], "-a")==0) {
+		char id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES+1];
+		id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES] = '\0';
+		pico_get_unique_board_id_string(id, PICO_UNIQUE_BOARD_ID_SIZE_BYTES);
+		printf("NOR Flash ID: %s\n", id);
 	}
 
 	return 0;
@@ -161,8 +167,17 @@ int shell_reboot(int argc, char **argv)
 	UNUSED(argc);
 	UNUSED(argv);
 
-	printf("\n");
-	picon_reboot();
+	if (argc <= 1) {
+		printf("\n");
+		picon_reboot();
+		// we won't return
+	}
+
+	if (strcmp(argv[1], "-s") == 0 ) {
+		printf("Last reboot: %s\n", picon_watchdog_caused_reboot() ? "watchdog" : "reboot");
+	} else {
+		printf("usage: reboot [-s]\n");
+	}
 
 	return 0;
 }

@@ -39,6 +39,7 @@ target_link_libraries(picon_common INTERFACE
         pico_runtime
         pico_time
         pico_stdlib_headers
+	pico_unique_id
 #        pico_stdlib
 #        tinyusb_device
 	hardware_gpio
