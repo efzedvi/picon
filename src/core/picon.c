@@ -55,3 +55,8 @@ int picon_init()
 
 	return 0;
 }
+
+void picon_reboot()
+{
+	watchdog_reboot(0, 0, 0);
+}

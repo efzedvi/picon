@@ -162,7 +162,7 @@ int shell_reboot(int argc, char **argv)
 	UNUSED(argv);
 
 	printf("\n");
-	//TODO: implement
+	picon_reboot();
 
 	return 0;
 }
