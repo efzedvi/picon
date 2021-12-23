@@ -88,10 +88,10 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 		// This is a lame way to handle control-c, but we keep it for now until I think
 		// of a better and more ellegant way
 		if (uart_sems[ux] != NULL  && ch == CONTROL('C')) {
-			RTOS_SEMAPHORE_GIVE_FROM_ISR(uart_sems[ux], &higher_priority_task_woken);
+			rtos_semaphore_give_from_isr(uart_sems[ux], &higher_priority_task_woken);
 		} else {
 			// Save data if the buffer is not full
-			RTOS_QUEUE_SEND_FROM_ISR(uartq[ux], &ch, &higher_priority_task_woken);
+			rtos_queue_send_from_isr(uartq[ux], &ch, &higher_priority_task_woken);
 		}
 
 		if (higher_priority_task_woken == RTOS_TRUE) {
@@ -100,7 +100,7 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 	}
 	irq_set_enabled(uart_irq, true);
 
-	RTOS_PORT_YIELD_FROM_ISR(must_yield);
+	rtos_port_yield_from_isr(must_yield);
 }
 
 void picon_uart0_rx_isr(void)
@@ -191,7 +191,7 @@ const void *picon_uart_open(const DEVICE_FILE *devf, int flags)
 	if (uartq[ux])
 		return (const void *) devf;	// already initialized
 
-	uartq[ux] = RTOS_QUEUE_CREATE(UART_QUEUE_SIZE, sizeof(char));
+	uartq[ux] = rtos_queue_create(UART_QUEUE_SIZE, sizeof(char));
 	if (!uartq[ux]) return NULL;
 
 	uart_flags[ux] = flags;
@@ -296,7 +296,7 @@ int picon_uart_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int c
 
 	for (n=0; n < count; n++ ) {
 		while ( ! uart_is_writable(uart) )
-			RTOS_TASK_YIELD();	
+			rtos_task_yield();	
 
 		// No CRLF support
 		uart_putc_raw(uart, buf[n]);

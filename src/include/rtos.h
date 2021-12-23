@@ -26,8 +26,6 @@
 /* from atomic.h */
 #define RTOS_ATOMIC_COMPARE_AND_SWAP_FAILURE         	 ATOMIC_COMPARE_AND_SWAP_FAILURE
 #define RTOS_ATOMIC_COMPARE_AND_SWAP_SUCCESS         	 ATOMIC_COMPARE_AND_SWAP_SUCCESS
-#define RTOS_ATOMIC_ENTER_CRITICAL                   	 ATOMIC_ENTER_CRITICAL
-#define RTOS_ATOMIC_EXIT_CRITICAL                    	 ATOMIC_EXIT_CRITICAL
 #define RTOS_ATOMIC_H                                	 ATOMIC_H
 /* from projdefs.h */
 #define RTOS_BIG_ENDIAN                              	 pdBIG_ENDIAN
@@ -36,7 +34,6 @@
 #define RTOS_BIT_4                                   	 BIT_4
 /* from FreeRTOS.h */
 #define RTOS_CONFIG_APPLICATION_ALLOCATED_HEAP       	 configAPPLICATION_ALLOCATED_HEAP
-#define RTOS_CONFIG_ASSERT                           	 configASSERT
 #define RTOS_CONFIG_ASSERT_DEFINED                   	 configASSERT_DEFINED
 #define RTOS_CONFIG_CHECK_FOR_STACK_OVERFLOW         	 configCHECK_FOR_STACK_OVERFLOW
 #define RTOS_CONFIG_ENABLE_BACKWARD_COMPATIBILITY    	 configENABLE_BACKWARD_COMPATIBILITY
@@ -53,8 +50,6 @@
 #define RTOS_CONFIG_KERNEL_INTERRUPT_PRIORITY        	 configKERNEL_INTERRUPT_PRIORITY
 /* from list.h */
 #define RTOS_CONFIG_LIST_VOLATILE                    	 configLIST_VOLATILE
-/* from FreeRTOS.h */
-#define RTOS_CONFIG_MAX                              	 configMAX
 /* from FreeRTOSConfig.h */
 #define RTOS_CONFIG_MAX_API_CALL_INTERRUPT_PRIORITY  	 configMAX_API_CALL_INTERRUPT_PRIORITY
 #define RTOS_CONFIG_MAX_CO_ROUTINE_PRIORITIES        	 configMAX_CO_ROUTINE_PRIORITIES
@@ -63,18 +58,12 @@
 /* from FreeRTOS.h */
 #define RTOS_CONFIG_MAX_TASK_NAME_LEN                	 configMAX_TASK_NAME_LEN
 #define RTOS_CONFIG_MESSAGE_BUFFER_LENGTH_TYPE       	 configMESSAGE_BUFFER_LENGTH_TYPE
-#define RTOS_CONFIG_MIN                              	 configMIN
 /* from FreeRTOSConfig.h */
 #define RTOS_CONFIG_MINIMAL_STACK_SIZE               	 configMINIMAL_STACK_SIZE
 /* from FreeRTOS.h */
 #define RTOS_CONFIG_NUM_CORES                        	 configNUM_CORES
 #define RTOS_CONFIG_NUM_THREAD_LOCAL_STORAGE_POINTERS 	 configNUM_THREAD_LOCAL_STORAGE_POINTERS
-#define RTOS_CONFIG_POST_SLEEP_PROCESSING            	 configPOST_SLEEP_PROCESSING
-#define RTOS_CONFIG_PRECONDITION                     	 configPRECONDITION
 #define RTOS_CONFIG_PRECONDITION_DEFINED             	 configPRECONDITION_DEFINED
-#define RTOS_CONFIG_PRE_SLEEP_PROCESSING             	 configPRE_SLEEP_PROCESSING
-#define RTOS_CONFIG_PRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING 	 configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING
-#define RTOS_CONFIG_PRINTF                           	 configPRINTF
 #define RTOS_CONFIG_QUEUE_REGISTRY_SIZE              	 configQUEUE_REGISTRY_SIZE
 #define RTOS_CONFIG_RECORD_STACK_HIGH_ADDRESS        	 configRECORD_STACK_HIGH_ADDRESS
 #define RTOS_CONFIG_RUN_FREERTOS_SECURE_ONLY         	 configRUN_FREERTOS_SECURE_ONLY
@@ -133,16 +122,6 @@
 #define RTOS_CO_ROUTINE_H                            	 CO_ROUTINE_H
 /* from FreeRTOS.h */
 #define RTOS_CO_ROUTINE_HANDLE                       	 xCoRoutineHandle
-/* from croutine.h */
-#define RTOS_CR_DELAY                                	 crDELAY
-#define RTOS_CR_END                                  	 crEND
-#define RTOS_CR_QUEUE_RECEIVE                        	 crQUEUE_RECEIVE
-#define RTOS_CR_QUEUE_RECEIVE_FROM_ISR               	 crQUEUE_RECEIVE_FROM_ISR
-#define RTOS_CR_QUEUE_SEND                           	 crQUEUE_SEND
-#define RTOS_CR_QUEUE_SEND_FROM_ISR                  	 crQUEUE_SEND_FROM_ISR
-#define RTOS_CR_SET_STATE0                           	 crSET_STATE0
-#define RTOS_CR_SET_STATE1                           	 crSET_STATE1
-#define RTOS_CR_START                                	 crSTART
 /* from deprecated_definitions.h */
 #define RTOS_DEPRECATED_DEFINITIONS_H                	 DEPRECATED_DEFINITIONS_H
 /* from projdefs.h */
@@ -161,9 +140,6 @@
 #define RTOS_EVENT_GROUP_CREATE                      	 xEventGroupCreate
 #define RTOS_EVENT_GROUP_CREATE_STATIC               	 xEventGroupCreateStatic
 #define RTOS_EVENT_GROUP_DELETE                      	 vEventGroupDelete
-/* from event_groups.h */
-#define RTOS_EVENT_GROUP_GET_BITS                    	 xEventGroupGetBits
-/* from mpu_wrappers.h */
 #define RTOS_EVENT_GROUP_SET_BITS                    	 xEventGroupSetBits
 /* from event_groups.h */
 #define RTOS_EVENT_GROUP_SET_BITS_FROM_ISR           	 xEventGroupSetBitsFromISR
@@ -235,14 +211,14 @@
 #define RTOS_INCLUDE_TASK_GET_HANDLE                 	 INCLUDE_xTaskGetHandle
 #define RTOS_INCLUDE_TASK_GET_IDLE_TASK_HANDLE       	 INCLUDE_xTaskGetIdleTaskHandle
 #define RTOS_INCLUDE_TASK_GET_SCHEDULER_STATE        	 INCLUDE_xTaskGetSchedulerState
+#define RTOS_INCLUDE_TASK_GET_STACK_HIGH_WATER_MARK  	 INCLUDE_uxTaskGetStackHighWaterMark
+#define RTOS_INCLUDE_TASK_GET_STACK_HIGH_WATER_MARK2 	 INCLUDE_uxTaskGetStackHighWaterMark2
 #define RTOS_INCLUDE_TASK_GET_STATE                  	 INCLUDE_eTaskGetState
+#define RTOS_INCLUDE_TASK_PRIORITY_GET               	 INCLUDE_uxTaskPriorityGet
 #define RTOS_INCLUDE_TASK_PRIORITY_SET               	 INCLUDE_vTaskPrioritySet
 #define RTOS_INCLUDE_TASK_RESUME_FROM_ISR            	 INCLUDE_xTaskResumeFromISR
 #define RTOS_INCLUDE_TASK_SUSPEND                    	 INCLUDE_vTaskSuspend
 #define RTOS_INCLUDE_TIMER_PEND_FUNCTION_CALL        	 INCLUDE_xTimerPendFunctionCall
-#define RTOS_INCLUDE_UX_TASK_GET_STACK_HIGH_WATER_MARK 	 INCLUDE_uxTaskGetStackHighWaterMark
-#define RTOS_INCLUDE_UX_TASK_GET_STACK_HIGH_WATER_MARK2 	 INCLUDE_uxTaskGetStackHighWaterMark2
-#define RTOS_INCLUDE_UX_TASK_PRIORITY_GET            	 INCLUDE_uxTaskPriorityGet
 #define RTOS_INC_FREERTOS_H                          	 INC_FREERTOS_H
 /* from task.h */
 #define RTOS_INC_TASK_H                              	 INC_TASK_H
@@ -253,75 +229,28 @@
 /* from FreeRTOS.h */
 #define RTOS_LIST                                    	 xList
 /* from list.h */
-#define RTOS_LIST_CURRENT_LIST_LENGTH                	 listCURRENT_LIST_LENGTH
 #define RTOS_LIST_FIRST_LIST_INTEGRITY_CHECK_VALUE   	 listFIRST_LIST_INTEGRITY_CHECK_VALUE
 #define RTOS_LIST_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE 	 listFIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE
-#define RTOS_LIST_GET_END_MARKER                     	 listGET_END_MARKER
-#define RTOS_LIST_GET_HEAD_ENTRY                     	 listGET_HEAD_ENTRY
-#define RTOS_LIST_GET_ITEM_VALUE_OF_HEAD_ENTRY       	 listGET_ITEM_VALUE_OF_HEAD_ENTRY
-#define RTOS_LIST_GET_LIST_ITEM_OWNER                	 listGET_LIST_ITEM_OWNER
-#define RTOS_LIST_GET_LIST_ITEM_VALUE                	 listGET_LIST_ITEM_VALUE
-#define RTOS_LIST_GET_NEXT                           	 listGET_NEXT
-#define RTOS_LIST_GET_OWNER_OF_HEAD_ENTRY            	 listGET_OWNER_OF_HEAD_ENTRY
-#define RTOS_LIST_GET_OWNER_OF_NEXT_ENTRY            	 listGET_OWNER_OF_NEXT_ENTRY
 #define RTOS_LIST_H                                  	 LIST_H
-#define RTOS_LIST_IS_CONTAINED_WITHIN                	 listIS_CONTAINED_WITHIN
 /* from FreeRTOS.h */
 #define RTOS_LIST_ITEM                               	 xListItem
 /* from list.h */
-#define RTOS_LIST_LIST_IS_EMPTY                      	 listLIST_IS_EMPTY
-#define RTOS_LIST_LIST_IS_INITIALISED                	 listLIST_IS_INITIALISED
-#define RTOS_LIST_LIST_ITEM_CONTAINER                	 listLIST_ITEM_CONTAINER
 #define RTOS_LIST_SECOND_LIST_INTEGRITY_CHECK_VALUE  	 listSECOND_LIST_INTEGRITY_CHECK_VALUE
 #define RTOS_LIST_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE 	 listSECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE
-#define RTOS_LIST_SET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE 	 listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE
-#define RTOS_LIST_SET_LIST_INTEGRITY_CHECK_1_VALUE   	 listSET_LIST_INTEGRITY_CHECK_1_VALUE
-#define RTOS_LIST_SET_LIST_INTEGRITY_CHECK_2_VALUE   	 listSET_LIST_INTEGRITY_CHECK_2_VALUE
-#define RTOS_LIST_SET_LIST_ITEM_OWNER                	 listSET_LIST_ITEM_OWNER
-#define RTOS_LIST_SET_LIST_ITEM_VALUE                	 listSET_LIST_ITEM_VALUE
-#define RTOS_LIST_SET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE 	 listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE
-#define RTOS_LIST_TEST_LIST_INTEGRITY                	 listTEST_LIST_INTEGRITY
-#define RTOS_LIST_TEST_LIST_ITEM_INTEGRITY           	 listTEST_LIST_ITEM_INTEGRITY
 /* from projdefs.h */
 #define RTOS_LITTLE_ENDIAN                           	 pdLITTLE_ENDIAN
 /* from FreeRTOS.h */
 #define RTOS_MEMORY_REGION                           	 xMemoryRegion
-/* from message_buffer.h */
-#define RTOS_MESSAGE_BUFFER_CREATE                   	 xMessageBufferCreate
-#define RTOS_MESSAGE_BUFFER_CREATE_STATIC            	 xMessageBufferCreateStatic
-#define RTOS_MESSAGE_BUFFER_DELETE                   	 vMessageBufferDelete
-#define RTOS_MESSAGE_BUFFER_IS_EMPTY                 	 xMessageBufferIsEmpty
-#define RTOS_MESSAGE_BUFFER_IS_FULL                  	 xMessageBufferIsFull
-#define RTOS_MESSAGE_BUFFER_NEXT_LENGTH_BYTES        	 xMessageBufferNextLengthBytes
-#define RTOS_MESSAGE_BUFFER_RECEIVE                  	 xMessageBufferReceive
-#define RTOS_MESSAGE_BUFFER_RECEIVE_COMPLETED_FROM_ISR 	 xMessageBufferReceiveCompletedFromISR
-#define RTOS_MESSAGE_BUFFER_RECEIVE_FROM_ISR         	 xMessageBufferReceiveFromISR
-#define RTOS_MESSAGE_BUFFER_RESET                    	 xMessageBufferReset
-#define RTOS_MESSAGE_BUFFER_SEND                     	 xMessageBufferSend
-#define RTOS_MESSAGE_BUFFER_SEND_COMPLETED_FROM_ISR  	 xMessageBufferSendCompletedFromISR
-#define RTOS_MESSAGE_BUFFER_SEND_FROM_ISR            	 xMessageBufferSendFromISR
-#define RTOS_MESSAGE_BUFFER_SPACES_AVAILABLE         	 xMessageBufferSpacesAvailable
-#define RTOS_MESSAGE_BUFFER_SPACE_AVAILABLE          	 xMessageBufferSpaceAvailable
 /* from mpu_wrappers.h */
 #define RTOS_MPU_WRAPPERS_H                          	 MPU_WRAPPERS_H
-/* from projdefs.h */
-#define RTOS_MS_TO_TICKS                             	 pdMS_TO_TICKS
-/* from FreeRTOS.h */
-#define RTOS_MT_COVERAGE_TEST_DELAY                  	 mtCOVERAGE_TEST_DELAY
-#define RTOS_MT_COVERAGE_TEST_MARKER                 	 mtCOVERAGE_TEST_MARKER
 /* from projdefs.h */
 #define RTOS_PASS                                    	 pdPASS
 /* from portable.h */
 #define RTOS_PORTABLE_H                              	 PORTABLE_H
 /* from portmacro.h */
 #define RTOS_PORTMACRO_H                             	 PORTMACRO_H
-/* from FreeRTOS.h */
-#define RTOS_PORT_ALLOCATE_SECURE_CONTEXT            	 portALLOCATE_SECURE_CONTEXT
 /* from portable.h */
 #define RTOS_PORT_ARCH_NAME                          	 portARCH_NAME
-/* from FreeRTOS.h */
-#define RTOS_PORT_ASSERT_IF_INTERRUPT_PRIORITY_INVALID 	 portASSERT_IF_INTERRUPT_PRIORITY_INVALID
-#define RTOS_PORT_ASSERT_IF_IN_ISR                   	 portASSERT_IF_IN_ISR
 /* from portmacro.h */
 #define RTOS_PORT_BASE_TYPE                          	 portBASE_TYPE
 #define RTOS_PORT_BYTE_ALIGNMENT                     	 portBYTE_ALIGNMENT
@@ -329,20 +258,9 @@
 #define RTOS_PORT_BYTE_ALIGNMENT_MASK                	 portBYTE_ALIGNMENT_MASK
 /* from portmacro.h */
 #define RTOS_PORT_CHAR                               	 portCHAR
-#define RTOS_PORT_CHECK_IF_IN_ISR                    	 portCHECK_IF_IN_ISR
-/* from FreeRTOS.h */
-#define RTOS_PORT_CLEAN_UP_TCB                       	 portCLEAN_UP_TCB
-/* from portmacro.h */
-#define RTOS_PORT_CLEAR_INTERRUPT_MASK_FROM_ISR      	 portCLEAR_INTERRUPT_MASK_FROM_ISR
-/* from FreeRTOS.h */
-#define RTOS_PORT_CONFIGURE_TIMER_FOR_RUN_TIME_STATS 	 portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
-/* from portmacro.h */
 #define RTOS_PORT_CRITICAL_NESTING_IN_TCB            	 portCRITICAL_NESTING_IN_TCB
-#define RTOS_PORT_DISABLE_INTERRUPTS                 	 portDISABLE_INTERRUPTS
 #define RTOS_PORT_DONT_DISCARD                       	 portDONT_DISCARD
 #define RTOS_PORT_DOUBLE                             	 portDOUBLE
-#define RTOS_PORT_ENABLE_INTERRUPTS                  	 portENABLE_INTERRUPTS
-#define RTOS_PORT_END_SWITCHING_ISR                  	 portEND_SWITCHING_ISR
 #define RTOS_PORT_ENTER_CRITICAL                     	 portENTER_CRITICAL
 #define RTOS_PORT_EXIT_CRITICAL                      	 portEXIT_CRITICAL
 #define RTOS_PORT_FLOAT                              	 portFLOAT
@@ -350,17 +268,10 @@
 #define RTOS_PORT_FORCE_INLINE                       	 portFORCE_INLINE
 /* from portable.h */
 #define RTOS_PORT_FREE_STACK                         	 vPortFreeStack
-/* from portmacro.h */
-#define RTOS_PORT_GET_CORE_ID                        	 portGET_CORE_ID
-#define RTOS_PORT_GET_ISR_LOCK                       	 portGET_ISR_LOCK
-#define RTOS_PORT_GET_TASK_LOCK                      	 portGET_TASK_LOCK
-/* from portable.h */
 #define RTOS_PORT_HAS_STACK_OVERFLOW_CHECKING        	 portHAS_STACK_OVERFLOW_CHECKING
 /* from portmacro.h */
 #define RTOS_PORT_LONG                               	 portLONG
 #define RTOS_PORT_MAX_DELAY                          	 portMAX_DELAY
-#define RTOS_PORT_MEMORY_BARRIER                     	 portMEMORY_BARRIER
-#define RTOS_PORT_NOP                                	 portNOP
 /* from portable.h */
 #define RTOS_PORT_NUM_CONFIGURABLE_REGIONS           	 portNUM_CONFIGURABLE_REGIONS
 /* from portmacro.h */
@@ -368,49 +279,27 @@
 #define RTOS_PORT_NVIC_PENDSVSET_BIT                 	 portNVIC_PENDSVSET_BIT
 /* from FreeRTOS.h */
 #define RTOS_PORT_POINTER_SIZE_TYPE                  	 portPOINTER_SIZE_TYPE
-#define RTOS_PORT_PRE_TASK_DELETE_HOOK               	 portPRE_TASK_DELETE_HOOK
 #define RTOS_PORT_PRIVILEGE_BIT                      	 portPRIVILEGE_BIT
 /* from portmacro.h */
-#define RTOS_PORT_RELEASE_ISR_LOCK                   	 portRELEASE_ISR_LOCK
-#define RTOS_PORT_RELEASE_TASK_LOCK                  	 portRELEASE_TASK_LOCK
-#define RTOS_PORT_RESTORE_INTERRUPTS                 	 portRESTORE_INTERRUPTS
-/* from FreeRTOS.h */
-#define RTOS_PORT_SETUP_TCB                          	 portSETUP_TCB
-/* from portmacro.h */
-#define RTOS_PORT_SET_INTERRUPT_MASK_FROM_ISR        	 portSET_INTERRUPT_MASK_FROM_ISR
 #define RTOS_PORT_SHORT                              	 portSHORT
-/* from FreeRTOS.h */
-#define RTOS_PORT_SOFTWARE_BARRIER                   	 portSOFTWARE_BARRIER
-/* from portmacro.h */
 #define RTOS_PORT_STACK_GROWTH                       	 portSTACK_GROWTH
 /* from stack_macros.h */
 #define RTOS_PORT_STACK_LIMIT_PADDING                	 portSTACK_LIMIT_PADDING
 /* from portmacro.h */
 #define RTOS_PORT_STACK_TYPE                         	 portSTACK_TYPE
 #define RTOS_PORT_SUPPRESS_TICKS_AND_SLEEP           	 portSUPPRESS_TICKS_AND_SLEEP
-#define RTOS_PORT_TASK_FUNCTION                      	 portTASK_FUNCTION
-#define RTOS_PORT_TASK_FUNCTION_PROTO                	 portTASK_FUNCTION_PROTO
-/* from FreeRTOS.h */
-#define RTOS_PORT_TASK_USES_FLOATING_POINT           	 portTASK_USES_FLOATING_POINT
-/* from portmacro.h */
 #define RTOS_PORT_TICK_PERIOD_MS                     	 portTICK_PERIOD_MS
 /* from FreeRTOS.h */
 #define RTOS_PORT_TICK_RATE_MS                       	 portTICK_RATE_MS
 #define RTOS_PORT_TICK_TYPE                          	 portTickType
-#define RTOS_PORT_TICK_TYPE_CLEAR_INTERRUPT_MASK_FROM_ISR 	 portTICK_TYPE_CLEAR_INTERRUPT_MASK_FROM_ISR
-#define RTOS_PORT_TICK_TYPE_ENTER_CRITICAL           	 portTICK_TYPE_ENTER_CRITICAL
-#define RTOS_PORT_TICK_TYPE_EXIT_CRITICAL            	 portTICK_TYPE_EXIT_CRITICAL
 /* from portmacro.h */
 #define RTOS_PORT_TICK_TYPE_IS_ATOMIC                	 portTICK_TYPE_IS_ATOMIC
 /* from FreeRTOS.h */
-#define RTOS_PORT_TICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR 	 portTICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR
 #define RTOS_PORT_TIMER_CALLBACK_ATTRIBUTE           	 portTIMER_CALLBACK_ATTRIBUTE
 /* from mpu_wrappers.h */
 #define RTOS_PORT_USING_MPU_WRAPPERS                 	 portUSING_MPU_WRAPPERS
 /* from portmacro.h */
 #define RTOS_PORT_YIELD                              	 portYIELD
-#define RTOS_PORT_YIELD_CORE                         	 portYIELD_CORE
-#define RTOS_PORT_YIELD_FROM_ISR                     	 portYIELD_FROM_ISR
 /* from mpu_wrappers.h */
 #define RTOS_PRIVILEGED_DATA                         	 PRIVILEGED_DATA
 #define RTOS_PRIVILEGED_FUNCTION                     	 PRIVILEGED_FUNCTION
@@ -426,17 +315,11 @@
 /* from mpu_wrappers.h */
 #define RTOS_QUEUE_ADD_TO_REGISTRY                   	 vQueueAddToRegistry
 #define RTOS_QUEUE_ADD_TO_SET                        	 xQueueAddToSet
-/* from queue.h */
-#define RTOS_QUEUE_CREATE                            	 xQueueCreate
-/* from mpu_wrappers.h */
 #define RTOS_QUEUE_CREATE_COUNTING_SEMAPHORE         	 xQueueCreateCountingSemaphore
 #define RTOS_QUEUE_CREATE_COUNTING_SEMAPHORE_STATIC  	 xQueueCreateCountingSemaphoreStatic
 #define RTOS_QUEUE_CREATE_MUTEX                      	 xQueueCreateMutex
 #define RTOS_QUEUE_CREATE_MUTEX_STATIC               	 xQueueCreateMutexStatic
 #define RTOS_QUEUE_CREATE_SET                        	 xQueueCreateSet
-/* from queue.h */
-#define RTOS_QUEUE_CREATE_STATIC                     	 xQueueCreateStatic
-/* from mpu_wrappers.h */
 #define RTOS_QUEUE_DELETE                            	 vQueueDelete
 #define RTOS_QUEUE_GENERIC_CREATE                    	 xQueueGenericCreate
 #define RTOS_QUEUE_GENERIC_CREATE_STATIC             	 xQueueGenericCreateStatic
@@ -454,8 +337,10 @@
 #define RTOS_QUEUE_HANDLE                            	 xQueueHandle
 /* from queue.h */
 #define RTOS_QUEUE_LENGTH                            	 QUEUE_LENGTH
-#define RTOS_QUEUE_OVERWRITE                         	 xQueueOverwrite
-#define RTOS_QUEUE_OVERWRITE_FROM_ISR                	 xQueueOverwriteFromISR
+/* from mpu_wrappers.h */
+#define RTOS_QUEUE_MESSAGES_WAITING                  	 uxQueueMessagesWaiting
+/* from queue.h */
+#define RTOS_QUEUE_OVERWRITE                         	 queueOVERWRITE
 /* from mpu_wrappers.h */
 #define RTOS_QUEUE_PEEK                              	 xQueuePeek
 /* from queue.h */
@@ -468,46 +353,24 @@
 /* from mpu_wrappers.h */
 #define RTOS_QUEUE_RECEIVE                           	 xQueueReceive
 #define RTOS_QUEUE_REMOVE_FROM_SET                   	 xQueueRemoveFromSet
-/* from queue.h */
-#define RTOS_QUEUE_RESET                             	 xQueueReset
-/* from mpu_wrappers.h */
 #define RTOS_QUEUE_SELECT_FROM_SET                   	 xQueueSelectFromSet
 #define RTOS_QUEUE_SEMAPHORE_TAKE                    	 xQueueSemaphoreTake
 /* from queue.h */
-#define RTOS_QUEUE_SEND                              	 xQueueSend
-#define RTOS_QUEUE_SEND_FROM_ISR                     	 xQueueSendFromISR
-#define RTOS_QUEUE_SEND_TO_BACK                      	 xQueueSendToBack
-#define RTOS_QUEUE_SEND_TO_BACK_FROM_ISR             	 xQueueSendToBackFromISR
-#define RTOS_QUEUE_SEND_TO_FRONT                     	 xQueueSendToFront
-#define RTOS_QUEUE_SEND_TO_FRONT_FROM_ISR            	 xQueueSendToFrontFromISR
+#define RTOS_QUEUE_SEND_TO_BACK                      	 queueSEND_TO_BACK
+#define RTOS_QUEUE_SEND_TO_FRONT                     	 queueSEND_TO_FRONT
 /* from FreeRTOS.h */
 #define RTOS_QUEUE_SET_HANDLE                        	 xQueueSetHandle
 #define RTOS_QUEUE_SET_MEMBER_HANDLE                 	 xQueueSetMemberHandle
 /* from mpu_wrappers.h */
+#define RTOS_QUEUE_SPACES_AVAILABLE                  	 uxQueueSpacesAvailable
 #define RTOS_QUEUE_TAKE_MUTEX_RECURSIVE              	 xQueueTakeMutexRecursive
 #define RTOS_QUEUE_UNREGISTER_QUEUE                  	 vQueueUnregisterQueue
 /* from semphr.h */
-#define RTOS_SEMAPHORE_CREATE_BINARY                 	 xSemaphoreCreateBinary
-#define RTOS_SEMAPHORE_CREATE_BINARY_STATIC          	 xSemaphoreCreateBinaryStatic
-#define RTOS_SEMAPHORE_CREATE_COUNTING               	 xSemaphoreCreateCounting
-#define RTOS_SEMAPHORE_CREATE_COUNTING_STATIC        	 xSemaphoreCreateCountingStatic
-#define RTOS_SEMAPHORE_CREATE_MUTEX                  	 xSemaphoreCreateMutex
-#define RTOS_SEMAPHORE_CREATE_MUTEX_STATIC           	 xSemaphoreCreateMutexStatic
-#define RTOS_SEMAPHORE_CREATE_RECURSIVE_MUTEX        	 xSemaphoreCreateRecursiveMutex
-#define RTOS_SEMAPHORE_CREATE_RECURSIVE_MUTEX_STATIC 	 xSemaphoreCreateRecursiveMutexStatic
-#define RTOS_SEMAPHORE_DELETE                        	 vSemaphoreDelete
-#define RTOS_SEMAPHORE_GET_MUTEX_HOLDER              	 xSemaphoreGetMutexHolder
-#define RTOS_SEMAPHORE_GET_MUTEX_HOLDER_FROM_ISR     	 xSemaphoreGetMutexHolderFromISR
-#define RTOS_SEMAPHORE_GIVE                          	 xSemaphoreGive
-#define RTOS_SEMAPHORE_GIVE_FROM_ISR                 	 xSemaphoreGiveFromISR
-#define RTOS_SEMAPHORE_GIVE_RECURSIVE                	 xSemaphoreGiveRecursive
+#define RTOS_SEMAPHORE_CREATE_BINARY                 	 vSemaphoreCreateBinary
 #define RTOS_SEMAPHORE_H                             	 SEMAPHORE_H
 /* from FreeRTOS.h */
 #define RTOS_SEMAPHORE_HANDLE                        	 xSemaphoreHandle
 /* from semphr.h */
-#define RTOS_SEMAPHORE_TAKE                          	 xSemaphoreTake
-#define RTOS_SEMAPHORE_TAKE_FROM_ISR                 	 xSemaphoreTakeFromISR
-#define RTOS_SEMAPHORE_TAKE_RECURSIVE                	 xSemaphoreTakeRecursive
 #define RTOS_SEM_BINARY_SEMAPHORE_QUEUE_LENGTH       	 semBINARY_SEMAPHORE_QUEUE_LENGTH
 #define RTOS_SEM_GIVE_BLOCK_TIME                     	 semGIVE_BLOCK_TIME
 #define RTOS_SEM_SEMAPHORE_QUEUE_ITEM_LENGTH         	 semSEMAPHORE_QUEUE_ITEM_LENGTH
@@ -519,10 +382,6 @@
 #define RTOS_STORAGE_SIZE_BYTES                      	 STORAGE_SIZE_BYTES
 /* from mpu_wrappers.h */
 #define RTOS_STREAM_BUFFER_BYTES_AVAILABLE           	 xStreamBufferBytesAvailable
-/* from stream_buffer.h */
-#define RTOS_STREAM_BUFFER_CREATE                    	 xStreamBufferCreate
-#define RTOS_STREAM_BUFFER_CREATE_STATIC             	 xStreamBufferCreateStatic
-/* from mpu_wrappers.h */
 #define RTOS_STREAM_BUFFER_DELETE                    	 vStreamBufferDelete
 #define RTOS_STREAM_BUFFER_GENERIC_CREATE            	 xStreamBufferGenericCreate
 #define RTOS_STREAM_BUFFER_GENERIC_CREATE_STATIC     	 xStreamBufferGenericCreateStatic
@@ -545,30 +404,21 @@
 #define RTOS_TASK_ABORT_DELAY                        	 xTaskAbortDelay
 #define RTOS_TASK_CALL_APPLICATION_TASK_HOOK         	 xTaskCallApplicationTaskHook
 #define RTOS_TASK_CATCH_UP_TICKS                     	 xTaskCatchUpTicks
-/* from stack_macros.h */
-#define RTOS_TASK_CHECK_FOR_STACK_OVERFLOW           	 taskCHECK_FOR_STACK_OVERFLOW
-/* from mpu_wrappers.h */
 #define RTOS_TASK_CHECK_FOR_TIME_OUT                 	 xTaskCheckForTimeOut
-/* from task.h */
-#define RTOS_TASK_CHECK_IF_IN_ISR                    	 taskCHECK_IF_IN_ISR
 /* from FreeRTOS.h */
 #define RTOS_TASK_CODE                               	 pdTASK_CODE
 /* from mpu_wrappers.h */
 #define RTOS_TASK_CREATE                             	 xTaskCreate
 #define RTOS_TASK_CREATE_STATIC                      	 xTaskCreateStatic
 #define RTOS_TASK_DELAY                              	 vTaskDelay
-#define RTOS_TASK_DELAY_UNTIL                        	 xTaskDelayUntil
-#define RTOS_TASK_DELETE                             	 vTaskDelete
 /* from task.h */
-#define RTOS_TASK_DISABLE_INTERRUPTS                 	 taskDISABLE_INTERRUPTS
-#define RTOS_TASK_ENABLE_INTERRUPTS                  	 taskENABLE_INTERRUPTS
-#define RTOS_TASK_ENTER_CRITICAL                     	 taskENTER_CRITICAL
-#define RTOS_TASK_ENTER_CRITICAL_FROM_ISR            	 taskENTER_CRITICAL_FROM_ISR
-#define RTOS_TASK_EXIT_CRITICAL                      	 taskEXIT_CRITICAL
-#define RTOS_TASK_EXIT_CRITICAL_FROM_ISR             	 taskEXIT_CRITICAL_FROM_ISR
+#define RTOS_TASK_DELAY_UNTIL                        	 vTaskDelayUntil
 /* from mpu_wrappers.h */
+#define RTOS_TASK_DELETE                             	 vTaskDelete
 #define RTOS_TASK_GENERIC_NOTIFY                     	 xTaskGenericNotify
 #define RTOS_TASK_GENERIC_NOTIFY_STATE_CLEAR         	 xTaskGenericNotifyStateClear
+#define RTOS_TASK_GENERIC_NOTIFY_TAKE                	 ulTaskGenericNotifyTake
+#define RTOS_TASK_GENERIC_NOTIFY_VALUE_CLEAR         	 ulTaskGenericNotifyValueClear
 #define RTOS_TASK_GENERIC_NOTIFY_WAIT                	 xTaskGenericNotifyWait
 #define RTOS_TASK_GET_APPLICATION_TASK_TAG           	 xTaskGetApplicationTaskTag
 #define RTOS_TASK_GET_CURRENT_TASK_HANDLE            	 xTaskGetCurrentTaskHandle
@@ -579,9 +429,13 @@
 #define RTOS_TASK_GET_IDLE_TASK_HANDLE               	 xTaskGetIdleTaskHandle
 #define RTOS_TASK_GET_INFO                           	 vTaskGetInfo
 #define RTOS_TASK_GET_NAME                           	 pcTaskGetName
+#define RTOS_TASK_GET_NUMBER_OF_TASKS                	 uxTaskGetNumberOfTasks
 #define RTOS_TASK_GET_RUN_TIME_STATS                 	 vTaskGetRunTimeStats
 #define RTOS_TASK_GET_SCHEDULER_STATE                	 xTaskGetSchedulerState
+#define RTOS_TASK_GET_STACK_HIGH_WATER_MARK          	 uxTaskGetStackHighWaterMark
+#define RTOS_TASK_GET_STACK_HIGH_WATER_MARK2         	 uxTaskGetStackHighWaterMark2
 #define RTOS_TASK_GET_STATE                          	 eTaskGetState
+#define RTOS_TASK_GET_SYSTEM_STATE                   	 uxTaskGetSystemState
 /* from FreeRTOS.h */
 #define RTOS_TASK_GET_TASK_INFO                      	 vTaskGetTaskInfo
 #define RTOS_TASK_GET_TASK_NAME                      	 pcTaskGetTaskName
@@ -592,30 +446,11 @@
 #define RTOS_TASK_HOOK_CODE                          	 pdTASK_HOOK_CODE
 /* from mpu_wrappers.h */
 #define RTOS_TASK_LIST                               	 vTaskList
-/* from task.h */
-#define RTOS_TASK_NOTIFY                             	 xTaskNotify
-#define RTOS_TASK_NOTIFY_AND_QUERY                   	 xTaskNotifyAndQuery
-#define RTOS_TASK_NOTIFY_AND_QUERY_FROM_ISR          	 xTaskNotifyAndQueryFromISR
-#define RTOS_TASK_NOTIFY_AND_QUERY_INDEXED           	 xTaskNotifyAndQueryIndexed
-#define RTOS_TASK_NOTIFY_AND_QUERY_INDEXED_FROM_ISR  	 xTaskNotifyAndQueryIndexedFromISR
-#define RTOS_TASK_NOTIFY_FROM_ISR                    	 xTaskNotifyFromISR
-#define RTOS_TASK_NOTIFY_GIVE                        	 xTaskNotifyGive
-#define RTOS_TASK_NOTIFY_GIVE_FROM_ISR               	 vTaskNotifyGiveFromISR
-#define RTOS_TASK_NOTIFY_GIVE_INDEXED                	 xTaskNotifyGiveIndexed
-#define RTOS_TASK_NOTIFY_GIVE_INDEXED_FROM_ISR       	 vTaskNotifyGiveIndexedFromISR
-#define RTOS_TASK_NOTIFY_INDEXED                     	 xTaskNotifyIndexed
-#define RTOS_TASK_NOTIFY_INDEXED_FROM_ISR            	 xTaskNotifyIndexedFromISR
-#define RTOS_TASK_NOTIFY_STATE_CLEAR                 	 xTaskNotifyStateClear
-#define RTOS_TASK_NOTIFY_STATE_CLEAR_INDEXED         	 xTaskNotifyStateClearIndexed
-#define RTOS_TASK_NOTIFY_WAIT                        	 xTaskNotifyWait
-#define RTOS_TASK_NOTIFY_WAIT_INDEXED                	 xTaskNotifyWaitIndexed
 /* from FreeRTOS.h */
 #define RTOS_TASK_PARAMETERS                         	 xTaskParameters
 /* from mpu_wrappers.h */
+#define RTOS_TASK_PRIORITY_GET                       	 uxTaskPriorityGet
 #define RTOS_TASK_PRIORITY_SET                       	 vTaskPrioritySet
-/* from task.h */
-#define RTOS_TASK_RESTORE_INTERRUPTS                 	 taskRESTORE_INTERRUPTS
-/* from mpu_wrappers.h */
 #define RTOS_TASK_RESUME                             	 vTaskResume
 #define RTOS_TASK_RESUME_ALL                         	 xTaskResumeAll
 /* from task.h */
@@ -632,23 +467,16 @@
 /* from mpu_wrappers.h */
 #define RTOS_TASK_SUSPEND                            	 vTaskSuspend
 #define RTOS_TASK_SUSPEND_ALL                        	 vTaskSuspendAll
-/* from task.h */
-#define RTOS_TASK_VALID_CORE_ID                      	 taskVALID_CORE_ID
-#define RTOS_TASK_YIELD                              	 taskYIELD
 /* from timers.h */
 #define RTOS_TIMERS_H                                	 TIMERS_H
-#define RTOS_TIMER_CHANGE_PERIOD                     	 xTimerChangePeriod
-#define RTOS_TIMER_CHANGE_PERIOD_FROM_ISR            	 xTimerChangePeriodFromISR
 /* from mpu_wrappers.h */
 #define RTOS_TIMER_CREATE                            	 xTimerCreate
 #define RTOS_TIMER_CREATE_STATIC                     	 xTimerCreateStatic
-/* from timers.h */
-#define RTOS_TIMER_DELETE                            	 xTimerDelete
 #define RTOS_TIMER_GENERIC_COMMAND                   	 xTimerGenericCommand
-/* from mpu_wrappers.h */
 #define RTOS_TIMER_GET_EXPIRY_TIME                   	 xTimerGetExpiryTime
 #define RTOS_TIMER_GET_NAME                          	 pcTimerGetName
 #define RTOS_TIMER_GET_PERIOD                        	 xTimerGetPeriod
+#define RTOS_TIMER_GET_RELOAD_MODE                   	 uxTimerGetReloadMode
 #define RTOS_TIMER_GET_TIMER_DAEMON_TASK_HANDLE      	 xTimerGetTimerDaemonTaskHandle
 /* from FreeRTOS.h */
 #define RTOS_TIMER_GET_TIMER_NAME                    	 pcTimerGetTimerName
@@ -656,17 +484,8 @@
 /* from mpu_wrappers.h */
 #define RTOS_TIMER_IS_TIMER_ACTIVE                   	 xTimerIsTimerActive
 #define RTOS_TIMER_PEND_FUNCTION_CALL                	 xTimerPendFunctionCall
-/* from timers.h */
-#define RTOS_TIMER_RESET                             	 xTimerReset
-#define RTOS_TIMER_RESET_FROM_ISR                    	 xTimerResetFromISR
-/* from mpu_wrappers.h */
 #define RTOS_TIMER_SET_RELOAD_MODE                   	 vTimerSetReloadMode
 #define RTOS_TIMER_SET_TIMER_ID                      	 vTimerSetTimerID
-/* from timers.h */
-#define RTOS_TIMER_START                             	 xTimerStart
-#define RTOS_TIMER_START_FROM_ISR                    	 xTimerStartFromISR
-#define RTOS_TIMER_STOP                              	 xTimerStop
-#define RTOS_TIMER_STOP_FROM_ISR                     	 xTimerStopFromISR
 /* from FreeRTOS.h */
 #define RTOS_TIME_OUT_TYPE                           	 xTimeOutType
 /* from timers.h */
@@ -685,95 +504,7 @@
 #define RTOS_TMR_FIRST_FROM_ISR_COMMAND              	 tmrFIRST_FROM_ISR_COMMAND
 /* from FreeRTOS.h */
 #define RTOS_TMR_TIMER_CALLBACK                      	 tmrTIMER_CALLBACK
-#define RTOS_TRACE_BLOCKING_ON_QUEUE_PEEK            	 traceBLOCKING_ON_QUEUE_PEEK
-#define RTOS_TRACE_BLOCKING_ON_QUEUE_RECEIVE         	 traceBLOCKING_ON_QUEUE_RECEIVE
-#define RTOS_TRACE_BLOCKING_ON_QUEUE_SEND            	 traceBLOCKING_ON_QUEUE_SEND
-#define RTOS_TRACE_BLOCKING_ON_STREAM_BUFFER_RECEIVE 	 traceBLOCKING_ON_STREAM_BUFFER_RECEIVE
-#define RTOS_TRACE_BLOCKING_ON_STREAM_BUFFER_SEND    	 traceBLOCKING_ON_STREAM_BUFFER_SEND
-#define RTOS_TRACE_CREATE_COUNTING_SEMAPHORE         	 traceCREATE_COUNTING_SEMAPHORE
-#define RTOS_TRACE_CREATE_COUNTING_SEMAPHORE_FAILED  	 traceCREATE_COUNTING_SEMAPHORE_FAILED
-#define RTOS_TRACE_CREATE_MUTEX                      	 traceCREATE_MUTEX
-#define RTOS_TRACE_CREATE_MUTEX_FAILED               	 traceCREATE_MUTEX_FAILED
-#define RTOS_TRACE_END                               	 traceEND
-#define RTOS_TRACE_EVENT_GROUP_CLEAR_BITS            	 traceEVENT_GROUP_CLEAR_BITS
-#define RTOS_TRACE_EVENT_GROUP_CLEAR_BITS_FROM_ISR   	 traceEVENT_GROUP_CLEAR_BITS_FROM_ISR
-#define RTOS_TRACE_EVENT_GROUP_CREATE                	 traceEVENT_GROUP_CREATE
-#define RTOS_TRACE_EVENT_GROUP_CREATE_FAILED         	 traceEVENT_GROUP_CREATE_FAILED
-#define RTOS_TRACE_EVENT_GROUP_DELETE                	 traceEVENT_GROUP_DELETE
-#define RTOS_TRACE_EVENT_GROUP_SET_BITS              	 traceEVENT_GROUP_SET_BITS
-#define RTOS_TRACE_EVENT_GROUP_SET_BITS_FROM_ISR     	 traceEVENT_GROUP_SET_BITS_FROM_ISR
-#define RTOS_TRACE_EVENT_GROUP_SYNC_BLOCK            	 traceEVENT_GROUP_SYNC_BLOCK
-#define RTOS_TRACE_EVENT_GROUP_SYNC_END              	 traceEVENT_GROUP_SYNC_END
-#define RTOS_TRACE_EVENT_GROUP_WAIT_BITS_BLOCK       	 traceEVENT_GROUP_WAIT_BITS_BLOCK
-#define RTOS_TRACE_EVENT_GROUP_WAIT_BITS_END         	 traceEVENT_GROUP_WAIT_BITS_END
-#define RTOS_TRACE_FREE                              	 traceFREE
-#define RTOS_TRACE_GIVE_MUTEX_RECURSIVE              	 traceGIVE_MUTEX_RECURSIVE
-#define RTOS_TRACE_GIVE_MUTEX_RECURSIVE_FAILED       	 traceGIVE_MUTEX_RECURSIVE_FAILED
-#define RTOS_TRACE_INCREASE_TICK_COUNT               	 traceINCREASE_TICK_COUNT
-#define RTOS_TRACE_LOW_POWER_IDLE_BEGIN              	 traceLOW_POWER_IDLE_BEGIN
-#define RTOS_TRACE_LOW_POWER_IDLE_END                	 traceLOW_POWER_IDLE_END
-#define RTOS_TRACE_MALLOC                            	 traceMALLOC
-#define RTOS_TRACE_MOVED_TASK_TO_READY_STATE         	 traceMOVED_TASK_TO_READY_STATE
-#define RTOS_TRACE_PEND_FUNC_CALL                    	 tracePEND_FUNC_CALL
-#define RTOS_TRACE_PEND_FUNC_CALL_FROM_ISR           	 tracePEND_FUNC_CALL_FROM_ISR
-#define RTOS_TRACE_POST_MOVED_TASK_TO_READY_STATE    	 tracePOST_MOVED_TASK_TO_READY_STATE
-#define RTOS_TRACE_QUEUE_CREATE                      	 traceQUEUE_CREATE
-#define RTOS_TRACE_QUEUE_CREATE_FAILED               	 traceQUEUE_CREATE_FAILED
-#define RTOS_TRACE_QUEUE_DELETE                      	 traceQUEUE_DELETE
-#define RTOS_TRACE_QUEUE_PEEK                        	 traceQUEUE_PEEK
-#define RTOS_TRACE_QUEUE_PEEK_FAILED                 	 traceQUEUE_PEEK_FAILED
-#define RTOS_TRACE_QUEUE_PEEK_FROM_ISR               	 traceQUEUE_PEEK_FROM_ISR
-#define RTOS_TRACE_QUEUE_PEEK_FROM_ISR_FAILED        	 traceQUEUE_PEEK_FROM_ISR_FAILED
-#define RTOS_TRACE_QUEUE_RECEIVE                     	 traceQUEUE_RECEIVE
-#define RTOS_TRACE_QUEUE_RECEIVE_FAILED              	 traceQUEUE_RECEIVE_FAILED
-#define RTOS_TRACE_QUEUE_RECEIVE_FROM_ISR            	 traceQUEUE_RECEIVE_FROM_ISR
-#define RTOS_TRACE_QUEUE_RECEIVE_FROM_ISR_FAILED     	 traceQUEUE_RECEIVE_FROM_ISR_FAILED
-#define RTOS_TRACE_QUEUE_REGISTRY_ADD                	 traceQUEUE_REGISTRY_ADD
-#define RTOS_TRACE_QUEUE_SEND                        	 traceQUEUE_SEND
-#define RTOS_TRACE_QUEUE_SEND_FAILED                 	 traceQUEUE_SEND_FAILED
-#define RTOS_TRACE_QUEUE_SEND_FROM_ISR               	 traceQUEUE_SEND_FROM_ISR
-#define RTOS_TRACE_QUEUE_SEND_FROM_ISR_FAILED        	 traceQUEUE_SEND_FROM_ISR_FAILED
 #define RTOS_TRACE_QUEUE_SET_SEND                    	 traceQUEUE_SET_SEND
-#define RTOS_TRACE_START                             	 traceSTART
-#define RTOS_TRACE_STREAM_BUFFER_CREATE              	 traceSTREAM_BUFFER_CREATE
-#define RTOS_TRACE_STREAM_BUFFER_CREATE_FAILED       	 traceSTREAM_BUFFER_CREATE_FAILED
-#define RTOS_TRACE_STREAM_BUFFER_CREATE_STATIC_FAILED 	 traceSTREAM_BUFFER_CREATE_STATIC_FAILED
-#define RTOS_TRACE_STREAM_BUFFER_DELETE              	 traceSTREAM_BUFFER_DELETE
-#define RTOS_TRACE_STREAM_BUFFER_RECEIVE             	 traceSTREAM_BUFFER_RECEIVE
-#define RTOS_TRACE_STREAM_BUFFER_RECEIVE_FAILED      	 traceSTREAM_BUFFER_RECEIVE_FAILED
-#define RTOS_TRACE_STREAM_BUFFER_RECEIVE_FROM_ISR    	 traceSTREAM_BUFFER_RECEIVE_FROM_ISR
-#define RTOS_TRACE_STREAM_BUFFER_RESET               	 traceSTREAM_BUFFER_RESET
-#define RTOS_TRACE_STREAM_BUFFER_SEND                	 traceSTREAM_BUFFER_SEND
-#define RTOS_TRACE_STREAM_BUFFER_SEND_FAILED         	 traceSTREAM_BUFFER_SEND_FAILED
-#define RTOS_TRACE_STREAM_BUFFER_SEND_FROM_ISR       	 traceSTREAM_BUFFER_SEND_FROM_ISR
-#define RTOS_TRACE_TAKE_MUTEX_RECURSIVE              	 traceTAKE_MUTEX_RECURSIVE
-#define RTOS_TRACE_TAKE_MUTEX_RECURSIVE_FAILED       	 traceTAKE_MUTEX_RECURSIVE_FAILED
-#define RTOS_TRACE_TASK_CREATE                       	 traceTASK_CREATE
-#define RTOS_TRACE_TASK_CREATE_FAILED                	 traceTASK_CREATE_FAILED
-#define RTOS_TRACE_TASK_DELAY                        	 traceTASK_DELAY
-#define RTOS_TRACE_TASK_DELAY_UNTIL                  	 traceTASK_DELAY_UNTIL
-#define RTOS_TRACE_TASK_DELETE                       	 traceTASK_DELETE
-#define RTOS_TRACE_TASK_INCREMENT_TICK               	 traceTASK_INCREMENT_TICK
-#define RTOS_TRACE_TASK_NOTIFY                       	 traceTASK_NOTIFY
-#define RTOS_TRACE_TASK_NOTIFY_FROM_ISR              	 traceTASK_NOTIFY_FROM_ISR
-#define RTOS_TRACE_TASK_NOTIFY_GIVE_FROM_ISR         	 traceTASK_NOTIFY_GIVE_FROM_ISR
-#define RTOS_TRACE_TASK_NOTIFY_TAKE                  	 traceTASK_NOTIFY_TAKE
-#define RTOS_TRACE_TASK_NOTIFY_TAKE_BLOCK            	 traceTASK_NOTIFY_TAKE_BLOCK
-#define RTOS_TRACE_TASK_NOTIFY_WAIT                  	 traceTASK_NOTIFY_WAIT
-#define RTOS_TRACE_TASK_NOTIFY_WAIT_BLOCK            	 traceTASK_NOTIFY_WAIT_BLOCK
-#define RTOS_TRACE_TASK_PRIORITY_DISINHERIT          	 traceTASK_PRIORITY_DISINHERIT
-#define RTOS_TRACE_TASK_PRIORITY_INHERIT             	 traceTASK_PRIORITY_INHERIT
-#define RTOS_TRACE_TASK_PRIORITY_SET                 	 traceTASK_PRIORITY_SET
-#define RTOS_TRACE_TASK_RESUME                       	 traceTASK_RESUME
-#define RTOS_TRACE_TASK_RESUME_FROM_ISR              	 traceTASK_RESUME_FROM_ISR
-#define RTOS_TRACE_TASK_SUSPEND                      	 traceTASK_SUSPEND
-#define RTOS_TRACE_TASK_SWITCHED_IN                  	 traceTASK_SWITCHED_IN
-#define RTOS_TRACE_TASK_SWITCHED_OUT                 	 traceTASK_SWITCHED_OUT
-#define RTOS_TRACE_TIMER_COMMAND_RECEIVED            	 traceTIMER_COMMAND_RECEIVED
-#define RTOS_TRACE_TIMER_COMMAND_SEND                	 traceTIMER_COMMAND_SEND
-#define RTOS_TRACE_TIMER_CREATE                      	 traceTIMER_CREATE
-#define RTOS_TRACE_TIMER_CREATE_FAILED               	 traceTIMER_CREATE_FAILED
-#define RTOS_TRACE_TIMER_EXPIRED                     	 traceTIMER_EXPIRED
 /* from projdefs.h */
 #define RTOS_TRUE                                    	 pdTRUE
 /* from task.h */
@@ -791,27 +522,292 @@
 #define RTOS_TSK_NO_AFFINITY                         	 tskNO_AFFINITY
 /* from FreeRTOS.h */
 #define RTOS_TSK_STATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE 	 tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE
+#define _RTOS_INCLUDE_TASK_DELAY_UNTIL               	 INCLUDE_xTaskDelayUntil
 /* from mpu_wrappers.h */
-#define RTOS_UL_TASK_GENERIC_NOTIFY_TAKE             	 ulTaskGenericNotifyTake
-#define RTOS_UL_TASK_GENERIC_NOTIFY_VALUE_CLEAR      	 ulTaskGenericNotifyValueClear
-#define RTOS_UL_TASK_GET_IDLE_RUN_TIME_COUNTER       	 ulTaskGetIdleRunTimeCounter
-/* from task.h */
-#define RTOS_UL_TASK_NOTIFY_TAKE                     	 ulTaskNotifyTake
-#define RTOS_UL_TASK_NOTIFY_TAKE_INDEXED             	 ulTaskNotifyTakeIndexed
-#define RTOS_UL_TASK_NOTIFY_VALUE_CLEAR              	 ulTaskNotifyValueClear
-#define RTOS_UL_TASK_NOTIFY_VALUE_CLEAR_INDEXED      	 ulTaskNotifyValueClearIndexed
-/* from mpu_wrappers.h */
-#define RTOS_UX_QUEUE_MESSAGES_WAITING               	 uxQueueMessagesWaiting
-#define RTOS_UX_QUEUE_SPACES_AVAILABLE               	 uxQueueSpacesAvailable
+#define _RTOS_TASK_GET_IDLE_RUN_TIME_COUNTER         	 ulTaskGetIdleRunTimeCounter
+/* from atomic.h */
+#define rtos_atomic_enter_critical                   	 ATOMIC_ENTER_CRITICAL
+#define rtos_atomic_exit_critical                    	 ATOMIC_EXIT_CRITICAL
+/* from FreeRTOS.h */
+#define rtos_config_assert                           	 configASSERT
+#define rtos_config_max                              	 configMAX
+#define rtos_config_min                              	 configMIN
+#define rtos_config_post_sleep_processing            	 configPOST_SLEEP_PROCESSING
+#define rtos_config_pre_sleep_processing             	 configPRE_SLEEP_PROCESSING
+#define rtos_config_pre_suppress_ticks_and_sleep_processing 	 configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING
+#define rtos_config_precondition                     	 configPRECONDITION
+#define rtos_config_printf                           	 configPRINTF
+/* from croutine.h */
+#define rtos_cr_delay                                	 crDELAY
+#define rtos_cr_end                                  	 crEND
+#define rtos_cr_queue_receive                        	 crQUEUE_RECEIVE
+#define rtos_cr_queue_receive_from_isr               	 crQUEUE_RECEIVE_FROM_ISR
+#define rtos_cr_queue_send                           	 crQUEUE_SEND
+#define rtos_cr_queue_send_from_isr                  	 crQUEUE_SEND_FROM_ISR
+#define rtos_cr_set_state0                           	 crSET_STATE0
+#define rtos_cr_set_state1                           	 crSET_STATE1
+#define rtos_cr_start                                	 crSTART
+/* from event_groups.h */
+#define rtos_event_group_get_bits                    	 xEventGroupGetBits
+/* from list.h */
+#define rtos_list_current_list_length                	 listCURRENT_LIST_LENGTH
+#define rtos_list_get_end_marker                     	 listGET_END_MARKER
+#define rtos_list_get_head_entry                     	 listGET_HEAD_ENTRY
+#define rtos_list_get_item_value_of_head_entry       	 listGET_ITEM_VALUE_OF_HEAD_ENTRY
+#define rtos_list_get_list_item_owner                	 listGET_LIST_ITEM_OWNER
+#define rtos_list_get_list_item_value                	 listGET_LIST_ITEM_VALUE
+#define rtos_list_get_next                           	 listGET_NEXT
+#define rtos_list_get_owner_of_head_entry            	 listGET_OWNER_OF_HEAD_ENTRY
+#define rtos_list_get_owner_of_next_entry            	 listGET_OWNER_OF_NEXT_ENTRY
+#define rtos_list_is_contained_within                	 listIS_CONTAINED_WITHIN
+#define rtos_list_list_is_empty                      	 listLIST_IS_EMPTY
+#define rtos_list_list_is_initialised                	 listLIST_IS_INITIALISED
+#define rtos_list_list_item_container                	 listLIST_ITEM_CONTAINER
+#define rtos_list_set_first_list_item_integrity_check_value 	 listSET_FIRST_LIST_ITEM_INTEGRITY_CHECK_VALUE
+#define rtos_list_set_list_integrity_check_1_value   	 listSET_LIST_INTEGRITY_CHECK_1_VALUE
+#define rtos_list_set_list_integrity_check_2_value   	 listSET_LIST_INTEGRITY_CHECK_2_VALUE
+#define rtos_list_set_list_item_owner                	 listSET_LIST_ITEM_OWNER
+#define rtos_list_set_list_item_value                	 listSET_LIST_ITEM_VALUE
+#define rtos_list_set_second_list_item_integrity_check_value 	 listSET_SECOND_LIST_ITEM_INTEGRITY_CHECK_VALUE
+#define rtos_list_test_list_integrity                	 listTEST_LIST_INTEGRITY
+#define rtos_list_test_list_item_integrity           	 listTEST_LIST_ITEM_INTEGRITY
+/* from message_buffer.h */
+#define rtos_message_buffer_create                   	 xMessageBufferCreate
+#define rtos_message_buffer_create_static            	 xMessageBufferCreateStatic
+#define rtos_message_buffer_delete                   	 vMessageBufferDelete
+#define rtos_message_buffer_is_empty                 	 xMessageBufferIsEmpty
+#define rtos_message_buffer_is_full                  	 xMessageBufferIsFull
+#define rtos_message_buffer_next_length_bytes        	 xMessageBufferNextLengthBytes
+#define rtos_message_buffer_receive                  	 xMessageBufferReceive
+#define rtos_message_buffer_receive_completed_from_isr 	 xMessageBufferReceiveCompletedFromISR
+#define rtos_message_buffer_receive_from_isr         	 xMessageBufferReceiveFromISR
+#define rtos_message_buffer_reset                    	 xMessageBufferReset
+#define rtos_message_buffer_send                     	 xMessageBufferSend
+#define rtos_message_buffer_send_completed_from_isr  	 xMessageBufferSendCompletedFromISR
+#define rtos_message_buffer_send_from_isr            	 xMessageBufferSendFromISR
+#define rtos_message_buffer_space_available          	 xMessageBufferSpaceAvailable
+#define rtos_message_buffer_spaces_available         	 xMessageBufferSpacesAvailable
+/* from projdefs.h */
+#define rtos_ms_to_ticks                             	 pdMS_TO_TICKS
+/* from FreeRTOS.h */
+#define rtos_mt_coverage_test_delay                  	 mtCOVERAGE_TEST_DELAY
+#define rtos_mt_coverage_test_marker                 	 mtCOVERAGE_TEST_MARKER
+#define rtos_port_allocate_secure_context            	 portALLOCATE_SECURE_CONTEXT
+#define rtos_port_assert_if_in_isr                   	 portASSERT_IF_IN_ISR
+#define rtos_port_assert_if_interrupt_priority_invalid 	 portASSERT_IF_INTERRUPT_PRIORITY_INVALID
+/* from portmacro.h */
+#define rtos_port_check_if_in_isr                    	 portCHECK_IF_IN_ISR
+/* from FreeRTOS.h */
+#define rtos_port_clean_up_tcb                       	 portCLEAN_UP_TCB
+/* from portmacro.h */
+#define rtos_port_clear_interrupt_mask_from_isr      	 portCLEAR_INTERRUPT_MASK_FROM_ISR
+/* from FreeRTOS.h */
+#define rtos_port_configure_timer_for_run_time_stats 	 portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+/* from portmacro.h */
+#define rtos_port_disable_interrupts                 	 portDISABLE_INTERRUPTS
+#define rtos_port_enable_interrupts                  	 portENABLE_INTERRUPTS
+#define rtos_port_end_switching_isr                  	 portEND_SWITCHING_ISR
+#define rtos_port_get_core_id                        	 portGET_CORE_ID
+#define rtos_port_get_isr_lock                       	 portGET_ISR_LOCK
+#define rtos_port_get_task_lock                      	 portGET_TASK_LOCK
+#define rtos_port_memory_barrier                     	 portMEMORY_BARRIER
+#define rtos_port_nop                                	 portNOP
+/* from FreeRTOS.h */
+#define rtos_port_pre_task_delete_hook               	 portPRE_TASK_DELETE_HOOK
+/* from portmacro.h */
+#define rtos_port_release_isr_lock                   	 portRELEASE_ISR_LOCK
+#define rtos_port_release_task_lock                  	 portRELEASE_TASK_LOCK
+#define rtos_port_restore_interrupts                 	 portRESTORE_INTERRUPTS
+#define rtos_port_set_interrupt_mask_from_isr        	 portSET_INTERRUPT_MASK_FROM_ISR
+/* from FreeRTOS.h */
+#define rtos_port_setup_tcb                          	 portSETUP_TCB
+#define rtos_port_software_barrier                   	 portSOFTWARE_BARRIER
+/* from portmacro.h */
+#define rtos_port_task_function                      	 portTASK_FUNCTION
+#define rtos_port_task_function_proto                	 portTASK_FUNCTION_PROTO
+/* from FreeRTOS.h */
+#define rtos_port_task_uses_floating_point           	 portTASK_USES_FLOATING_POINT
+#define rtos_port_tick_type_clear_interrupt_mask_from_isr 	 portTICK_TYPE_CLEAR_INTERRUPT_MASK_FROM_ISR
+#define rtos_port_tick_type_enter_critical           	 portTICK_TYPE_ENTER_CRITICAL
+#define rtos_port_tick_type_exit_critical            	 portTICK_TYPE_EXIT_CRITICAL
+#define rtos_port_tick_type_set_interrupt_mask_from_isr 	 portTICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR
+/* from portmacro.h */
+#define rtos_port_yield_core                         	 portYIELD_CORE
+#define rtos_port_yield_from_isr                     	 portYIELD_FROM_ISR
+/* from FreeRTOS.h */
+#define rtos_queue_add_to_registry                   	 vQueueAddToRegistry
+/* from queue.h */
+#define rtos_queue_create                            	 xQueueCreate
+#define rtos_queue_create_static                     	 xQueueCreateStatic
+/* from FreeRTOS.h */
+#define rtos_queue_get_name                          	 pcQueueGetName
+/* from queue.h */
+#define rtos_queue_overwrite                         	 xQueueOverwrite
+#define rtos_queue_overwrite_from_isr                	 xQueueOverwriteFromISR
+#define rtos_queue_reset                             	 xQueueReset
+#define rtos_queue_send                              	 xQueueSend
+#define rtos_queue_send_from_isr                     	 xQueueSendFromISR
+#define rtos_queue_send_to_back                      	 xQueueSendToBack
+#define rtos_queue_send_to_back_from_isr             	 xQueueSendToBackFromISR
+#define rtos_queue_send_to_front                     	 xQueueSendToFront
+#define rtos_queue_send_to_front_from_isr            	 xQueueSendToFrontFromISR
+/* from FreeRTOS.h */
+#define rtos_queue_unregister_queue                  	 vQueueUnregisterQueue
 /* from semphr.h */
-#define RTOS_UX_SEMAPHORE_GET_COUNT                  	 uxSemaphoreGetCount
-/* from mpu_wrappers.h */
-#define RTOS_UX_TASK_GET_NUMBER_OF_TASKS             	 uxTaskGetNumberOfTasks
-#define RTOS_UX_TASK_GET_STACK_HIGH_WATER_MARK       	 uxTaskGetStackHighWaterMark
-#define RTOS_UX_TASK_GET_STACK_HIGH_WATER_MARK2      	 uxTaskGetStackHighWaterMark2
-#define RTOS_UX_TASK_GET_SYSTEM_STATE                	 uxTaskGetSystemState
-#define RTOS_UX_TASK_PRIORITY_GET                    	 uxTaskPriorityGet
-#define RTOS_UX_TIMER_GET_RELOAD_MODE                	 uxTimerGetReloadMode
+#define rtos_semaphore_create_binary                 	 xSemaphoreCreateBinary
+#define rtos_semaphore_create_binary_static          	 xSemaphoreCreateBinaryStatic
+#define rtos_semaphore_create_counting               	 xSemaphoreCreateCounting
+#define rtos_semaphore_create_counting_static        	 xSemaphoreCreateCountingStatic
+#define rtos_semaphore_create_mutex                  	 xSemaphoreCreateMutex
+#define rtos_semaphore_create_mutex_static           	 xSemaphoreCreateMutexStatic
+#define rtos_semaphore_create_recursive_mutex        	 xSemaphoreCreateRecursiveMutex
+#define rtos_semaphore_create_recursive_mutex_static 	 xSemaphoreCreateRecursiveMutexStatic
+#define rtos_semaphore_delete                        	 vSemaphoreDelete
+#define rtos_semaphore_get_count                     	 uxSemaphoreGetCount
+#define rtos_semaphore_get_mutex_holder              	 xSemaphoreGetMutexHolder
+#define rtos_semaphore_get_mutex_holder_from_isr     	 xSemaphoreGetMutexHolderFromISR
+#define rtos_semaphore_give                          	 xSemaphoreGive
+#define rtos_semaphore_give_from_isr                 	 xSemaphoreGiveFromISR
+#define rtos_semaphore_give_recursive                	 xSemaphoreGiveRecursive
+#define rtos_semaphore_take                          	 xSemaphoreTake
+#define rtos_semaphore_take_from_isr                 	 xSemaphoreTakeFromISR
+#define rtos_semaphore_take_recursive                	 xSemaphoreTakeRecursive
+/* from stream_buffer.h */
+#define rtos_stream_buffer_create                    	 xStreamBufferCreate
+#define rtos_stream_buffer_create_static             	 xStreamBufferCreateStatic
+/* from stack_macros.h */
+#define rtos_task_check_for_stack_overflow           	 taskCHECK_FOR_STACK_OVERFLOW
+/* from task.h */
+#define rtos_task_check_if_in_isr                    	 taskCHECK_IF_IN_ISR
+#define rtos_task_disable_interrupts                 	 taskDISABLE_INTERRUPTS
+#define rtos_task_enable_interrupts                  	 taskENABLE_INTERRUPTS
+#define rtos_task_enter_critical                     	 taskENTER_CRITICAL
+#define rtos_task_enter_critical_from_isr            	 taskENTER_CRITICAL_FROM_ISR
+#define rtos_task_exit_critical                      	 taskEXIT_CRITICAL
+#define rtos_task_exit_critical_from_isr             	 taskEXIT_CRITICAL_FROM_ISR
+#define rtos_task_notify                             	 xTaskNotify
+#define rtos_task_notify_and_query                   	 xTaskNotifyAndQuery
+#define rtos_task_notify_and_query_from_isr          	 xTaskNotifyAndQueryFromISR
+#define rtos_task_notify_and_query_indexed           	 xTaskNotifyAndQueryIndexed
+#define rtos_task_notify_and_query_indexed_from_isr  	 xTaskNotifyAndQueryIndexedFromISR
+#define rtos_task_notify_from_isr                    	 xTaskNotifyFromISR
+#define rtos_task_notify_give                        	 xTaskNotifyGive
+#define rtos_task_notify_give_from_isr               	 vTaskNotifyGiveFromISR
+#define rtos_task_notify_give_indexed                	 xTaskNotifyGiveIndexed
+#define rtos_task_notify_give_indexed_from_isr       	 vTaskNotifyGiveIndexedFromISR
+#define rtos_task_notify_indexed                     	 xTaskNotifyIndexed
+#define rtos_task_notify_indexed_from_isr            	 xTaskNotifyIndexedFromISR
+#define rtos_task_notify_state_clear                 	 xTaskNotifyStateClear
+#define rtos_task_notify_state_clear_indexed         	 xTaskNotifyStateClearIndexed
+#define rtos_task_notify_take                        	 ulTaskNotifyTake
+#define rtos_task_notify_take_indexed                	 ulTaskNotifyTakeIndexed
+#define rtos_task_notify_value_clear                 	 ulTaskNotifyValueClear
+#define rtos_task_notify_value_clear_indexed         	 ulTaskNotifyValueClearIndexed
+#define rtos_task_notify_wait                        	 xTaskNotifyWait
+#define rtos_task_notify_wait_indexed                	 xTaskNotifyWaitIndexed
+#define rtos_task_restore_interrupts                 	 taskRESTORE_INTERRUPTS
+#define rtos_task_valid_core_id                      	 taskVALID_CORE_ID
+#define rtos_task_yield                              	 taskYIELD
+/* from timers.h */
+#define rtos_timer_change_period                     	 xTimerChangePeriod
+#define rtos_timer_change_period_from_isr            	 xTimerChangePeriodFromISR
+#define rtos_timer_delete                            	 xTimerDelete
+#define rtos_timer_generic_command                   	 xTimerGenericCommand
+#define rtos_timer_reset                             	 xTimerReset
+#define rtos_timer_reset_from_isr                    	 xTimerResetFromISR
+#define rtos_timer_start                             	 xTimerStart
+#define rtos_timer_start_from_isr                    	 xTimerStartFromISR
+#define rtos_timer_stop                              	 xTimerStop
+#define rtos_timer_stop_from_isr                     	 xTimerStopFromISR
+/* from FreeRTOS.h */
+#define rtos_trace_blocking_on_queue_peek            	 traceBLOCKING_ON_QUEUE_PEEK
+#define rtos_trace_blocking_on_queue_receive         	 traceBLOCKING_ON_QUEUE_RECEIVE
+#define rtos_trace_blocking_on_queue_send            	 traceBLOCKING_ON_QUEUE_SEND
+#define rtos_trace_blocking_on_stream_buffer_receive 	 traceBLOCKING_ON_STREAM_BUFFER_RECEIVE
+#define rtos_trace_blocking_on_stream_buffer_send    	 traceBLOCKING_ON_STREAM_BUFFER_SEND
+#define rtos_trace_create_counting_semaphore         	 traceCREATE_COUNTING_SEMAPHORE
+#define rtos_trace_create_counting_semaphore_failed  	 traceCREATE_COUNTING_SEMAPHORE_FAILED
+#define rtos_trace_create_mutex                      	 traceCREATE_MUTEX
+#define rtos_trace_create_mutex_failed               	 traceCREATE_MUTEX_FAILED
+#define rtos_trace_end                               	 traceEND
+#define rtos_trace_event_group_clear_bits            	 traceEVENT_GROUP_CLEAR_BITS
+#define rtos_trace_event_group_clear_bits_from_isr   	 traceEVENT_GROUP_CLEAR_BITS_FROM_ISR
+#define rtos_trace_event_group_create                	 traceEVENT_GROUP_CREATE
+#define rtos_trace_event_group_create_failed         	 traceEVENT_GROUP_CREATE_FAILED
+#define rtos_trace_event_group_delete                	 traceEVENT_GROUP_DELETE
+#define rtos_trace_event_group_set_bits              	 traceEVENT_GROUP_SET_BITS
+#define rtos_trace_event_group_set_bits_from_isr     	 traceEVENT_GROUP_SET_BITS_FROM_ISR
+#define rtos_trace_event_group_sync_block            	 traceEVENT_GROUP_SYNC_BLOCK
+#define rtos_trace_event_group_sync_end              	 traceEVENT_GROUP_SYNC_END
+#define rtos_trace_event_group_wait_bits_block       	 traceEVENT_GROUP_WAIT_BITS_BLOCK
+#define rtos_trace_event_group_wait_bits_end         	 traceEVENT_GROUP_WAIT_BITS_END
+#define rtos_trace_free                              	 traceFREE
+#define rtos_trace_give_mutex_recursive              	 traceGIVE_MUTEX_RECURSIVE
+#define rtos_trace_give_mutex_recursive_failed       	 traceGIVE_MUTEX_RECURSIVE_FAILED
+#define rtos_trace_increase_tick_count               	 traceINCREASE_TICK_COUNT
+#define rtos_trace_low_power_idle_begin              	 traceLOW_POWER_IDLE_BEGIN
+#define rtos_trace_low_power_idle_end                	 traceLOW_POWER_IDLE_END
+#define rtos_trace_malloc                            	 traceMALLOC
+#define rtos_trace_moved_task_to_ready_state         	 traceMOVED_TASK_TO_READY_STATE
+#define rtos_trace_pend_func_call                    	 tracePEND_FUNC_CALL
+#define rtos_trace_pend_func_call_from_isr           	 tracePEND_FUNC_CALL_FROM_ISR
+#define rtos_trace_post_moved_task_to_ready_state    	 tracePOST_MOVED_TASK_TO_READY_STATE
+#define rtos_trace_queue_create                      	 traceQUEUE_CREATE
+#define rtos_trace_queue_create_failed               	 traceQUEUE_CREATE_FAILED
+#define rtos_trace_queue_delete                      	 traceQUEUE_DELETE
+#define rtos_trace_queue_peek                        	 traceQUEUE_PEEK
+#define rtos_trace_queue_peek_failed                 	 traceQUEUE_PEEK_FAILED
+#define rtos_trace_queue_peek_from_isr               	 traceQUEUE_PEEK_FROM_ISR
+#define rtos_trace_queue_peek_from_isr_failed        	 traceQUEUE_PEEK_FROM_ISR_FAILED
+#define rtos_trace_queue_receive                     	 traceQUEUE_RECEIVE
+#define rtos_trace_queue_receive_failed              	 traceQUEUE_RECEIVE_FAILED
+#define rtos_trace_queue_receive_from_isr            	 traceQUEUE_RECEIVE_FROM_ISR
+#define rtos_trace_queue_receive_from_isr_failed     	 traceQUEUE_RECEIVE_FROM_ISR_FAILED
+#define rtos_trace_queue_registry_add                	 traceQUEUE_REGISTRY_ADD
+#define rtos_trace_queue_send                        	 traceQUEUE_SEND
+#define rtos_trace_queue_send_failed                 	 traceQUEUE_SEND_FAILED
+#define rtos_trace_queue_send_from_isr               	 traceQUEUE_SEND_FROM_ISR
+#define rtos_trace_queue_send_from_isr_failed        	 traceQUEUE_SEND_FROM_ISR_FAILED
+#define rtos_trace_start                             	 traceSTART
+#define rtos_trace_stream_buffer_create              	 traceSTREAM_BUFFER_CREATE
+#define rtos_trace_stream_buffer_create_failed       	 traceSTREAM_BUFFER_CREATE_FAILED
+#define rtos_trace_stream_buffer_create_static_failed 	 traceSTREAM_BUFFER_CREATE_STATIC_FAILED
+#define rtos_trace_stream_buffer_delete              	 traceSTREAM_BUFFER_DELETE
+#define rtos_trace_stream_buffer_receive             	 traceSTREAM_BUFFER_RECEIVE
+#define rtos_trace_stream_buffer_receive_failed      	 traceSTREAM_BUFFER_RECEIVE_FAILED
+#define rtos_trace_stream_buffer_receive_from_isr    	 traceSTREAM_BUFFER_RECEIVE_FROM_ISR
+#define rtos_trace_stream_buffer_reset               	 traceSTREAM_BUFFER_RESET
+#define rtos_trace_stream_buffer_send                	 traceSTREAM_BUFFER_SEND
+#define rtos_trace_stream_buffer_send_failed         	 traceSTREAM_BUFFER_SEND_FAILED
+#define rtos_trace_stream_buffer_send_from_isr       	 traceSTREAM_BUFFER_SEND_FROM_ISR
+#define rtos_trace_take_mutex_recursive              	 traceTAKE_MUTEX_RECURSIVE
+#define rtos_trace_take_mutex_recursive_failed       	 traceTAKE_MUTEX_RECURSIVE_FAILED
+#define rtos_trace_task_create                       	 traceTASK_CREATE
+#define rtos_trace_task_create_failed                	 traceTASK_CREATE_FAILED
+#define rtos_trace_task_delay                        	 traceTASK_DELAY
+#define rtos_trace_task_delay_until                  	 traceTASK_DELAY_UNTIL
+#define rtos_trace_task_delete                       	 traceTASK_DELETE
+#define rtos_trace_task_increment_tick               	 traceTASK_INCREMENT_TICK
+#define rtos_trace_task_notify                       	 traceTASK_NOTIFY
+#define rtos_trace_task_notify_from_isr              	 traceTASK_NOTIFY_FROM_ISR
+#define rtos_trace_task_notify_give_from_isr         	 traceTASK_NOTIFY_GIVE_FROM_ISR
+#define rtos_trace_task_notify_take                  	 traceTASK_NOTIFY_TAKE
+#define rtos_trace_task_notify_take_block            	 traceTASK_NOTIFY_TAKE_BLOCK
+#define rtos_trace_task_notify_wait                  	 traceTASK_NOTIFY_WAIT
+#define rtos_trace_task_notify_wait_block            	 traceTASK_NOTIFY_WAIT_BLOCK
+#define rtos_trace_task_priority_disinherit          	 traceTASK_PRIORITY_DISINHERIT
+#define rtos_trace_task_priority_inherit             	 traceTASK_PRIORITY_INHERIT
+#define rtos_trace_task_priority_set                 	 traceTASK_PRIORITY_SET
+#define rtos_trace_task_resume                       	 traceTASK_RESUME
+#define rtos_trace_task_resume_from_isr              	 traceTASK_RESUME_FROM_ISR
+#define rtos_trace_task_suspend                      	 traceTASK_SUSPEND
+#define rtos_trace_task_switched_in                  	 traceTASK_SWITCHED_IN
+#define rtos_trace_task_switched_out                 	 traceTASK_SWITCHED_OUT
+#define rtos_trace_timer_command_received            	 traceTIMER_COMMAND_RECEIVED
+#define rtos_trace_timer_command_send                	 traceTIMER_COMMAND_SEND
+#define rtos_trace_timer_create                      	 traceTIMER_CREATE
+#define rtos_trace_timer_create_failed               	 traceTIMER_CREATE_FAILED
+#define rtos_trace_timer_expired                     	 traceTIMER_EXPIRED
 
 
 /* typedefs */
@@ -904,11 +900,13 @@
 
 /* functions */
 /* from timers.h */
-#define rtos___assert                                	 __assert
-#define rtos___assert_fail                           	 __assert_fail
-#define rtos___assert_perror_fail                    	 __assert_perror_fail
-#define rtos_application_stack_overflow_hook         	 vApplicationStackOverflowHook
-#define rtos_application_tick_hook                   	 vApplicationTickHook
+#define __rtos_assert                                	 __assert
+#define __rtos_assert_fail                           	 __assert_fail
+#define __rtos_assert_perror_fail                    	 __assert_perror_fail
+/* from semphr.h */
+#define _rtos_queue_add_to_registry                  	 vQueueAddToRegistry
+#define _rtos_queue_get_name                         	 pcQueueGetName
+#define _rtos_queue_unregister_queue                 	 vQueueUnregisterQueue
 /* from atomic.h */
 #define rtos_atomic_add_u32                          	 Atomic_Add_u32
 #define rtos_atomic_and_u32                          	 Atomic_AND_u32
@@ -963,7 +961,6 @@
 #define rtos_port_suppress_ticks_and_sleep           	 vPortSuppressTicksAndSleep
 #define rtos_port_yield                              	 vPortYield
 /* from semphr.h */
-#define rtos_queue_add_to_registry                   	 vQueueAddToRegistry
 #define rtos_queue_add_to_set                        	 xQueueAddToSet
 #define rtos_queue_cr_receive                        	 xQueueCRReceive
 #define rtos_queue_cr_receive_from_isr               	 xQueueCRReceiveFromISR
@@ -981,7 +978,6 @@
 #define rtos_queue_generic_send_from_isr             	 xQueueGenericSendFromISR
 #define rtos_queue_get_mutex_holder                  	 xQueueGetMutexHolder
 #define rtos_queue_get_mutex_holder_from_isr         	 xQueueGetMutexHolderFromISR
-#define rtos_queue_get_name                          	 pcQueueGetName
 #define rtos_queue_get_queue_number                  	 uxQueueGetQueueNumber
 #define rtos_queue_get_queue_type                    	 ucQueueGetQueueType
 #define rtos_queue_give_from_isr                     	 xQueueGiveFromISR
@@ -1001,7 +997,6 @@
 #define rtos_queue_set_queue_number                  	 vQueueSetQueueNumber
 #define rtos_queue_spaces_available                  	 uxQueueSpacesAvailable
 #define rtos_queue_take_mutex_recursive              	 xQueueTakeMutexRecursive
-#define rtos_queue_unregister_queue                  	 vQueueUnregisterQueue
 #define rtos_queue_wait_for_message_restricted       	 vQueueWaitForMessageRestricted
 /* from timers.h */
 #define rtos_set_interrupt_mask_from_isr             	 ulSetInterruptMaskFromISR

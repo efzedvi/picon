@@ -8,6 +8,8 @@ use ModPerl::CScan;
 use Data::Dumper;
 use File::Basename;
 
+# super hacky perl script to change the naming convention of FreeRTOS to sane snake_case
+
 sub unhun {
 	my ($thing, $type) = @_;
 
@@ -17,26 +19,35 @@ sub unhun {
 
 	$type = lc $type;
 
-	if ($type ne 'define')  {
+	if ($type !~ /define/)  {
 		# remove the stupid freaking hungarian type notation
-		$thing =~ s/^[a-z]+([A-Z].*)/$1/; 
+		$thing =~ s/^[a-z]+([A-Z].*)/$1/;
 	}
 
-	if ($type eq 'define') {
+	if ($type =~ /define/) {
 		# some freaking Macros in FreeRTOS still have types
 		$thing =~ s/^p?d//;
 		$thing =~ s/^pc//;
 		$thing =~ s/^err([A-Z])/ERR_$1/;
 		$thing =~ s/^e//;
-		$thing =~ s/^v?x?([A-Z].*)/$1/; 
+		$thing =~ s/^ux//;
+		$thing =~ s/^ul//;
+		$thing =~ s/^v?x?([A-Z].*)/$1/;
 
 		$thing =~ s/^INCLUDE_p?d./INCLUDE_/;
 		$thing =~ s/^INCLUDE_pc/INCLUDE_/;
 		$thing =~ s/^INCLUDE_e/INCLUDE_/;
-		$thing =~ s/^INCLUDE_v?x?([A-Z].*)/INCLUDE_$1/; 
+		$thing =~ s/^INCLUDE_ux/INCLUDE_/;
+		$thing =~ s/^INCLUDE_v?x?([A-Z].*)/INCLUDE_$1/;
 	}
 
-	$thing = 'rtos_'.decamelize($thing);
+	my $decamelized = decamelize($thing);
+	if ($decamelized =~ /^__/) {
+		$decamelized =~ s/^__//;
+		$thing = '__rtos_'.$decamelized;
+	} else {
+		$thing = 'rtos_'.$decamelized;
+	}
 
 	if ($type eq 'define') {
 		$thing = uc $thing;
@@ -107,7 +118,7 @@ for my $hfile (@ARGV) {
 	my $externs = $c->get('vdecl_hash');
 
 	if (scalar(keys %$typedefs)) {
-		for my $x (keys %$typedefs) {
+		for my $x (sort keys %$typedefs) {
 			next if $x =~ /^_/;
 
 			my $sane = unhun($x, 'type');
@@ -115,10 +126,10 @@ for my $hfile (@ARGV) {
 				if (defined($objs->{$sane}) &&
 				    ($objs->{$sane}->{type} ne 'type' ||
 				     $objs->{$sane}->{value} ne $x)) {
-					printf(STDERR "ERROR: symbol %s was defined as '%s' as type '%s', in %s\n", 
-					       $sane, $objs->{$sane}->{value}, $objs->{$sane}->{type},
+					printf(STDERR "WARNING: symbol %s (%s, %s) was defined as '%s' as type '%s', in %s\n",
+					       $sane, $objs->{$sane}->{value}, 'type', $sane, $objs->{$sane}->{type},
 					       $objs->{$sane}->{file});
-					#exit(1);
+					$sane = "_$sane";
 				} else {
 					$objs->{$sane} = { type => 'type', value => $x, file => basename($hfile) };
 				}
@@ -126,58 +137,56 @@ for my $hfile (@ARGV) {
 		}
 	}
 
-	if (scalar( keys %$defs_args )) {
-		for my $x (keys %$defs_args) {
-			my $sane = unhun($x, 'define');
-			if ($x ne $sane) {
-				if (defined($objs->{$sane}) &&
-				    ($objs->{$sane}->{type} ne 'define' ||
-				     $objs->{$sane}->{value} ne $x)) {
-					printf(STDERR "ERROR: symbol %s was defined as '%s' as type '%s', in %s\n", 
-					       $sane, $objs->{$sane}->{value}, $objs->{$sane}->{type},
-					       $objs->{$sane}->{file});
-					#exit(1);
-				} else {
-					$objs->{$sane} = { type => 'define', value => $x, file => basename($hfile) };
-				}
-			}
-		}
-	}
-
 	if (scalar( keys %$defs_no_args )) {
-		for my $x (keys %$defs_no_args) {
+		for my $x (sort keys %$defs_no_args) {
 			my $sane = unhun($x, 'define');
 			if ($x ne $sane) {
 				if (defined($objs->{$sane}) &&
 				    ($objs->{$sane}->{type} ne 'define' ||
 				     $objs->{$sane}->{value} ne $x)) {
-					printf(STDERR "ERROR: symbol %s was defined as '%s' as type '%s', in %s\n", 
-					       $sane, $objs->{$sane}->{value}, $objs->{$sane}->{type},
+					printf(STDERR "WARNING: symbol %s (%s, %s) was defined as '%s' as type '%s', in %s\n",
+					       $sane, $objs->{$sane}->{value}, 'define', $sane, $objs->{$sane}->{type},
 					       $objs->{$sane}->{file});
-					#exit(1);
-				} else {
-					$objs->{$sane} = { type => 'define', value => $x, file => basename($hfile) };
+					$sane = "_$sane";
 				}
+				$objs->{$sane} = { type => 'define', value => $x, file => basename($hfile) };
 			}
 		}
 	}
-
 
 	if (scalar(@$func)) {
-		for my $func (@$func) {
+		for my $func (sort { $a->[1] cmp $b->[1]} @$func) {
 			my $x = $func->[1];
 			my $sane = unhun($x, 'func');
 			if ($x ne $sane) {
 				if (defined($objs->{$sane}) &&
 				    ($objs->{$sane}->{type} ne 'func' ||
 				     $objs->{$sane}->{value} ne $x)) {
-					printf(STDERR "ERROR: symbol %s was defined as '%s' as type '%s', in %s\n", 
-					       $sane, $objs->{$sane}->{value}, $objs->{$sane}->{type},
+					printf(STDERR "WARNING: symbol %s (%s, %s) was defined as '%s' as type '%s', in %s\n",
+					       $sane, $objs->{$sane}->{value}, 'func', $sane, $objs->{$sane}->{type},
+					       $objs->{$sane}->{file});
+					$sane = "_$sane";
+				}
+				$objs->{$sane} = { type => 'func', value => $x, file => basename($hfile) };
+			}
+		}
+	}
+
+	if (scalar( keys %$defs_args )) {
+		# note the reverse sort order, it's a nasty hack so that the new xSemaphoreCreateBinary gets dealt with before the old freaking vSemaphoreCreateBinary
+		for my $x (sort {$b cmp $a } keys %$defs_args) {
+			my $sane = unhun($x, 'defines_args');
+			if ($x ne $sane) {
+				if (defined($objs->{$sane}) &&
+				    ($objs->{$sane}->{type} ne 'define' ||
+				     $objs->{$sane}->{value} ne $x)) {
+					printf(STDERR "WARNING: symbol %s (%s, %s) was defined as '%s' as type '%s', in %s\n",
+					       $sane, $objs->{$sane}->{value}, 'define_args', $sane, $objs->{$sane}->{type},
 					       $objs->{$sane}->{file});
 					#exit(1);
-				} else {
-					$objs->{$sane} = { type => 'func', value => $x, file => basename($hfile) };
+					$sane = uc $sane;
 				}
+				$objs->{$sane} = { type => 'define', value => $x, file => basename($hfile) };
 			}
 		}
 	}

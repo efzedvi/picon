@@ -26,7 +26,7 @@ static void picon_heart_beat_task(void *args)
 
 	while (1) {
 		gpio_xor_mask(1<<CONFIG_HEART_BEAT_PIN);
-		RTOS_TASK_DELAY(RTOS_MS_TO_TICKS(CONFIG_HEART_BEAT_RATE));
+		rtos_task_delay(rtos_ms_to_ticks(CONFIG_HEART_BEAT_RATE));
 
 #ifdef CONFIG_WDG
 		// kick the watchdog

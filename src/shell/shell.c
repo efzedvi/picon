@@ -355,7 +355,7 @@ static void shell_command_runner_task(void *args)
 {
 	SHELL_CMD_ARG	*cmd;
 
-	if (!args) RTOS_TASK_DELETE(NULL);
+	if (!args) rtos_task_delete(NULL);
 
 	cmd = (SHELL_CMD_ARG *) args;
 
@@ -363,14 +363,14 @@ static void shell_command_runner_task(void *args)
 
 	if (!cmd->func) {
 		cmd->rc = -1;
-		RTOS_TASK_DELETE(NULL);
+		rtos_task_delete(NULL);
 	}
 
 	cmd->rc = cmd->func(cmd->argc, cmd->argv);
 
-	RTOS_SEMAPHORE_GIVE(cmd->sem);
+	rtos_semaphore_give(cmd->sem);
 
-	RTOS_TASK_SUSPEND(NULL);
+	rtos_task_suspend(NULL);
 }
 
 
@@ -388,7 +388,8 @@ void shell_task(void *args)
 	CONSOLE_INFO 		*console_info, child_console_info;
 	SHELL_CMD_ARG	cmd;
 
-	sem = RTOS_SEMAPHORE_CREATE_BINARY();
+	//sem = rtos_semaphore_create_binary();
+	sem = xSemaphoreCreateBinary();
 	console_info = TASK_GET_LOCAL_STORAGE();
 	if (console_info) console_fd = console_info->stdfd[STDIN_FILENO];
 
@@ -441,14 +442,14 @@ void shell_task(void *args)
 						break;
 					}
 
-					RTOS_SEMAPHORE_TAKE(sem, RTOS_PORT_MAX_DELAY);
+					rtos_semaphore_take(sem, RTOS_PORT_MAX_DELAY);
 
 					ioctl(console_fd, PICON_IOC_TTY_SET_INT, NULL);
 
 					// if there are any allocated memory free them up
 					picon_free_all(&child_console_info);
 
-					RTOS_TASK_DELETE(child_handle);
+					rtos_task_delete(child_handle);
 
 				} else {
 					commands[i].func(argc, argv);

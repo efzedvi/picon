@@ -39,7 +39,7 @@ void io_init(void)
 		open_files[i].mtx = NULL;
 	}
 
-	iomtx = RTOS_SEMAPHORE_CREATE_MUTEX();
+	iomtx = rtos_semaphore_create_mutex();
 	if (!iomtx) {
 		//bad bad bad
 		for(;;);
@@ -56,7 +56,7 @@ int open(const char *name, int flags)
 	devf = dev_by_name(name);
 	if (!devf) return -ENXIO;
 
-	RTOS_SEMAPHORE_TAKE(iomtx, RTOS_PORT_MAX_DELAY);
+	rtos_semaphore_take(iomtx, RTOS_PORT_MAX_DELAY);
 
 	for(i=0; i<MAX_OPEN_FILES; i++) {
 		if (open_files[i].devf != NULL &&
@@ -71,7 +71,7 @@ int open(const char *name, int flags)
 	for(i=0; i < MAX_OPEN_FILES; i++) {
 		if (open_files[i].devf == NULL) {
 			if (devf->dev->flags & DEV_FLAG_SERIALIZE) {
-				open_files[i].mtx = RTOS_SEMAPHORE_CREATE_MUTEX();
+				open_files[i].mtx = rtos_semaphore_create_mutex();
 				if (!open_files[i].mtx) {
 					rc = -ENOMEM;
 					goto leave;
@@ -82,7 +82,7 @@ int open(const char *name, int flags)
 
 			if (!devf->dev->open || devf->dev->open(devf, flags) == NULL) {
 				if (open_files[i].mtx) {
-					RTOS_SEMAPHORE_DELETE(open_files[i].mtx);
+					rtos_semaphore_delete(open_files[i].mtx);
 				}
 
 				rc = -EINVAL;
@@ -104,7 +104,7 @@ int open(const char *name, int flags)
 
 leave:
 
-	RTOS_SEMAPHORE_GIVE(iomtx);
+	rtos_semaphore_give(iomtx);
 	return rc;
 
 }
@@ -118,7 +118,7 @@ int read(int fd, const void *buf, unsigned int count)
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
@@ -129,7 +129,7 @@ int read(int fd, const void *buf, unsigned int count)
 	}
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_GIVE(open_files[fd].mtx);
+		rtos_semaphore_give(open_files[fd].mtx);
 
 	return rc;
 }
@@ -143,7 +143,7 @@ int write(int fd, const void *buf, unsigned int count)
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
@@ -154,7 +154,7 @@ int write(int fd, const void *buf, unsigned int count)
 	}
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_GIVE(open_files[fd].mtx);
+		rtos_semaphore_give(open_files[fd].mtx);
 
 	return rc;
 }
@@ -169,7 +169,7 @@ int pread(int fd, void *buf, uint16_t count, uint32_t offset)
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
@@ -180,7 +180,7 @@ int pread(int fd, void *buf, uint16_t count, uint32_t offset)
 	}
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_GIVE(open_files[fd].mtx);
+		rtos_semaphore_give(open_files[fd].mtx);
 
 	return rc;
 }
@@ -195,7 +195,7 @@ int pwrite(int fd, const void *buf, uint16_t count, uint32_t offset)
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
@@ -206,7 +206,7 @@ int pwrite(int fd, const void *buf, uint16_t count, uint32_t offset)
 	}
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_GIVE(open_files[fd].mtx);
+		rtos_semaphore_give(open_files[fd].mtx);
 
 	return rc;
 }
@@ -220,7 +220,7 @@ int lseek(int fd, uint32_t offset, int whence)
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
@@ -231,7 +231,7 @@ int lseek(int fd, uint32_t offset, int whence)
 	}
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_GIVE(open_files[fd].mtx);
+		rtos_semaphore_give(open_files[fd].mtx);
 
 	return rc;
 }
@@ -245,7 +245,7 @@ int ioctl(int fd, unsigned int request, void *data)
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
@@ -263,7 +263,7 @@ int ioctl(int fd, unsigned int request, void *data)
 	}
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_GIVE(open_files[fd].mtx);
+		rtos_semaphore_give(open_files[fd].mtx);
 
 	return rc;
 }
@@ -279,7 +279,7 @@ int sendto(int fd, const void *buf, size_t len, int flags,
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
@@ -290,7 +290,7 @@ int sendto(int fd, const void *buf, size_t len, int flags,
 	}
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_GIVE(open_files[fd].mtx);
+		rtos_semaphore_give(open_files[fd].mtx);
 
 	return rc;
 }
@@ -305,7 +305,7 @@ int recvfrom(int fd, void *buf, size_t len, int flags,
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
@@ -316,7 +316,7 @@ int recvfrom(int fd, void *buf, size_t len, int flags,
 	}
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_GIVE(open_files[fd].mtx);
+		rtos_semaphore_give(open_files[fd].mtx);
 
 	return rc;
 }
@@ -332,12 +332,12 @@ int close(int fd)
 
 	if (--open_files[fd].use_count)  return 0;
 
-	RTOS_SEMAPHORE_TAKE(iomtx, RTOS_PORT_MAX_DELAY);
+	rtos_semaphore_take(iomtx, RTOS_PORT_MAX_DELAY);
 
 	dev = open_files[fd].devf->dev;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_TAKE(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
 	if (dev->close) {
 		rc = dev->close(open_files[fd].devf);
@@ -346,9 +346,9 @@ int close(int fd)
 	open_files[fd].devf = NULL;
 
 	if (open_files[fd].mtx)
-		RTOS_SEMAPHORE_DELETE(open_files[fd].mtx);
+		rtos_semaphore_delete(open_files[fd].mtx);
 
-	RTOS_SEMAPHORE_GIVE(iomtx);
+	rtos_semaphore_give(iomtx);
 
 	return rc;
 }

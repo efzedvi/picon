@@ -225,7 +225,7 @@ int getline(char *buf, unsigned short bufsiz, char *hist[], unsigned char hist_s
 
 		ch = getchar();
 		if (ch <= 0) {
-			RTOS_TASK_DELAY(RTOS_MS_TO_TICKS(GETCHAR_DELAY));
+			rtos_task_delay(rtos_ms_to_ticks(GETCHAR_DELAY));
 			continue;
 		}
 		if (ch > 127)
