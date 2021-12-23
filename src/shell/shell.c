@@ -11,6 +11,7 @@
 #include <time.h>
 
 #include "pico/unique_id.h"
+#include "pico/version.h"
 
 #include "picon.h"
 
@@ -99,8 +100,9 @@ int shell_clear(int argc, char **argv)
 
 int shell_uname(int argc, char **argv)
 {
-	printf("picon Version: %s, FreeRTOS version: %s, built: %s, %s\n",
-		PICON_VERSION, RTOS_TSK_KERNEL_VERSION_NUMBER, PICON_BUILD_DATE, PICON_BUILD_TIME);
+	printf("picon Version: %s\nFreeRTOS version: %s\nPICO SDK: %s\nbuilt: %s, %s\n",
+		PICON_VERSION, RTOS_TSK_KERNEL_VERSION_NUMBER, PICO_SDK_VERSION_STRING,
+		PICON_BUILD_DATE, PICON_BUILD_TIME);
 
 	if (argc > 1 && strcmp(argv[1], "-a")==0) {
 		char id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES+1];
@@ -112,10 +114,17 @@ int shell_uname(int argc, char **argv)
 	return 0;
 }
 
-static void print_uptime(uint32_t now)
+int shell_uptime(int argc, char **argv)
 {
+	uint32_t now;
 	uint16_t days;
 	uint8_t  hours, minutes, seconds;
+
+	UNUSED(argc);
+	UNUSED(argv);
+
+	// get uptime in seconds
+	now = rtos_task_get_tick_count() / RTOS_CONFIG_TICK_RATE_HZ;
 
 	#define SECS_HOUR	(3600)
 	#define SECS_DAY	(SECS_HOUR * 24)
@@ -126,28 +135,7 @@ static void print_uptime(uint32_t now)
 	seconds = now % 60;
 
 	printf("%d days, %d hours %d minutes, %d seconds\n", days, hours, minutes, seconds);
-}
 
-int shell_uptime(int argc, char **argv)
-{
-	uint32_t now;
-
-	UNUSED(argc);
-	UNUSED(argv);
-
-
-	// get uptime in seconds
-	now = rtos_task_get_tick_count() / RTOS_CONFIG_TICK_RATE_HZ;
-
-	print_uptime(now);
-
-/*
-	if (argc>1 && strcmp(argv[1], "-a")==0) {
-		now = (uint32_t) time(NULL);
-		printf("Since cold boot: ");
-		print_uptime(now);
-	}
-*/
 	return 0;
 }
 
