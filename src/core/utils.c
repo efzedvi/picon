@@ -168,67 +168,6 @@ float stof(const char* s)
 	return res * fact;
 }
 
-#define LEAP_YEAR(Y)     ( ((1970+(Y))>0) && !((1970+(Y))%4) && ( ((1970+(Y))%100) || !((1970+(Y))%400) ) )
-
-static  const uint8_t month_days[]={31,28,31,30,31,30,31,31,30,31,30,31};
-
-struct tm *localtime_r(const time_t *timep, struct tm *tm)
-{
-	uint8_t year;
-	uint8_t month, month_length;
-	uint32_t time;
-	unsigned long days;
-
-	if (!tm) return NULL;
-
-	time = *((uint32_t *) timep);
-	tm->tm_sec = time % 60;
-	time /= 60;
-	tm->tm_min = time % 60;
-	time /= 60;
-	tm->tm_hour = time % 24;
-	time /= 24;
-	tm->tm_wday = ((time + 4) % 7) + 1;
-
-	year = 0;
-	days = 0;
-
-	while((unsigned)(days += (LEAP_YEAR(year) ? 366 : 365)) <= time) {
-		year++;
-	}
-
-	tm->tm_year = year + 1970;
-
-	days -= LEAP_YEAR(year) ? 366 : 365;
-	time  -= days; // now it is days in this year, starting at 0
-
-	days=0;
-	month=0;
-	month_length=0;
-
-	for (month=0; month<12; month++) {
-		if (month==1) { // february
-			if (LEAP_YEAR(year)) {
-				month_length=29;
-			} else {
-				month_length=28;
-			}
-		} else {
-			month_length = month_days[month];
-		}
-
-		if (time >= month_length) {
-			time -= month_length;
-		} else {
-			break;
-		}
-	}
-	tm->tm_mon = month + 1;  // jan is month 1
-	tm->tm_mday = time + 1;   // day of month
-
-	return tm;
-}
-
 inline rtos_tick_type_t diff_ticks(rtos_tick_type_t t0, rtos_tick_type_t t1)
 {
 	if (t1 > t0)

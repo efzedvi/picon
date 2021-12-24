@@ -6,6 +6,8 @@
 
 #include "hardware/gpio.h"
 #include "hardware/watchdog.h"
+#include "hardware/rtc.h"
+#include "pico/types.h"
 
 #include "rtos.h"
 #include "picon.h"
@@ -18,6 +20,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <time.h>
 
 #ifdef CONFIG_HEART_BEAT
 static void picon_heart_beat_task(void *args)
@@ -38,6 +41,8 @@ static void picon_heart_beat_task(void *args)
 
 int picon_init()
 {
+	rtc_init();
+
 #ifdef CONFIG_HEART_BEAT
 	gpio_init(CONFIG_HEART_BEAT_PIN);
 	gpio_set_dir(CONFIG_HEART_BEAT_PIN, GPIO_OUT);
@@ -64,5 +69,47 @@ void picon_reboot()
 bool picon_watchdog_caused_reboot()
 {
 	return watchdog_caused_reboot();
+}
+
+void picon_set_datetime(time_t time)
+{
+	struct tm	tm;
+	datetime_t	dt;
+
+	localtime_r(&time, &tm);
+
+	dt.year  = tm.tm_year + 1900;
+	dt.month = tm.tm_mon + 1;
+	dt.day   = tm.tm_mday;
+	dt.dotw  = tm.tm_wday;
+	dt.hour  = tm.tm_hour;
+	dt.min   = tm.tm_min;
+	dt.sec   = tm.tm_sec;
+
+	rtc_set_datetime(&dt);
+}
+
+time_t time(time_t *tloc)
+{
+	struct tm	tm;
+	datetime_t	dt;
+	time_t		t;
+
+	rtc_get_datetime(&dt);
+
+	tm.tm_year = dt.year - 1900;
+	tm.tm_mon  = dt.month - 1;
+	tm.tm_mday = dt.day;
+	tm.tm_wday = dt.dotw;
+	tm.tm_hour = dt.hour;
+	tm.tm_min  = dt.min;
+	tm.tm_sec  = dt.sec;
+
+	t = mktime(&tm);
+
+	if (tloc)
+		*tloc = t;
+
+	return t;
 }
 

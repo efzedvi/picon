@@ -510,13 +510,13 @@ int shell_date(int argc, char **argv)
 			printf("%u\n", (unsigned int) t);
 			return 0;
 		}
-#ifdef BOARD_HAS_CLOCK
+
 		if (argc == 3 && strcmp(argv[1], "-s") == 0) {
 			t = atoi(argv[2]);
-			//board_set_time(t);
-		}
-#endif
-		else {
+			picon_set_datetime(t);
+			rtos_task_delay(rtos_ms_to_ticks(500));
+			t = time(NULL);
+		} else {
 			printf( "-s <unixtime>\n"\
 				"-t\n");
 			return -1;
@@ -526,7 +526,7 @@ int shell_date(int argc, char **argv)
 	localtime_r((const time_t *) &t, &tm);
 
 	printf("%d/%02d/%02d-%02d:%02d:%02d\n",
-		tm.tm_year, tm.tm_mon, tm.tm_mday,
+		tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday,
 		tm.tm_hour, tm.tm_min, tm.tm_sec);
 
 	return 0;
