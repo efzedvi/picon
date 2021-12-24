@@ -466,6 +466,7 @@ int shell_primes(int argc, char **argv)
 {
 	int		i, j, num=0;
 	unsigned char	prime=0;
+	uint32_t	start, end, delta;
 
 	if (argc > 1) {
 		num = abs(atoi(argv[1]));
@@ -473,6 +474,8 @@ int shell_primes(int argc, char **argv)
 		printf("primes <num>\n");
 		return -1;
 	}
+
+	start = rtos_task_get_tick_count();
 
 	for(i=3; i<=num; i++) {
 
@@ -488,8 +491,10 @@ int shell_primes(int argc, char **argv)
 		}
 		if (prime) printf("%d\n", i);
 	}
+	end = rtos_task_get_tick_count();
+	delta = diff_ticks(start, end);
 
-	printf("\n");
+	printf("\nelapsed time: %u ms\n", (unsigned int) (delta * 1000 / RTOS_CONFIG_TICK_RATE_HZ));
 	return 0;
 }
 
