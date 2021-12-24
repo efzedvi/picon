@@ -75,12 +75,13 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 	uint16_t must_yield=0;
 	int      uart_irq;
 
+	// Lets let only one core to deal with the ISRs
+	if (get_core_num() != 0) return;
+
 	if ( ux >=UART_MAX || !uartp || !(uartq[ux]) )
 		return;					// Not open for ISR receiving!
 
 	uart_irq = ( uart == uart0) ? UART0_IRQ : UART1_IRQ;
-
-	irq_set_enabled(uart_irq, false); // in SMP mode ISRs can run concurrently
 
 	while (uart_is_readable(uart)) {
 		ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
@@ -98,7 +99,6 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 			must_yield = 1;
 		}
 	}
-	irq_set_enabled(uart_irq, true);
 
 	rtos_port_yield_from_isr(must_yield);
 }
