@@ -181,8 +181,9 @@ int getchar(void)
 
 	stdin_fd = console_info->stdfd[STDIN_FILENO];
 
-	if (read(stdin_fd, &ch, 1) == 1)
+	if (read(stdin_fd, &ch, 1) == 1) {
 		return (int) ch;
+	}
 
 	return -1;
 }
@@ -224,6 +225,7 @@ int getline(char *buf, unsigned short bufsiz, char *hist[], unsigned char hist_s
 	while ( ch != '\n' ) {
 
 		ch = getchar();
+
 		if (ch <= 0) {
 			rtos_task_delay(rtos_ms_to_ticks(GETCHAR_DELAY));
 			continue;

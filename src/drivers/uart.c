@@ -73,15 +73,10 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 	uint8_t 	ch;			// Read data byte
 	rtos_base_type_t	higher_priority_task_woken;
 	uint16_t must_yield=0;
-	int      uart_irq;
 
-	// Lets let only one core to deal with the ISRs
-	if (get_core_num() != 0) return;
 
 	if ( ux >=UART_MAX || !uartp || !(uartq[ux]) )
 		return;					// Not open for ISR receiving!
-
-	uart_irq = ( uart == uart0) ? UART0_IRQ : UART1_IRQ;
 
 	while (uart_is_readable(uart)) {
 		ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
@@ -136,11 +131,15 @@ int picon_uart_init(uint8_t ux, void *params)
 
 	uart_init(uart, PICON_DEFAULT_BAUD_RATE);
 
-	if (uartp->rx_pin >= 0)
+	if (uartp->rx_pin >= 0) {
 		gpio_set_function(uartp->rx_pin, GPIO_FUNC_UART);
+		gpio_pull_up(uartp->rx_pin); // input pull up mode
+	}
 
-	if (uartp->tx_pin >= 0)
+	if (uartp->tx_pin >= 0) {
 		gpio_set_function(uartp->tx_pin, GPIO_FUNC_UART);
+		gpio_set_pulls(uartp->tx_pin, true, true);	// pushpull
+	}
 
 	// Set our data format
 	// 8N1
@@ -196,6 +195,7 @@ const void *picon_uart_open(const DEVICE_FILE *devf, int flags)
 
 	uart_flags[ux] = flags;
 
+	uart_set_irq_enables(uart, false, false);
 	if (uartp->rx_pin >= 0) {
 		// Now enable the UART to send interrupts - RX only
 		uart_set_irq_enables(uart, true, false);
