@@ -22,15 +22,15 @@
 #include "picon/io.h"
 #include "picon/ioctl.h"
 #include "picon/utils.h"
-#include "shell.h"
-//#include "picon/shell_gpio.h"
+#include "shell/shell.h"
+//#include "/shell_gpio.h"
 //#include "picon/shell_adc.h"
 //#include "picon/shell_dac.h"
 //#include "picon/shell_timer.h"
 //#include "picon/shell_i2c.h"
 //#include "picon/shell_spi.h"
 //#include "picon/shell_rf.h"
-//#include "picon/shell_log.h"
+#include "shell/shell_log.h"
 
 #define SHELL_PROMPT		"# "
 #define SHELL_MAX_LINE  	(80)
@@ -46,7 +46,7 @@ const SHELL_COMMAND  shell_commands[] = {
 //	SHELL_TIMER_COMMAND
 //	SHELL_I2C_COMMAND
 //	SHELL_SPI_COMMAND
-//	SHELL_LOG_COMMAND
+	SHELL_LOG_COMMAND
 //	SHELL_RF_COMMAND
 	{ NULL, 	NULL, 0, 0 },
 };

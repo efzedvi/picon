@@ -7,7 +7,7 @@
 #include "picon/ioctl.h"        
 #include "picon/uart.h"
 #include "picon/mem.h"
-#include "shell.h"        
+#include "shell/shell.h"
 
 #include "FreeRTOS.h"
 #include "FreeRTOSConfig.h"
@@ -28,7 +28,7 @@ int main()
 	io_init();
         dev_init(dt);
 
-        console_create("/dev/uart0", "ttyS0", shell_task, 544, CONFIG_SHELL_CMD_PRIORITY, (void *) shell_commands);
+        CONSOLE_CREATE("/dev/uart0", "ttyS0");
 
 	rtos_task_start_scheduler();
 

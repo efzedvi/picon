@@ -22,22 +22,22 @@ typedef struct
 } __attribute((__packed__)) LOG_REC;
 
 #define LOG_REC_SIZE            sizeof(LOG_REC)
-#define LOG_DEFAULT_SIZE	(64)
+#define LOG_DEFAULT_SIZE	(256)
 
 
-RTOS_SEMAPHORE_HANDLE	log_mtx = NULL;
+rtos_semaphore_handle_t log_mtx = NULL;
 uint8_t			log_enabled = 0;
 LOG_REC			*log_buf = NULL;
 uint8_t			log_idx = 0;
 uint8_t			log_size = 0;
 uint8_t			log_count = 0;
 
-void log_init(uint8_t size)
+void log_init(uint16_t size)
 {
 	size = (!size) ? LOG_DEFAULT_SIZE : size;
 
 	if (!log_mtx)
-		log_mtx = RTOS_SEMAPHORE_CREATE_MUTEX();
+		log_mtx = rtos_semaphore_create_mutex();
 
 	log_clear();
 	if (log_buf) return;
@@ -84,9 +84,9 @@ void log_record(uint8_t from_isr, LOG_SRC_FILE file, uint16_t line, const char* 
 	// no scheduler? then don't bother
 	if (rtos_task_get_scheduler_state() == RTOS_TASK_SCHEDULER_RUNNING) {
 		if (from_isr) {
-			RTOS_SEMAPHORE_TAKE_FROM_ISR(log_mtx, NULL);
+			rtos_semaphore_take_from_isr(log_mtx, NULL);
 		} else {
-			RTOS_SEMAPHORE_TAKE(log_mtx, RTOS_PORT_MAX_DELAY);
+			rtos_semaphore_take(log_mtx, RTOS_PORT_MAX_DELAY);
 		}
 	}
 
@@ -97,9 +97,9 @@ void log_record(uint8_t from_isr, LOG_SRC_FILE file, uint16_t line, const char* 
 
 	if (rtos_task_get_scheduler_state() == RTOS_TASK_SCHEDULER_RUNNING) {
 		if (from_isr) {
-			RTOS_SEMAPHORE_GIVE_FROM_ISR(log_mtx, NULL);
+			rtos_semaphore_give_from_isr(log_mtx, NULL);
 		} else {
-			RTOS_SEMAPHORE_GIVE(log_mtx);
+			rtos_semaphore_give(log_mtx);
 		}
 	}
 }

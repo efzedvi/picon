@@ -22,6 +22,8 @@ typedef struct _console_info {
 	void	*allocs[CONSOLE_MAX_ALLOCS];
 } CONSOLE_INFO;
 
+// 640 stack element should be enough for everyone! ;)
+#define CONSOLE_STACK_SIZE	(640)
 
 #define TASK_GET_LOCAL_STORAGE()	(CONSOLE_INFO *)rtos_task_get_thread_local_storage_pointer(NULL, 0)
 
@@ -39,5 +41,8 @@ int getchar(void);
 int getline(char *buf, unsigned short bufsiz, char *hist[], unsigned char hist_size);
 
 int puts(const char *s);
+
+#define CONSOLE_CREATE(dev,name) console_create((dev), (name), shell_task, CONSOLE_STACK_SIZE, CONFIG_SHELL_CMD_PRIORITY, (void *) shell_commands);
+
 
 #endif /* end of include guard CONSOLE_H */

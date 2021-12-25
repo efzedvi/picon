@@ -44,7 +44,7 @@ typedef enum {
 #define LOG_FROM_ISR(file, log_fmt, log_arg...)
 #endif
 
-void log_init(uint8_t size);
+void log_init(uint16_t size);
 void log_shutdown(void);
 void log_status(uint8_t *size, uint8_t *capturing);
 void log_capture(uint8_t onoff);

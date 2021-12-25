@@ -24,10 +24,12 @@ target_sources(picon_common INTERFACE
         src/core/console.c
         src/core/utils.c
         src/core/printf-stdarg.c
+        src/core/log.c
         src/core/picon.c
 	src/drivers/uart.c
 	src/drivers/mem.c
 	src/shell/shell.c
+	src/shell/shell_log.c
         src/main/main.c)
 target_include_directories(picon_common INTERFACE
 	src/include
