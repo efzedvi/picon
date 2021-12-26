@@ -1027,6 +1027,8 @@
 #define rtos_task_catch_up_ticks                     	 xTaskCatchUpTicks
 #define rtos_task_check_for_time_out                 	 xTaskCheckForTimeOut
 #define rtos_task_confirm_sleep_mode_status          	 eTaskConfirmSleepModeStatus
+#define rtos_task_core_affinity_get                  	 vTaskCoreAffinityGet
+#define rtos_task_core_affinity_set                  	 vTaskCoreAffinitySet
 #define rtos_task_create                             	 xTaskCreate
 #define rtos_task_delay                              	 vTaskDelay
 #define rtos_task_delay_until                        	 xTaskDelayUntil
