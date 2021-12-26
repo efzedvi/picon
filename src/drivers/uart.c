@@ -46,7 +46,8 @@ typedef struct _uart_t {
 } uart_t;
 
 // UART receive queues
-rtos_queue_handle_t uartq[UART_MAX];
+rtos_queue_handle_t uartq_rx[UART_MAX];
+rtos_queue_handle_t uartq_tx[UART_MAX];
 
 // to handle control-c
 rtos_semaphore_handle_t  uart_sems[UART_MAX];
@@ -66,19 +67,20 @@ static uart_t uarts[UART_MAX] = {
 uint8_t uart_flags[UART_MAX];
 
 // ISR to receive data
-static void picon_uart_common_rx_isr(uint8_t ux)
+static void picon_uart_common_isr(uint8_t ux)
 {
 	const uart_t *uartp = uarts+ux;		// Access UART's buffer
 	uart_inst_t  *uart = uarts[ux].uart;	// Lookup UART address
 	uint8_t 	ch;			// Read data byte
 	rtos_base_type_t	higher_priority_task_woken;
+	rtos_base_type_t	rv;
 	uint16_t must_yield=0;
 
 
-	if ( ux >=UART_MAX || !uartp || !(uartq[ux]) )
-		return;					// Not open for ISR receiving!
+	if ( ux >=UART_MAX || !uartp)
+		return;				// Not open for ISR receiving!
 
-	while (uart_is_readable(uart)) {
+	while (uartq_rx[ux] && uart_is_readable(uart)) {
 		ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
 
 		// This is a lame way to handle control-c, but we keep it for now until I think
@@ -87,7 +89,7 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 			rtos_semaphore_give_from_isr(uart_sems[ux], &higher_priority_task_woken);
 		} else {
 			// Save data if the buffer is not full
-			rtos_queue_send_from_isr(uartq[ux], &ch, &higher_priority_task_woken);
+			rtos_queue_send_from_isr(uartq_rx[ux], &ch, &higher_priority_task_woken);
 		}
 
 		if (higher_priority_task_woken == RTOS_TRUE) {
@@ -95,24 +97,43 @@ static void picon_uart_common_rx_isr(uint8_t ux)
 		}
 	}
 
+	if (uartq_tx[ux]) {
+		while (uart_is_writable(uart) && rtos_queue_messages_waiting_from_isr(uartq_tx[ux])) {
+			rv = rtos_queue_receive_from_isr(uartq_tx[ux], &ch, &higher_priority_task_woken);
+
+			if (rv == RTOS_TRUE) {
+				uart_get_hw(uart)->dr = ch;
+
+				if (!must_yield && higher_priority_task_woken == RTOS_TRUE) {
+					must_yield = 1;
+				}
+			}
+		}
+
+		// whether or not we want to receive TX interrupts depends on availability of items in the TX quieue
+		uart_set_irq_enables(uart, uartq_rx[ux]!=NULL, rtos_queue_messages_waiting_from_isr(uartq_tx[ux]));
+	}
+
 	rtos_port_yield_from_isr(must_yield);
 }
 
-void picon_uart0_rx_isr(void)
+
+void picon_uart0_isr(void)
 {
-	picon_uart_common_rx_isr(0);
+	picon_uart_common_isr(0);
 }
 
-void picon_uart1_rx_isr(void)
+void picon_uart1_isr(void)
 {
-	picon_uart_common_rx_isr(1);
+	picon_uart_common_isr(1);
 }
 
 int picon_uart_init(uint8_t ux, void *params)
 {
 	const uart_t	*uartp = uarts+ux;		// Access UART's buffer
 	uart_inst_t  	*uart = uarts[ux].uart;		// Lookup UART address
-	uint32_t bps = 115200;
+	uint32_t 	bps = PICON_DEFAULT_BAUD_RATE;
+	int uart_irq;
 
 	if (params) {
 		bps = (uint32_t) params;
@@ -121,7 +142,7 @@ int picon_uart_init(uint8_t ux, void *params)
 	if ( ux >=UART_MAX || !uartp)
 		return -EINVAL;			// Invalid UART ref
 
-	if (uartq[ux])
+	if (uartq_rx[ux] || uartq_tx[ux])
 		return -EINVAL;			// already initialized
 
 	uart_sems[ux] = NULL;
@@ -130,6 +151,8 @@ int picon_uart_init(uint8_t ux, void *params)
 		return -EINVAL;			// Invalid pins
 
 	uart_init(uart, PICON_DEFAULT_BAUD_RATE);
+
+	uart_irq = (uart == uart0) ? UART0_IRQ : UART1_IRQ;
 
 	if (uartp->rx_pin >= 0) {
 		gpio_set_function(uartp->rx_pin, GPIO_FUNC_UART);
@@ -151,19 +174,11 @@ int picon_uart_init(uint8_t ux, void *params)
 	// Turn off FIFO's - we want to do this character by character
 	uart_set_fifo_enabled(uart, false);
 
-	if (uartp->rx_pin >= 0) {
-		// Set up a RX interrupt
-		// We need to set up the handler first
-		// Select correct interrupt for the UART we are using
-		int uart_irq;
-
-		// And set up and enable the interrupt handlers
-		if (uart == uart0) {
-			uart_irq = UART0_IRQ;
-			irq_set_exclusive_handler(uart_irq, picon_uart0_rx_isr);
+	if (uartp->rx_pin >= 0 || uartp->tx_pin >= 0) {
+		if (ux == 0) {
+			irq_set_exclusive_handler(uart_irq, picon_uart0_isr);
 		} else {
-			uart_irq = UART1_IRQ;
-			irq_set_exclusive_handler(uart_irq, picon_uart1_rx_isr);
+			irq_set_exclusive_handler(uart_irq, picon_uart1_isr);
 		}
 		irq_set_enabled(uart_irq, true);
 	}
@@ -187,21 +202,39 @@ const void *picon_uart_open(const DEVICE_FILE *devf, int flags)
 
 	uart = uarts[ux].uart;		// Lookup UART address
 
-	if (uartq[ux])
+	if (uartq_rx[ux] || uartq_tx[ux])
 		return (const void *) devf;	// already initialized
-
-	uartq[ux] = rtos_queue_create(UART_QUEUE_SIZE, sizeof(char));
-	if (!uartq[ux]) return NULL;
 
 	uart_flags[ux] = flags;
 
 	uart_set_irq_enables(uart, false, false);
 	if (uartp->rx_pin >= 0) {
-		// Now enable the UART to send interrupts - RX only
-		uart_set_irq_enables(uart, true, false);
+		uartq_rx[ux] = rtos_queue_create(UART_QUEUE_SIZE, sizeof(char));
+		if (!uartq_rx[ux]) goto failure;
 	}
 
+	if (uartp->tx_pin >= 0) {
+		uartq_tx[ux] = rtos_queue_create(UART_QUEUE_SIZE, sizeof(char));
+		if (!uartq_tx[ux]) goto failure;
+	}
+	// Now enable the UART to send interrupts
+        // since we just opened the dvice there is no items in the TX queue hence 
+	// we don't want the ISR to be flooding us for being available to send
+	uart_set_irq_enables(uart, uartq_rx[ux]!=NULL, false);
+
 	return (const void *) devf;
+
+failure:
+	if (uartq_rx[ux])
+		rtos_queue_delete(uartq_rx[ux]);
+
+	if (uartq_tx[ux])
+		rtos_queue_delete(uartq_tx[ux]);
+
+	uartq_rx[ux] = NULL;
+	uartq_tx[ux] = NULL;
+
+	return NULL;
 }
 
 int picon_uart_close(const DEVICE_FILE *devf)
@@ -219,14 +252,20 @@ int picon_uart_close(const DEVICE_FILE *devf)
 	if ( ux >=UART_MAX || !uartp)
 		return -EINVAL;			// Invalid UART ref
 
-	if (!uartq[ux])
+	if (!uartq_rx[ux] && !uartq_tx[ux])
 		return -EINVAL;	// not opened?
 
 	// stop receiving interrupts
 	uart_set_irq_enables(uart, false ,false);
 
-	rtos_queue_delete(uartq[ux]);
-	uartq[ux] = NULL;
+	if (uartq_rx[ux])
+		rtos_queue_delete(uartq_rx[ux]);
+
+	if (uartq_tx[ux])
+		rtos_queue_delete(uartq_tx[ux]);
+
+	uartq_rx[ux] = NULL;
+	uartq_tx[ux] = NULL;
 	uart_sems[ux] = NULL;
 	uart_flags[ux] = 0;
 
@@ -249,9 +288,8 @@ int picon_uart_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data)
 	if ( ux >=UART_MAX || !uartp)
 		return -EINVAL;		// Invalid UART ref
 
-	if (!uartq[ux])
+	if (!uartq_rx[ux] && !uartq_tx[ux])
 		return -EINVAL;	// not opened
-
 
 	uart_set_irq_enables(uart, false, false);
 
@@ -273,7 +311,7 @@ int picon_uart_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data)
 			break;
 	}
 
-	uart_set_irq_enables(uart, true, false);
+	uart_set_irq_enables(uart, uartq_rx[ux]!=NULL, uartq_tx[ux]!=NULL && rtos_queue_messages_waiting(uartq_tx[ux]) );
 
 	return rc;
 }
@@ -291,16 +329,14 @@ int picon_uart_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int c
 	uartp = uarts+ux;		// Access UART's buffer
 	uart = uarts[ux].uart;		// Lookup UART address
 
-	if ( ux >=UART_MAX || !uartp)
+	if ( ux >=UART_MAX || !uartp || !uartq_tx[ux] )
 		return -EINVAL;		// Invalid UART ref
 
 	for (n=0; n < count; n++ ) {
-		while ( ! uart_is_writable(uart) )
-			rtos_task_yield();	
-
-		// No CRLF support
-		uart_putc_raw(uart, buf[n]);
+		rtos_queue_send(uartq_tx[ux], buf+n, RTOS_PORT_MAX_DELAY);
 	}
+
+	uart_set_irq_enables(uart, uartq_rx[ux]!=NULL, rtos_queue_messages_waiting(uartq_tx[ux]) );
 
 	return n;
 }
@@ -321,11 +357,11 @@ int picon_uart_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned int co
 	if (uart_flags[ux] & PICON_IO_NONBLOCK)
 		wait_time = MIN_WAIT_TIME;
 
-	if ( ux >=UART_MAX || !uartp || !(uartq[ux]) )
+	if ( ux >=UART_MAX || !uartp || !(uartq_rx[ux]) )
 		return -1;			// Invalid UART ref or not opened
 
 	for (n=0; n < count; n++ ) {
-		if (rtos_queue_receive(uartq[ux], buf++, wait_time) != RTOS_PASS)
+		if (rtos_queue_receive(uartq_rx[ux], buf++, wait_time) != RTOS_PASS)
 			break;
 	}
 
