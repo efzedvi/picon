@@ -27,6 +27,8 @@ int sendto(int fd, const void *buf, size_t len, int flags,
 int recvfrom(int fd, void *buf, size_t len, int flags,
 		     void *src_addr, uint8_t *addrlen);
 
+int fsync(int fd);
+
 int close(int fd);
 
 #endif /* end of include guard IO_H */

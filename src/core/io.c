@@ -353,4 +353,29 @@ int close(int fd)
 	return rc;
 }
 
+int fsync(int fd)
+{
+	DEVICE *dev;
+	int rc = 0;
+
+	if (fd < 0 || fd >= MAX_OPEN_FILES) return -EBADF;
+	if (open_files[fd].devf == NULL) return -EINVAL;
+
+	if (--open_files[fd].use_count)  return 0;
+
+	dev = open_files[fd].devf->dev;
+
+	if (open_files[fd].mtx)
+		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
+
+	if (dev->fsync) {
+		rc = dev->fsync(open_files[fd].devf);
+	}
+
+	if (open_files[fd].mtx)
+		rtos_semaphore_give(open_files[fd].mtx);
+
+	return rc;
+}
+
 

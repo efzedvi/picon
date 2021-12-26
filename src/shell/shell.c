@@ -368,9 +368,15 @@ static void shell_command_runner_task(void *args)
 
 	cmd->rc = cmd->func(cmd->argc, cmd->argv);
 
+	fsync(cmd->console_info->stdfd[STDOUT_FILENO]);
+
 	rtos_semaphore_give(cmd->sem);
 
+	rtos_task_delay(1000);
+
 	rtos_task_suspend(NULL);
+
+	rtos_task_delay(1000);
 }
 
 
@@ -388,8 +394,7 @@ void shell_task(void *args)
 	CONSOLE_INFO 		*console_info, child_console_info;
 	SHELL_CMD_ARG	cmd;
 
-	//sem = rtos_semaphore_create_binary();
-	sem = xSemaphoreCreateBinary();
+	sem = rtos_semaphore_create_binary();
 	console_info = TASK_GET_LOCAL_STORAGE();
 	if (console_info) console_fd = console_info->stdfd[STDIN_FILENO];
 
@@ -478,7 +483,6 @@ int shell_primes(int argc, char **argv)
 	start = rtos_task_get_tick_count();
 
 	for(i=3; i<=num; i++) {
-
 		if (i % 2 == 0) continue;
 
 		prime = 1;
@@ -491,10 +495,12 @@ int shell_primes(int argc, char **argv)
 		}
 		if (prime) printf("%d\n", i);
 	}
+
 	end = rtos_task_get_tick_count();
 	delta = diff_ticks(start, end);
 
 	printf("\nelapsed time: %u ms\n", (unsigned int) (delta * 1000 / RTOS_CONFIG_TICK_RATE_HZ));
+
 	return 0;
 }
 

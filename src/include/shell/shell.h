@@ -67,6 +67,7 @@ int shell_expr(int argc, char **argv);
 	{ CMD(uname),	SHELL_MIN_CMD_STACK_SIZE, 0 },\
 	{ CMD(uptime),	SHELL_MIN_CMD_STACK_SIZE, 0 },\
         SHELL_EXPR_CMD_DEF \
-	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, SHELL_CMD_PROPERTY_CANCELABLE },
+	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, 0 },
+//	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, SHELL_CMD_PROPERTY_CANCELABLE },
 
 #endif /* end of include guard SHELL_H */

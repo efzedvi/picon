@@ -32,6 +32,7 @@ int picon_mem_pwrite(const DEVICE_FILE *devf, const void *buf, uint16_t count, u
   .lseek = NULL,\
   .sendto   = NULL,\
   .recvfrom = NULL,\
+  .fsync = NULL,\
   .flags = DEV_FLAG_SERIALIZE | DEV_FLAG_MEMORY \
 }
 

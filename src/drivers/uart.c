@@ -272,6 +272,34 @@ int picon_uart_close(const DEVICE_FILE *devf)
 	return 0;
 }
 
+int picon_uart_fsync(const DEVICE_FILE *devf)
+{
+	unsigned char 	ux;
+	const uart_t	*uartp;
+	uart_inst_t     *uart;
+
+	if (!devf) return -EINVAL;
+
+	ux = devf->minor;
+	uartp = uarts+ux;		// Access UART's buffer
+	uart = uarts[ux].uart;		// Lookup UART address
+
+	if ( ux >=UART_MAX || !uartp)
+		return -EINVAL;			// Invalid UART ref
+
+	if (!uartq_tx[ux])
+		return 0; // nothing to be done
+
+	// stop receiving interrupts
+	uart_set_irq_enables(uart, false ,false);
+
+	while (rtos_queue_messages_waiting(uartq_tx[ux]))
+		rtos_task_yield();
+
+	return 0;
+}
+
+
 int picon_uart_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data)
 {
 	unsigned char 	ux;
@@ -322,6 +350,7 @@ int picon_uart_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int c
 	const uart_t	*uartp;
 	uart_inst_t     *uart;
 	uint32_t	n;
+	rtos_base_type_t        rv;
 
 	if (!devf) return -1;
 
@@ -333,7 +362,9 @@ int picon_uart_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int c
 		return -EINVAL;		// Invalid UART ref
 
 	for (n=0; n < count; n++ ) {
-		rtos_queue_send(uartq_tx[ux], buf+n, RTOS_PORT_MAX_DELAY);
+		rv = rtos_queue_send(uartq_tx[ux], buf+n, RTOS_PORT_MAX_DELAY);
+		if (rv != RTOS_TRUE)
+			break;
 	}
 
 	uart_set_irq_enables(uart, uartq_rx[ux]!=NULL, rtos_queue_messages_waiting(uartq_tx[ux]) );

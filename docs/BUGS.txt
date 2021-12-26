@@ -1,0 +1,1 @@
+- After fixing the issue of corrup UART data in SMP mode by adding TX queues now handling control-c and cancelable commands don't work

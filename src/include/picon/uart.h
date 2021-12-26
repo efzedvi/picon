@@ -15,6 +15,7 @@ int picon_uart_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned int co
 int picon_uart_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count);
 int picon_uart_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data);
 int picon_uart_close(const DEVICE_FILE *devf);
+int picon_uart_fsync(const DEVICE_FILE *devf);
 
 #define UART_DEV \
 &(DEVICE)\
@@ -29,6 +30,7 @@ int picon_uart_close(const DEVICE_FILE *devf);
   .lseek = NULL,\
   .sendto   = NULL,\
   .recvfrom = NULL,\
+  .fsync= picon_uart_fsync,\
   .flags = DEV_FLAG_SERIALIZE \
 }
 

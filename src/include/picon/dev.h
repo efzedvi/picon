@@ -43,6 +43,7 @@ typedef struct _DEV {
 				  const void *dest_addr, uint8_t addrlen);
 	int		(*recvfrom)(const DEVICE_FILE *devf, void *buf, size_t len, int flags,
 				    void *src_addr, uint8_t *addrlen);
+	int		(*fsync)(const DEVICE_FILE *devf);
 
 	uint8_t		flags;
 } __attribute__((packed)) DEVICE;
