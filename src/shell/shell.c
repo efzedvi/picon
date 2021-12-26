@@ -372,11 +372,7 @@ static void shell_command_runner_task(void *args)
 
 	rtos_semaphore_give(cmd->sem);
 
-	rtos_task_delay(1000);
-
 	rtos_task_suspend(NULL);
-
-	rtos_task_delay(1000);
 }
 
 
