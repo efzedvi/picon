@@ -1,5 +1,8 @@
 TODO:
 -more ioctl for HW flow control and format changing and getting
--couple ux and uart[01]
+-couple ux and uart[01] and add ability to pass other pins
 -give void vTaskGetRunTimeStats and uxTaskGetSystemState a try
-
+-make usb CDC working
+-I2C
+-SPI
+-GPIO
