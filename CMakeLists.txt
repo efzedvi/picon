@@ -27,6 +27,7 @@ target_sources(picon_common INTERFACE
         src/core/log.c
         src/core/picon.c
 	src/drivers/uart.c
+	src/drivers/usb_serial.c
 	src/drivers/mem.c
 	src/shell/shell.c
 	src/shell/shell_log.c
@@ -43,8 +44,8 @@ target_link_libraries(picon_common INTERFACE
         pico_time
         pico_stdlib_headers
 	pico_unique_id
-#        pico_stdlib
-#        tinyusb_device
+        tinyusb_device_unmarked
+#        pico_stdio_usb
 	hardware_gpio
 	hardware_uart
 	hardware_irq
