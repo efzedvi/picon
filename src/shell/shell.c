@@ -105,9 +105,9 @@ int shell_uname(int argc, char **argv)
 		PICON_BUILD_DATE, PICON_BUILD_TIME);
 
 	if (argc > 1 && strcmp(argv[1], "-a")==0) {
-		char id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES+1];
+		char id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES*2+1];
 		id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES] = '\0';
-		pico_get_unique_board_id_string(id, PICO_UNIQUE_BOARD_ID_SIZE_BYTES);
+		pico_get_unique_board_id_string(id, sizeof(id));
 		printf("NOR Flash ID: %s\n", id);
 	}
 

@@ -24,6 +24,7 @@
 
 #define USB_RX_QUEUE_SIZE		CFG_TUD_CDC_RX_BUFSIZE
 #define USB_TX_QUEUE_SIZE		CFG_TUD_CDC_TX_BUFSIZE
+#define PICON_USB_BUF_SIZE		(128)
 
 #define MIN_WAIT_TIME			(100)
 
@@ -32,7 +33,7 @@ static rtos_queue_handle_t usb_txq;		// USB transmit queue
 static rtos_queue_handle_t usb_rxq;		// USB receive queue
 static int usbs_flags = 0;
 
-#define USB_DELAY_TICKS		(25)
+#define USB_DELAY_TICKS		(5)
 
 
 // ---- descriptors
@@ -157,9 +158,10 @@ const uint16_t *tud_descriptor_string_cb(uint8_t index, __unused uint16_t langid
 // USB Driver task:
 static void usb_serial_task(void *arg)
 {
-	int 	rc;
-	char	ch;
-
+	int 		rc, n=0;
+	char		ch;
+	char            txbuf[PICON_USB_BUF_SIZE];
+	uint16_t        txlen = 0;
 
 	for (;;) {
 		tud_task();
@@ -173,16 +175,23 @@ static void usb_serial_task(void *arg)
 				} 
 			}
 
-			if (rtos_queue_messages_waiting(usb_txq)) {
-				if (rtos_queue_receive(usb_txq, &ch, RTOS_PORT_MAX_DELAY) != RTOS_PASS) {
-					int avail = (int) tud_cdc_write_available();
-					if (avail >= 1) {
-						tud_cdc_write(&ch, 1);
-					} else {
-						tud_cdc_write_flush();
-					}
+			tud_task();
+
+			// slurp the tx queue data into a buffer
+			txlen = MIN(rtos_queue_messages_waiting(usb_txq), tud_cdc_write_available());
+			txlen = MIN(txlen, sizeof(txbuf));
+
+			if (txlen > 0) {
+				for(n=0; n<txlen; n++) {
+					if (rtos_queue_receive(usb_txq, txbuf+n, 0) != RTOS_PASS)
+						break;
 				}
+
+				if (n > 0)
+					tud_cdc_write(txbuf, n);
 			}
+
+			tud_cdc_write_flush();
 		}
 
 		rtos_task_delay(USB_DELAY_TICKS);
@@ -200,7 +209,7 @@ int picon_usb_serial_init(uint8_t ux, void *params)
 
 	tusb_init();
 
-	rtos_task_create(usb_serial_task, "USBCDC", 500, NULL, PICON_USB_SERIAL_PRIORITY, NULL);
+	rtos_task_create(usb_serial_task, "USBCDC", 600, NULL, PICON_USB_SERIAL_PRIORITY, NULL);
 	//TODO: check the return value of task_create
 
 	return 0;
@@ -214,6 +223,9 @@ int picon_usb_serial_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned 
 	UNUSED(devf);
 
 	if (!buf) return -1;
+
+	if (usbs_flags & PICON_IO_NONBLOCK)
+		wait_time = MIN_WAIT_TIME;
 
 	for(n=0; n<count; n++) {
 		if ( rtos_queue_receive(usb_rxq, buf++, wait_time) != RTOS_PASS)
