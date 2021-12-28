@@ -6,6 +6,7 @@
 #include "picon/console.h"      
 #include "picon/ioctl.h"        
 #include "picon/uart.h"
+#include "picon/usb_serial.h"
 #include "picon/mem.h"
 #include "shell/shell.h"
 
@@ -16,6 +17,7 @@
 
 
 static const DEVICE_FILE *dt[] = {
+	DEV_ENTRY("/dev/usbcdc",  USB_SERIAL_DEV, 0, NULL)
 	DEV_ENTRY("/dev/mem", MEM_DEV, 0, NULL)
         DEV_ENTRY("/dev/uart0", UART_DEV, 0, NULL)
         NULL
@@ -29,6 +31,7 @@ int main()
         dev_init(dt);
 
         CONSOLE_CREATE("/dev/uart0", "ttyS0");
+        CONSOLE_CREATE("/dev/usbcdc", "ttyCDC");
 
 	rtos_task_start_scheduler();
 
