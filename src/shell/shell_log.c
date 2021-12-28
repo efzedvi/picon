@@ -28,8 +28,9 @@ static void shell_log_usage(void)
 
 int shell_log(int argc, char *argv[])
 {
-	int 	rv = 0;
-	uint8_t	size=0, capturing=0;
+	int 		rv = 0;
+	uint16_t	size=0;
+	uint8_t 	capturing=0;
 
 	if (argc < 2) {
 		log_status(&size, &capturing);

@@ -16,6 +16,7 @@
 #include "picon/ioctl.h"
 #include "picon/io.h"
 #include "picon/usb_serial.h"
+#include "picon/log.h"
 
 #include "tusb.h"
 #include "pico/unique_id.h"
@@ -166,13 +167,15 @@ static void usb_serial_task(void *arg)
 	for (;;) {
 		tud_task();
 
-		if (tud_cdc_connected() && tud_cdc_available()) {
+		if (tud_cdc_connected()) {
 
-			rc = (int) tud_cdc_read(&ch, (uint32_t) 1);
-			if (rc == 1) {
-				if (rtos_queue_spaces_available(usb_rxq) > 0) {
-					rtos_queue_send(usb_rxq, &ch, 0);
-				} 
+			if (tud_cdc_available()) {
+				rc = (int) tud_cdc_read(&ch, (uint32_t) 1);
+				if (rc == 1) {
+					if (rtos_queue_spaces_available(usb_rxq) > 0) {
+						rtos_queue_send(usb_rxq, &ch, 0);
+					}
+				}
 			}
 
 			tud_task();
@@ -190,7 +193,6 @@ static void usb_serial_task(void *arg)
 				if (n > 0)
 					tud_cdc_write(txbuf, n);
 			}
-
 			tud_cdc_write_flush();
 		}
 
@@ -228,7 +230,7 @@ int picon_usb_serial_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned 
 		wait_time = MIN_WAIT_TIME;
 
 	for(n=0; n<count; n++) {
-		if ( rtos_queue_receive(usb_rxq, buf++, wait_time) != RTOS_PASS)
+		if ( rtos_queue_receive(usb_rxq, buf+n, wait_time) != RTOS_PASS)
 			break;
 	}
 
@@ -244,9 +246,8 @@ int picon_usb_serial_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned
 	if (!buf) return -1;
 
 	for(n=0; n<count; n++) {
-		if (rtos_queue_send(usb_txq, buf, USB_DELAY_TICKS) != RTOS_PASS) break;
-
-		++buf;
+		if (rtos_queue_send(usb_txq, buf+n, USB_DELAY_TICKS) != RTOS_PASS)
+			break;
 	}
 
 	return n;

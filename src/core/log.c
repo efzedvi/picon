@@ -28,9 +28,9 @@ typedef struct
 rtos_semaphore_handle_t log_mtx = NULL;
 uint8_t			log_enabled = 0;
 LOG_REC			*log_buf = NULL;
-uint8_t			log_idx = 0;
-uint8_t			log_size = 0;
-uint8_t			log_count = 0;
+uint16_t			log_idx = 0;
+uint16_t		log_size = 0;
+uint16_t			log_count = 0;
 
 void log_init(uint16_t size)
 {
@@ -132,7 +132,7 @@ void log_clear(void)
 	log_count = 0;
 }
 
-void log_status(uint8_t *size, uint8_t *capturing)
+void log_status(uint16_t *size, uint8_t *capturing)
 {
 	if (!capturing || !size) return;
 

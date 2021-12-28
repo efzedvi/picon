@@ -46,7 +46,7 @@ typedef enum {
 
 void log_init(uint16_t size);
 void log_shutdown(void);
-void log_status(uint8_t *size, uint8_t *capturing);
+void log_status(uint16_t *size, uint8_t *capturing);
 void log_capture(uint8_t onoff);
 void log_record(uint8_t from_isr, LOG_SRC_FILE file, uint16_t line, const char* fmt, ...);
 void log_display(uint8_t num);
