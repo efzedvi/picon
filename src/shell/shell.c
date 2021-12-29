@@ -12,6 +12,7 @@
 
 #include "pico/unique_id.h"
 #include "pico/version.h"
+#include "pico/bootrom.h"
 
 #include "picon.h"
 
@@ -163,8 +164,10 @@ int shell_reboot(int argc, char **argv)
 
 	if (strcmp(argv[1], "-s") == 0 ) {
 		printf("Last reboot: %s\n", picon_watchdog_caused_reboot() ? "watchdog" : "reboot");
+	} else if (strcmp(argv[1], "-b") == 0 ) {
+		reset_usb_boot(0, 0);
 	} else {
-		printf("usage: reboot [-s]\n");
+		printf("usage: reboot [-s | -b]\n");
 	}
 
 	return 0;

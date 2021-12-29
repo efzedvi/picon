@@ -44,6 +44,7 @@ target_link_libraries(picon_common INTERFACE
         pico_time
         pico_stdlib_headers
 	pico_unique_id
+	pico_bootrom
         tinyusb_device_unmarked
 #        pico_stdio_usb
 	hardware_gpio
