@@ -8,6 +8,7 @@
 #include "hardware/watchdog.h"
 #include "hardware/rtc.h"
 #include "pico/types.h"
+#include "pico/binary_info.h"
 
 #include "rtos.h"
 #include "picon.h"
@@ -43,6 +44,11 @@ static void picon_heart_beat_task(void *args)
 int picon_init()
 {
 	rtc_init();
+
+	bi_decl(bi_program_description("Picon (Pico Console) program. Author: Faraz Vahabzadeh (faraz@fzv.ca)"));
+	bi_decl(bi_program_version_string(PICON_VERSION));
+	bi_decl(bi_program_url("<github url here>")); //TODO
+
 
 #ifdef CONFIG_HEART_BEAT
 	gpio_init(CONFIG_HEART_BEAT_PIN);
