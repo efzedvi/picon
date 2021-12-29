@@ -176,23 +176,55 @@ int shell_reboot(int argc, char **argv)
 
 int shell_ps(int argc, char **argv)
 {
-	char *buf;
+	if (argc > 1 && strcmp(argv[1], "-a") == 0) {
+		// not using rtos_task_list
+		rtos_task_status_t 	  *task_array;
+		volatile rtos_base_type_t num_tasks;
+		int 	 i;
+		const    char task_state_desc[5] = {
+			'R', 'X', 'B', 'S', 'D'
+		};
 
-	UNUSED(argc);
-	UNUSED(argv);
+		num_tasks = rtos_task_get_number_of_tasks();
 
-	buf = (char *) rtos_port_malloc(1024);
-	if (!buf) {
-		printf("Failed to allocate memory\n");
-		return -1;
+		task_array = (rtos_task_status_t *) rtos_port_malloc(num_tasks *
+								     sizeof(rtos_task_status_t));
+		if (!task_array) {
+			printf("Failed to allocate memory\n");
+			return -1;
+		}
+
+		rtos_task_get_system_state(task_array, num_tasks, NULL);
+
+		printf("Task            State   Prio    Stack_Base  StackPtr  Num\n");
+		printf("----------------------------------------------------------\n");
+		for(i=0; i<num_tasks; i++) {
+			printf("%-16s  %c      %2d      %x     %4d    %2d\n",
+				task_array[i].pcTaskName,
+				task_state_desc[(int) task_array[i].eCurrentState],
+				task_array[i].uxCurrentPriority,
+				task_array[i].pxStackBase,
+				task_array[i].usStackHighWaterMark,
+				task_array[i].xTaskNumber
+			);
+		}
+		rtos_port_free(task_array);
+	} else {
+		char *buf;
+
+		buf = (char *) rtos_port_malloc(1024);
+		if (!buf) {
+			printf("Failed to allocate memory\n");
+			return -1;
+		}
+
+		rtos_task_list(buf);
+		printf("Task           State   Prio    Stack   Num\n");
+		printf("------------------------------------------\n");
+		printf("%s\n", buf);
+		rtos_port_free(buf);
 	}
 
-	rtos_task_list(buf);
-	printf("Task           State   Prio    Stack   Num\n");
-	printf("------------------------------------------\n");
-	printf("%s\n", buf);
-
-	rtos_port_free(buf);
 	return 0;
 }
 
