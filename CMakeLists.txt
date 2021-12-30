@@ -31,6 +31,7 @@ target_sources(picon_common INTERFACE
 	src/drivers/mem.c
 	src/shell/shell.c
 	src/shell/shell_log.c
+	src/shell/shell_gpio.c
         src/main/main.c)
 target_include_directories(picon_common INTERFACE
 	src/include
@@ -45,6 +46,7 @@ target_link_libraries(picon_common INTERFACE
         pico_stdlib_headers
 	pico_unique_id
 	pico_bootrom
+	pico_malloc
         tinyusb_device_unmarked
 #        pico_stdio_usb
 	hardware_regs

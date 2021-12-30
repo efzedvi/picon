@@ -24,7 +24,7 @@
 #include "picon/ioctl.h"
 #include "picon/utils.h"
 #include "shell/shell.h"
-//#include "/shell_gpio.h"
+#include "shell/shell_gpio.h"
 //#include "picon/shell_adc.h"
 //#include "picon/shell_dac.h"
 //#include "picon/shell_timer.h"
@@ -40,14 +40,14 @@
 
 const SHELL_COMMAND  shell_commands[] = {
 	SHELL_BASIC_COMMANDS
-//	SHELL_GPIO_COMMAND
+	SHELL_LOG_COMMAND
+	SHELL_GPIO_COMMAND
 //	SHELL_ADC_COMMAND
 //	//SHELL_DAC_COMMAND
 //	SHELL_BOARD_REGDUMP
 //	SHELL_TIMER_COMMAND
 //	SHELL_I2C_COMMAND
 //	SHELL_SPI_COMMAND
-	SHELL_LOG_COMMAND
 //	SHELL_RF_COMMAND
 	{ NULL, 	NULL, 0, 0 },
 };

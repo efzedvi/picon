@@ -10,17 +10,16 @@
 #include <stdlib.h>
 
 #include "picon/config.h"
-#include "picon/shell.h"
 #include "picon/console.h"
 #include "picon/printf.h"
 #include "picon/io.h"
 #include "picon/ioctl.h"
 #include "picon/utils.h"
-#include "board.h"
-#include "gpio.h"
 
-#include "picon/shell_gpio.h"
+#include "shell/shell.h"
+#include "shell/shell_gpio.h"
 #include "hardware/platform_defs.h"
+#include "hardware/gpio.h"
 
 typedef enum _picon_gpio_role {
 	TX,	// UART
@@ -38,7 +37,7 @@ typedef enum _picon_gpio_role {
 	B,	// PWM
 
 	GPIN0, //CLOCK
-	GPOUT0, 
+	GPOUT0,
 	GPIN1,
 	GPOUT1,
 	GPOUT2,
@@ -185,348 +184,268 @@ picon_gpio_def	picon_gpios[PICON_MAX_GPIO][PICON_MAX_GPIO_FUNC] = {
 	  { GPIO_FUNC_USB, -1, VBUS_EN }, }, // 29
 };
 
+const char *role_to_str[21] = {
+	"TX",
+	"RX",
+	"CTS",
+	"RTS",
+	"SDA",
+	"SCL",
+	"SCK",
+	"CS",
+	"MOSI",
+	"MISO",
+	"A",
+	"B",
+	"GPIN0",
+	"GPOUT0",
+	"GPIN1",
+	"GPOUT1",
+	"GPOUT2",
+	"GPOUT3",
+	"OVCUR_DET",
+	"VBUS_DET",
+	"VBUS_EN"
+};
 
 
 
-const char *dir_to_str[4] = {
+const char *dir_to_str[2] = {
 	"input",
-	"output-slow",
-	"output-normal",
-	"output-fast",
+	"output",
 };
 
-const char *mode_to_str[8] = {
-	"input-analog",
-	"input-float",
-	"input-pullup",
-	"input-pulldown",
-	"output-pushpull",
-	"output-opendrain",
-	"output-alt-pp",
-	"output-alt-od",
+const char *speed_to_str[2] = {
+	"slow",
+	"fast",
 };
 
-static void gpio_user_isr(void)
+const char *func_to_str[9] = {
+	//"xip",
+	"spi",
+	"uart",
+	"i2c",
+	"pwm",
+	"sio",
+	"pio0",
+	"pio1",
+	"gpck",
+	"usb",
+};
+
+const uint8_t strength_to_num[4] = { 2, 4, 8, 12 };
+
+typedef enum _shell_gpio_cmd_t {
+	SHELL_GPIO_READ,
+	SHELL_GPIO_WRITE,
+	SHELL_GPIO_TOGGLE,
+	SHELL_GPIO_CONFIG,
+	SHELL_GPIO_LIST,
+
+	SHELL_GPIO_UNKNOWN,
+} shell_gpio_cmd_t;
+
+
+static void func_role_to_str(uint8_t gpio, uint8_t func, char *buf, uint8_t buf_size)
 {
-	if (isr_test_port && isr_test_pin)
-		gpio_toggle(isr_test_port, isr_test_pin);
+	if (!buf || !buf_size || gpio >= PICON_MAX_GPIO) return;
+
+	if (func > 8 || func==0) {
+		strncpy(buf, " ", buf_size);
+		return;
+	}
+
+	func -= 1;
+
+	if (picon_gpios[gpio][func].idx > 0) {
+		snprintf(buf, buf_size, "%s%d %s", func_to_str[func], picon_gpios[gpio][func].idx, role_to_str[picon_gpios[gpio][func].role]);
+	} else if (picon_gpios[gpio][func].role != ROLE_NULL) {
+		snprintf(buf, buf_size, "%s %s", func_to_str[func], role_to_str[picon_gpios[gpio][func].role]);
+	} else {
+		snprintf(buf, buf_size, "%s", func_to_str[func]);
+	}
 }
+
 
 
 static void shell_gpio_usage(void)
 {
 	printf( "Options are:\n"
-		"-r <gpio>\n"
-		"-w <gpio> [val=0]\n"
-		"-t <gpio>\n"
-		"-c <gpio> -d <dir> -m <mode>\n"
-		"-g <gpio>\n"
-		"-l <port>\n"
-		"-i <gpio> -x <trigger> -u <gpio|null>\n\n"
-		"dir  : input | output-slow | output-normal | output-fast\n"
-		"mode : input-analog | input-float | input-pullup | input-pulldown\n"
-		"       output-pushpull | output-opendrain | output-alt-pp | output-alt-od\n"
-		"trigger : rising | falling | any : default is any\n");
+		"-l\n"
+		"-p <gpio>\n"
+		"-p <gpio> -w <0|1>\n"
+		"-p <gpio> -t\n"
+		"-p <gpio> -c <i|o>\n"
+		"	   -u -d -s <s|f> -a <2|4|8|12>\n"
+		);
 }
 
-int shell_parse_gpio(char *str, PICON_GPIO *gpio)
+void display_gpios(uint8_t start, uint8_t end)
 {
-	char	port_ch;
-	int	tmp;
+	int			i;
+	char			role[16];
+	enum gpio_function	func;
+	uint8_t			pull_up=0, pull_down=0, dir_out=0, value=0;
+	enum gpio_slew_rate	speed = GPIO_SLEW_RATE_SLOW;
+	enum gpio_drive_strength	strength=GPIO_DRIVE_STRENGTH_4MA;
 
-	if (!str || !gpio) return -1;
+	printf("GPIO   Direction   Value   Pull   Speed   Strength  Function\n");
+	printf("---------------------------------------------------------------\n");
+	for(i=start; i < PICON_MAX_GPIO && i <= end ; i++) {
+		dir_out = gpio_is_dir_out(i); // note GPIO_OUT is 1/true and GPIO_IN is 0/false
+		value = gpio_get(i);
+		pull_up = gpio_is_pulled_up(i);
+		pull_down = gpio_is_pulled_down(i);
+		speed = gpio_get_slew_rate(i);
+		strength = gpio_get_drive_strength(i);
+		func = gpio_get_function(i);
 
-	port_ch = str[0];
-	if (!isalpha(port_ch)) {
-		printf("Invalid GPIO port '%s'\n\n", str);
-		return -1;
-	}
-	tmp = toupper(port_ch) - 'A';
-	if (tmp >= PICON_PORT_MAX) {
-		printf("Out of range GPIO port\n\n");
-		return -1;
-	}
-	gpio->port = (PICON_GPIO_PORT) tmp;
+		func_role_to_str(i, func, role, sizeof(role));
 
-	if (str[1] == '\0') {
-		gpio->pin = PICON_PIN_ALL;
-	} else {
-		tmp = atoi(str + 1);
-		if (tmp > 15) {
-			printf("Out of range GPIO pin\n\n");
-			return -1;
-		}
-		if (tmp < 0) tmp = 0;
-		gpio->pin = PICON_PIN(tmp % 16);
+		printf(" %2d      %-6s      %d      %c%c    %s    %2d mA     %s\n", i, dir_to_str[dir_out], value,
+			pull_up ? 'U' : ' ', pull_down ? 'D' : ' ',
+			speed_to_str[speed], strength_to_num[strength],
+			role
+			);
 	}
 
-	return 0;
+
 }
 
 int shell_gpio(int argc, char *argv[])
 {
-	const char *opt_string = "r:w:t:c:g:l:i:d:m:u:x:";
-	PICON_OPT  opt;
-	int	   next_option;
-	SHELL_GPIO_CMDS	cmd = SHELL_GPIO_UNKNOWN;
-	char		dir_dir=0, mode_dir=0;
-	int		rv, fd=-1;
-	uint16_t 	i;
-	PICON_IOCTL_GPIO_CONFIG		gpio_cfg;
-	PICON_IOCTL_GPIO_INTERRUPT	gpio_intr;
-	PICON_GPIO			gpio, test_gpio;
+	const char 	*opt_string = "p:w:tc:uds:a:lh";
+	PICON_OPT  	opt;
+	int	   	next_option, tmp;
+	int8_t	  	gpio=-1;
+	shell_gpio_cmd_t	cmd=SHELL_GPIO_UNKNOWN;
+	uint8_t			pull_up=0, pull_down=0, dir_out=0, value=0;
+	enum gpio_slew_rate	speed = GPIO_SLEW_RATE_SLOW;
+	enum gpio_drive_strength	strength=GPIO_DRIVE_STRENGTH_4MA;
 
-	gpio.port = PICON_PORT_MAX;
-	gpio.pin = PICON_PIN_ALL;
-	gpio.value = 0;
 
-	gpio_cfg.mode = PICON_GPIO_MODE_MAX;
-	gpio_cfg.dir_speed = PICON_GPIO_DIR_MAX;
+	if (argc >= 2) {
+		opt_init(&opt, opt_string);
 
-	gpio_intr.trigger = PICON_GPIO_TRIGGER_ANY;
-	gpio_intr.func	= NULL;
+		do {
+			next_option = getopt(&opt, argc, argv);
 
-	if (argc < 2) {
-		shell_gpio_usage();
-		return -1;
+			switch (next_option) {
+				case 'l':
+					cmd = SHELL_GPIO_LIST;
+					break;
+
+				case 'p':
+					gpio = atoi(opt.optarg);
+					if (gpio < 0 || gpio >= PICON_MAX_GPIO) {
+						printf("Invalid gpio\n");
+						return -2;
+					}
+					break;
+				case 'w':
+					value = atoi(opt.optarg) ? 1 : 0;
+					cmd = SHELL_GPIO_WRITE;
+					break;
+				case 't':
+					cmd = SHELL_GPIO_TOGGLE;
+					break;
+				case 'c':
+					if (strcmp(opt.optarg, "i") !=0 && strcmp(opt.optarg, "o") !=0) {
+						printf("Invalid pin direction, must be either 'i', or 'o'\n");
+						return -2;
+					}
+					dir_out = (opt.optarg[0] == 'o');
+					cmd = SHELL_GPIO_CONFIG;
+					break;
+				case 'u':
+					pull_up = 1;
+					break;
+				case 'd':
+					pull_down = 1;
+					break;
+				case 's':
+					if ( strcmp(opt.optarg, "s") == 0 ) {
+						speed = GPIO_SLEW_RATE_SLOW;
+					} else if ( strcmp(opt.optarg, "f") == 0) {
+						speed = GPIO_SLEW_RATE_FAST;
+					} else {
+						printf("Invalid pin speed, must be either 's', or 'f'\n");
+						return -2;
+					}
+					break;
+				case 'a':
+					tmp = atoi(opt.optarg);
+					switch (tmp) {
+						case 2:
+							strength = GPIO_DRIVE_STRENGTH_2MA;
+							break;
+						case 4:
+							strength = GPIO_DRIVE_STRENGTH_4MA;
+							break;
+						case 8:
+							strength = GPIO_DRIVE_STRENGTH_8MA;
+							break;
+						case 12:
+							strength = GPIO_DRIVE_STRENGTH_12MA;
+							break;
+						default:
+							printf("Invalid pin strengh, must be either 2, 4, 8, or 12 mA\n");
+							return -2;
+					}
+					break;
+				case 'h':
+					shell_gpio_usage();
+					return -1;
+				case -1:
+					break;
+
+				case '?':
+					printf("Invalid opiton\n\n");
+					shell_gpio_usage();
+					return -1;
+				case ':':
+					printf("Missing argument\n\n");
+				default:
+					shell_gpio_usage();
+					return -1;
+			};
+
+		} while (next_option != -1);
+	} else {
+		cmd = SHELL_GPIO_LIST;
 	}
 
-	opt_init(&opt, opt_string);
-
-	do {
-		next_option = getopt(&opt, argc, argv);
-
-		switch (next_option) {
-
-			case 'r':
-				cmd = SHELL_GPIO_READ;
-				rv = shell_parse_gpio(opt.optarg, &gpio);
-				if (rv < 0) return rv;
-				break;
-			case 'w':
-				cmd = SHELL_GPIO_WRITE;
-				rv = shell_parse_gpio(opt.optarg, &gpio);
-				if (rv < 0) return rv;
-				break;
-			case 't':
-				cmd = SHELL_GPIO_TOGGLE;
-				rv = shell_parse_gpio(opt.optarg, &gpio);
-				if (rv < 0) return rv;
-				break;
-			case 'c':
-				cmd = SHELL_GPIO_CONFIG;
-				rv = shell_parse_gpio(opt.optarg, &gpio);
-				if (rv < 0) return rv;
-				break;
-			case 'g':
-				cmd = SHELL_GPIO_CHECK;
-				rv = shell_parse_gpio(opt.optarg, &gpio);
-				if (rv < 0) return rv;
-				break;
-			case 'l':
-				cmd = SHELL_GPIO_LIST;
-				rv = shell_parse_gpio(opt.optarg, &gpio);
-				if (rv < 0) return rv;
-				break;
-			case 'd':
-				if (strcmp(opt.optarg, "input") == 0) {
-					gpio_cfg.dir_speed = PICON_GPIO_DIR_INPUT;
-					dir_dir = 1;
-				} else if (strcmp(opt.optarg, "output-slow") == 0) {
-					gpio_cfg.dir_speed  = PICON_GPIO_DIR_OUPUT_SLOW;
-					dir_dir = 0;
-				} else if (strcmp(opt.optarg, "output-normal") == 0) {
-					gpio_cfg.dir_speed  = PICON_GPIO_DIR_OUPUT_NORMAL;
-					dir_dir = 0;
-				} else if (strcmp(opt.optarg, "output-fast") == 0) {
-					gpio_cfg.dir_speed  = PICON_GPIO_DIR_OUPUT_FAST;
-					dir_dir = 0;
-				} else {
-					printf("Invalid direction\n\n");
-					shell_gpio_usage();
-					return -1;
-				}
-
-				break;
-
-			case 'm':
-				if (strcmp(opt.optarg, "input-analog") == 0) {
-					gpio_cfg.mode = PICON_GPIO_MODE_INPUT_ANALOG;
-					mode_dir = 1;
-				} else if (strcmp(opt.optarg, "input-float") == 0) {
-					gpio_cfg.mode = PICON_GPIO_MODE_INPUT_FLOAT;
-					mode_dir = 1;
-				} else if (strcmp(opt.optarg, "input-pullup") == 0) {
-					gpio_cfg.mode = PICON_GPIO_MODE_INPUT_PULLUP;
-					mode_dir = 1;
-				} else if (strcmp(opt.optarg, "input-pulldown") == 0) {
-					gpio_cfg.mode = PICON_GPIO_MODE_INPUT_PULLDOWN;
-					mode_dir = 1;
-				} else if (strcmp(opt.optarg, "output-pushpull") == 0) {
-					gpio_cfg.mode = PICON_GPIO_MODE_OUTPUT_PUSHPULL;
-					mode_dir = 0;
-				} else if (strcmp(opt.optarg, "output-opendrain") == 0) {
-					gpio_cfg.mode = PICON_GPIO_MODE_OUTPUT_OPENDRAIN;
-					mode_dir = 0;
-				} else if (strcmp(opt.optarg, "output-alt-pp") == 0) {
-					gpio_cfg.mode = PICON_GPIO_MODE_OUTPUT_ALTFN_PUSHPULL;
-					mode_dir = 0;
-				} else if (strcmp(opt.optarg, "output-alt-od") == 0) {
-					gpio_cfg.mode = PICON_GPIO_MODE_OUTPUT_ALTFN_OPENDRAIN;
-					mode_dir = 0;
-				} else {
-					printf("Invalid gpio_cfg.mode\n\n");
-					shell_gpio_usage();
-					return -1;
-				}
-				break;
-
-			case 'i':
-				cmd = SHELL_GPIO_INTR;
-				rv = shell_parse_gpio(opt.optarg, &gpio);
-				if (rv < 0) return rv;
-				break;
-
-			case 'x':
-				if (strcmp(opt.optarg, "rising") == 0) {
-					gpio_intr.trigger = PICON_GPIO_TRIGGER_RISING;
-				} else if (strcmp(opt.optarg, "falling") == 0) {
-					gpio_intr.trigger = PICON_GPIO_TRIGGER_RISING;
-				} else if (strcmp(opt.optarg, "any") == 0) {
-					gpio_intr.trigger = PICON_GPIO_TRIGGER_ANY;
-				} else {
-					printf("Invalid trigger\n\n");
-					shell_gpio_usage();
-					return -1;
-				}
-				break;
-
-			case 'u':
-				if (strcmp(opt.optarg, "null")==0) {
-					gpio_intr.func = NULL;
-					isr_test_port = 0;
-					isr_test_pin  = 0;
-				} else {
-					rv = shell_parse_gpio(opt.optarg, &test_gpio);
-					if (rv < 0) return rv;
-
-					isr_test_port = gpio_ll_port(test_gpio.port);
-					isr_test_pin  = test_gpio.pin;
-					gpio_intr.func = gpio_user_isr;
-
-				}
-				break;
-
-			case -1:
-				break;
-
-			case '?':
-				printf("Invalid opiton\n\n");
-				shell_gpio_usage();
-				return -1;
-			case ':':
-				printf("Missing argument\n\n");
-			default:
-				shell_gpio_usage();
-				return -1;
-		};
-	
-	} while (next_option != -1); 
-
-	if (dir_dir != mode_dir) {
-		printf("Direction and Mode don't match\n\n");
+	if (gpio < 0 && cmd != SHELL_GPIO_LIST) {
+		printf("gpio pin not specified\n");
 		return -2;
 	}
 
-	if (gpio.port == PICON_PORT_MAX || gpio.port > PICON_MAX_GPIO_PORT) {
-		printf("No valid GPIO port specified\n\n");
-		return -3;
-	}
+	if (cmd == SHELL_GPIO_UNKNOWN)
+		cmd = SHELL_GPIO_READ;
 
-	fd = open(GPIO_DEV_NAME, 0);
-	if (fd < 0) {
-		printf("Failed to open %s\n\n", GPIO_DEV_NAME);
-		return -4;
-	}
-
-	rv = 0;
 	switch (cmd) {
 		case SHELL_GPIO_READ:
-			rv = ioctl(fd, PICON_IOC_GPIO_GET, &gpio);
-			if (rv < 0) break;
-			if (gpio.pin == PICON_PIN_ALL)
-				printf("%x\n", gpio.value);
-			else
-				printf("%x\n", gpio.value ? 1 : 0);
+			display_gpios(gpio, gpio);
 			break;
 
 		case SHELL_GPIO_WRITE:
-			if (opt.optind < argc)
-				gpio.value = (uint16_t) strtol(argv[opt.optind], NULL, 16);
-
-			rv = ioctl(fd, PICON_IOC_GPIO_SET, &gpio);
+			gpio_put(gpio, value);
 			break;
 
 		case SHELL_GPIO_TOGGLE:
-			rv = ioctl(fd, PICON_IOC_GPIO_TOGGLE, &gpio);
+			gpio_xor_mask(1 << gpio);
 			break;
 
 		case SHELL_GPIO_CONFIG:
-
-			if (gpio_cfg.mode == PICON_GPIO_MODE_MAX) {
-				printf("Inalid mode\n\n");
-				close(fd);
-				return -5;
-			}
-
-			if (gpio_cfg.dir_speed == PICON_GPIO_DIR_MAX) {
-				printf("Inalid GPIO direction\n\n");
-				close(fd);
-				return -5;
-			}
-
-			gpio_cfg.gpio = gpio;
-			rv = ioctl(fd, PICON_IOC_GPIO_SET_CONFIG, &gpio_cfg);
-			break;
-
-		case SHELL_GPIO_CHECK:
-			gpio_cfg.gpio = gpio;
-			rv = ioctl(fd, PICON_IOC_GPIO_GET_CONFIG, &gpio_cfg);
-			if (rv < 0) break;
-
-			printf("%s %s\n", dir_to_str[gpio_cfg.dir_speed],
-					  mode_to_str[gpio_cfg.mode]);
+			gpio_init(gpio);
+			gpio_set_dir(gpio, dir_out);
+			gpio_set_pulls(gpio, pull_up, pull_down);
+			gpio_set_slew_rate(gpio, speed);
+			gpio_set_drive_strength(gpio, strength);
 			break;
 
 		case SHELL_GPIO_LIST:
-			gpio_cfg.gpio = gpio;
-			for(i=0; i<sizeof(uint16_t) * 8; i++) {
-				gpio_cfg.gpio.pin = BIT(i);
-							
-				rv = ioctl(fd, PICON_IOC_GPIO_GET_CONFIG, &gpio_cfg);
-				if (rv < 0) break;
-
-				printf("%c%d\t%d\t%s\n", 'A'+gpio.port, i,
-					gpio_cfg.gpio.value ? 1 : 0,
-					mode_to_str[gpio_cfg.mode]);
-			}
-			break;
-
-		case SHELL_GPIO_INTR:
-
-			if (isr_test_pin) {
-				gpio_cfg.gpio = test_gpio;
-				gpio_cfg.dir_speed = PICON_GPIO_DIR_OUPUT_FAST;
-				gpio_cfg.mode      = PICON_GPIO_MODE_OUTPUT_PUSHPULL;
-				rv = ioctl(fd, PICON_IOC_GPIO_SET_CONFIG, &gpio_cfg);
-				if (rv < 0) {
-					printf("Failed configuring gpio\n");
-					break;
-				}
-			}
-
-			gpio_intr.gpio = gpio;
-			rv = ioctl(fd, PICON_IOC_GPIO_INTERRUPT, &gpio_intr);
+			display_gpios(1, PICON_MAX_GPIO);
 			break;
 
 		default:
@@ -534,12 +453,8 @@ int shell_gpio(int argc, char *argv[])
 			break;
 	}
 
-	if (rv < 0) {
-		printf("ioctl failed rv=%d\n\n", rv);
-	}
 
-	close(fd);
-	return rv;
+	return 0;
 }
 
 

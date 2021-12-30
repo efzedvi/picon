@@ -29,6 +29,9 @@
 #define MAX(a,b)	(((a) > (b))? (a) : (b))
 #endif
 
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(arr) (sizeof((arr)) / sizeof((arr)[0]))
+#endif
 
 #define CONTROL(c) ((c) & 0x1F)
 
