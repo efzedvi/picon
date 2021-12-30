@@ -25,7 +25,7 @@
 #include "hardware/uart.h"
 #include "hardware/irq.h"
 #include "hardware/gpio.h"
-
+#include "pico/platform.h"
 
 #define UART_QUEUE_SIZE		(128)
 #define UART_MAX		(2)
@@ -73,8 +73,8 @@ static uart_t uarts[UART_MAX] = {
 
 uint8_t uart_flags[UART_MAX];
 
-// ISR to receive data
-static void picon_uart_common_isr(uint8_t ux)
+// ISR to receive data, __time_critical_func causes to not be in flash (i.e is placed in RAM)
+static void __time_critical_func(picon_uart_common_isr)(uint8_t ux)
 {
 	const uart_t *uartp = uarts+ux;		// Access UART's buffer
 	uart_inst_t  *uart = uarts[ux].uart;	// Lookup UART address
