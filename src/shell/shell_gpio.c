@@ -20,6 +20,7 @@
 #include "gpio.h"
 
 #include "picon/shell_gpio.h"
+#include "hardware/platform_defs.h"
 
 typedef enum _picon_gpio_role {
 	TX,	// UART
@@ -58,11 +59,11 @@ typedef struct _picon_gpio_def {
 
 
 //#ifdef RASPBERRYPI_PICO
-#define PICON_MAX_GPIO		(29)
+#define PICON_MAX_GPIO		NUM_BANK0_GPIOS
 #define PICON_MAX_GPIO_FUNC	(9)
 //#end
 
-picon_gpio_def	picon_gpios[PICON_MAX_GPIO + 1][PICON_MAX_GPIO_FUNC] = {
+picon_gpio_def	picon_gpios[PICON_MAX_GPIO][PICON_MAX_GPIO_FUNC] = {
 	{ { GPIO_FUNC_SPI, 0, MISO }, { GPIO_FUNC_UART, 0, TX }, { GPIO_FUNC_I2C, 0, SDA }, { GPIO_FUNC_PWM, 0, A },
           { GPIO_FUNC_SIO, -1, ROLE_NULL }, { GPIO_FUNC_PIO0, -1, ROLE_NULL }, { GPIO_FUNC_PIO0, -1, ROLE_NULL }, { GPIO_FUNC_NULL, -1, ROLE_NULL },
 	  { GPIO_FUNC_USB, -1, OVCUR_DET }, }, // 0

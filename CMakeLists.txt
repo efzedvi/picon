@@ -47,6 +47,7 @@ target_link_libraries(picon_common INTERFACE
 	pico_bootrom
         tinyusb_device_unmarked
 #        pico_stdio_usb
+	hardware_regs
 	hardware_gpio
 	hardware_uart
 	hardware_irq

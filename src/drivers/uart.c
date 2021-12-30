@@ -22,13 +22,15 @@
 #include "picon/uart.h"
 #include "picon/log.h"
 
+#include "hardware/platform_defs.h"
 #include "hardware/uart.h"
 #include "hardware/irq.h"
 #include "hardware/gpio.h"
 #include "pico/platform.h"
 
+
 #define UART_QUEUE_SIZE		(128)
-#define UART_MAX		(2)
+#define UART_MAX		NUM_UARTS
 #define MIN_WAIT_TIME		(40)
 
 typedef struct _uart_t {
