@@ -176,7 +176,7 @@ int shell_reboot(int argc, char **argv)
 
 int shell_ps(int argc, char **argv)
 {
-	if (argc > 1 && strcmp(argv[1], "-a") == 0) {
+	if (argc > 1 && strcmp(argv[1], "-x") == 0) {
 		// not using rtos_task_list
 		rtos_task_status_t 	  *task_array;
 		volatile rtos_base_type_t num_tasks;

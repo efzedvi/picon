@@ -221,16 +221,16 @@ const char *speed_to_str[2] = {
 };
 
 const char *func_to_str[9] = {
-	//"xip",
-	"spi",
-	"uart",
-	"i2c",
-	"pwm",
-	"sio",
-	"pio0",
-	"pio1",
-	"gpck",
-	"usb",
+	//"XIP",
+	"SPI",
+	"UART",
+	"I2C",
+	"PWM",
+	"SIO",
+	"PIO0",
+	"PIO1",
+	"GPCK",
+	"USB",
 };
 
 const uint8_t strength_to_num[4] = { 2, 4, 8, 12 };
@@ -258,9 +258,9 @@ static void func_role_to_str(uint8_t gpio, uint8_t func, char *buf, uint8_t buf_
 	func -= 1;
 
 	if (picon_gpios[gpio][func].idx > 0) {
-		snprintf(buf, buf_size, "%s%d %s", func_to_str[func], picon_gpios[gpio][func].idx, role_to_str[picon_gpios[gpio][func].role]);
+		snprintf(buf, buf_size, "%s%d-%s", func_to_str[func], picon_gpios[gpio][func].idx, role_to_str[picon_gpios[gpio][func].role]);
 	} else if (picon_gpios[gpio][func].role != ROLE_NULL) {
-		snprintf(buf, buf_size, "%s %s", func_to_str[func], role_to_str[picon_gpios[gpio][func].role]);
+		snprintf(buf, buf_size, "%s-%s", func_to_str[func], role_to_str[picon_gpios[gpio][func].role]);
 	} else {
 		snprintf(buf, buf_size, "%s", func_to_str[func]);
 	}
@@ -445,7 +445,7 @@ int shell_gpio(int argc, char *argv[])
 			break;
 
 		case SHELL_GPIO_LIST:
-			display_gpios(1, PICON_MAX_GPIO);
+			display_gpios(0, PICON_MAX_GPIO);
 			break;
 
 		default:

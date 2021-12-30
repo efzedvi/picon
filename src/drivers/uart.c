@@ -175,12 +175,16 @@ int picon_uart_init(uint8_t ux, void *params)
 
 	if (uartp->cfg.rx >= 0) {
 		uartp->cfg.rx &= 0x1f;
+		gpio_init(uartp->cfg.rx);
+		gpio_set_dir(uartp->cfg.rx, GPIO_IN);
 		gpio_set_function(uartp->cfg.rx, GPIO_FUNC_UART);
 		gpio_pull_up(uartp->cfg.rx); // input pull up mode
 	}
 
 	if (uartp->cfg.tx >= 0) {
 		uartp->cfg.tx &= 0x1f;
+		gpio_init(uartp->cfg.tx);
+		gpio_set_dir(uartp->cfg.tx, GPIO_OUT);
 		gpio_set_function(uartp->cfg.tx, GPIO_FUNC_UART);
 		gpio_set_pulls(uartp->cfg.tx, true, true);	// pushpull
 	}
