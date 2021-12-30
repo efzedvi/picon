@@ -1,7 +1,21 @@
 TODO:
--more ioctl for HW flow control and format changing and getting
--couple ux and uart[01] and add ability to pass other pins
--make usb CDC working
 -I2C
 -SPI
 -GPIO
+-PWM
+-ADC
+-PIO
+-SD Card support (FatFS)
+-Ethernet support
+-FS on flash?!
+-VFS and procfs
+-Look into the possibility of having a host side Fuse FS to access Picon
+- More highlevel drivers :
+	- 1306 OLED display
+	- 2004/1602 display drivers
+	- Atmel eeprom drivers
+	- RF ASK driver
+	- micro servo
+	- stepper
+-Doxify the code
+-Add readme.md and more documentation
