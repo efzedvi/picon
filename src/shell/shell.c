@@ -445,8 +445,12 @@ void shell_task(void *args)
 		if (!argv[0] || argv[0][0] == 0 || argv[0][0] == '#') continue;
 
 		if (argv[0][0] == '?' || strcmp(argv[0], "help") == 0) {
-			for(i=0; commands[i].cmd; i++)
-				printf("%s\n", commands[i].cmd);
+			for(i=0; commands[i].cmd; i++) {
+				printf("%-12s", commands[i].cmd);
+				if (commands[i].desc) printf(" : %s", commands[i].desc);
+				printf("\n");
+			}
+
 			continue;
 		}
 

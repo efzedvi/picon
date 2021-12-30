@@ -14,7 +14,7 @@ int shell_log(int argc, char *argv[]);
 
 #ifdef PICON_LOGGING
 #define SHELL_LOG_COMMAND \
-	{ CMD(log), SHELL_LOG_CMD_STACK_SIZE, 0 },
+	{ CMD(log), SHELL_LOG_CMD_STACK_SIZE, "Log command used for debugging", 0 },
 #else
 #define SHELL_LOG_COMMAND
 #endif

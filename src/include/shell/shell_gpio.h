@@ -12,6 +12,6 @@
 int shell_gpio(int argc, char *argv[]);
 
 #define SHELL_GPIO_COMMAND \
-	{ CMD(gpio), SHELL_GPIO_CMD_STACK_SIZE, 0 },
+	{ CMD(gpio), SHELL_GPIO_CMD_STACK_SIZE, "GPIO handling command", 0 },
 
 #endif /* end of include guard SHELL_GPIO_H */
