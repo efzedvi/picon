@@ -15,11 +15,21 @@
 #include "task.h"
 #include "rtos.h"
 
+const uart_cfg_t picon_uart_cfg = {
+		.baud = PICON_DEFAULT_BAUD_RATE,
+		.data_bits = PICON_DEFAULT_DATA_BITS,
+		.stop_bits = PICON_DEFAULT_STOP_BITS,
+		.parity    = PICON_DEFAULT_PARITY,
+		.rx  = PICON_DEFAULT_UART_RX_PIN,
+		.tx  = PICON_DEFAULT_UART_TX_PIN,
+		.cts = -1,
+		.rts = -1,
+		};
 
 static const DEVICE_FILE *dt[] = {
 	DEV_ENTRY("/dev/usbcdc",  USB_SERIAL_DEV, 0, NULL)
 	DEV_ENTRY("/dev/mem", MEM_DEV, 0, NULL)
-        DEV_ENTRY("/dev/uart0", UART_DEV, 0, NULL)
+        DEV_ENTRY("/dev/uart0", UART_DEV, 0, (void *) &picon_uart_cfg)
         NULL
 };
 

@@ -19,6 +19,7 @@
 #include "picon/dev.h"
 #include "picon/ioctl.h"
 #include "picon/utils.h"
+#include "picon/uart.h"
 #include "picon/log.h"
 
 #include "hardware/uart.h"
@@ -26,23 +27,13 @@
 #include "hardware/gpio.h"
 
 
-#define UART_QUEUE_SIZE		(80)
+#define UART_QUEUE_SIZE		(128)
 #define UART_MAX		(2)
 #define MIN_WAIT_TIME		(40)
 
-#define PICON_DEFAULT_BAUD_RATE 	115200
-#define PICON_DEFAULT_DATA_BITS 	8
-#define PICON_DEFAULT_PARITY    	UART_PARITY_NONE
-#define PICON_DEFAULT_STOP_BITS 	1
-
-#define PICON_DEFAULT_UART_TX_PIN	0
-#define PICON_DEFAULT_UART_RX_PIN	1
-
-
 typedef struct _uart_t {
-	uart_inst_t*		uart;		// UART pointer 
-	int8_t			rx_pin;		// rx gpio pin
-	int8_t			tx_pin;		// rx gpio pin
+	uart_inst_t*		uart;		// UART pointer
+	uart_cfg_t		cfg;
 } uart_t;
 
 // UART receive queues
@@ -54,12 +45,28 @@ rtos_semaphore_handle_t  uart_sems[UART_MAX];
 
 static uart_t uarts[UART_MAX] = {
 	{ .uart = uart0,
-	  .rx_pin = PICON_DEFAULT_UART_RX_PIN, 
-	  .tx_pin = PICON_DEFAULT_UART_TX_PIN,
+	  .cfg = {
+		.baud = PICON_DEFAULT_BAUD_RATE,
+		.data_bits = PICON_DEFAULT_DATA_BITS,
+		.stop_bits = PICON_DEFAULT_STOP_BITS,
+		.parity    = PICON_DEFAULT_PARITY,
+		.rx  = PICON_DEFAULT_UART_RX_PIN,
+		.tx  = PICON_DEFAULT_UART_TX_PIN,
+		.cts = -1,
+		.rts = -1,
+	  },
 	},
 	{ .uart = uart1,
-	  .rx_pin = -1,
-	  .tx_pin = -1,
+	  .cfg = {
+		.baud = 0,
+		.data_bits = -1,
+		.stop_bits = -1,
+		.parity    = -1,
+		.rx  = -1,
+		.tx  = -1,
+		.cts = -1,
+		.rts = -1,
+	  },
 	},
 
 };
@@ -130,14 +137,28 @@ void picon_uart1_isr(void)
 
 int picon_uart_init(uint8_t ux, void *params)
 {
-	const uart_t	*uartp = uarts+ux;		// Access UART's buffer
+	uart_t		*uartp = uarts+ux;		// Access UART's buffer
 	uart_inst_t  	*uart = uarts[ux].uart;		// Lookup UART address
-	uint32_t 	bps = PICON_DEFAULT_BAUD_RATE;
 	int uart_irq;
+	uart_cfg_t	*cfg;
 
 	if (params) {
-		bps = (uint32_t) params;
+		cfg = (uart_cfg_t *) params;
+		uartp->cfg = *cfg;
 	}
+
+	if (uartp->cfg.baud < 1200)
+		uartp->cfg.baud = PICON_DEFAULT_BAUD_RATE;
+
+	if (uartp->cfg.data_bits < 0)
+		uartp->cfg.data_bits = PICON_DEFAULT_DATA_BITS;
+
+	if (uartp->cfg.stop_bits < 0)
+		uartp->cfg.stop_bits = PICON_DEFAULT_STOP_BITS;
+
+	if (uartp->cfg.parity < 0)
+		uartp->cfg.parity = PICON_DEFAULT_PARITY;
+
 
 	if ( ux >=UART_MAX || !uartp)
 		return -EINVAL;			// Invalid UART ref
@@ -147,34 +168,41 @@ int picon_uart_init(uint8_t ux, void *params)
 
 	uart_sems[ux] = NULL;
 
-	if (uartp->rx_pin < 0 && uartp->tx_pin < 0)
-		return -EINVAL;			// Invalid pins
+	if (uartp->cfg.rx < 0 && uartp->cfg.tx < 0)
+		return -EINVAL;			// Invalid cfg
 
-	uart_init(uart, PICON_DEFAULT_BAUD_RATE);
+	if (uartp->cfg.rx >= 0) {
+		gpio_set_function(uartp->cfg.rx, GPIO_FUNC_UART);
+		gpio_pull_up(uartp->cfg.rx); // input pull up mode
+	}
+
+	if (uartp->cfg.tx >= 0) {
+		gpio_set_function(uartp->cfg.tx, GPIO_FUNC_UART);
+		gpio_set_pulls(uartp->cfg.tx, true, true);	// pushpull
+	}
+
+	if (uartp->cfg.cts >= 0) {
+		gpio_set_function(uartp->cfg.cts, GPIO_FUNC_UART);
+	}
+
+	if (uartp->cfg.rts >= 0) {
+		gpio_set_function(uartp->cfg.cts, GPIO_FUNC_UART);
+	}
+
+	uart_init(uart, uartp->cfg.baud);
 
 	uart_irq = (uart == uart0) ? UART0_IRQ : UART1_IRQ;
 
-	if (uartp->rx_pin >= 0) {
-		gpio_set_function(uartp->rx_pin, GPIO_FUNC_UART);
-		gpio_pull_up(uartp->rx_pin); // input pull up mode
-	}
-
-	if (uartp->tx_pin >= 0) {
-		gpio_set_function(uartp->tx_pin, GPIO_FUNC_UART);
-		gpio_set_pulls(uartp->tx_pin, true, true);	// pushpull
-	}
-
 	// Set our data format
-	// 8N1
-	uart_set_format(uart, PICON_DEFAULT_DATA_BITS, PICON_DEFAULT_STOP_BITS, PICON_DEFAULT_PARITY);
+	uart_set_format(uart, uartp->cfg.data_bits, uartp->cfg.stop_bits, uartp->cfg.parity);
 
-	// Set UART flow control CTS/RTS, we don't want these, so turn them off
-	uart_set_hw_flow(uart, false, false);
+	// set hw flow control
+	uart_set_hw_flow(uart, uartp->cfg.cts >= 0, uartp->cfg.rts >= 0);
 
 	// Turn off FIFO's - we want to do this character by character
 	uart_set_fifo_enabled(uart, false);
 
-	if (uartp->rx_pin >= 0 || uartp->tx_pin >= 0) {
+	if (uartp->cfg.rx >= 0 || uartp->cfg.tx >= 0) {
 		if (ux == 0) {
 			irq_set_exclusive_handler(uart_irq, picon_uart0_isr);
 		} else {
@@ -195,7 +223,7 @@ const void *picon_uart_open(const DEVICE_FILE *devf, int flags)
 	if (!devf) return NULL;
 
 	ux = devf->minor;
-	uartp = uarts+ux;		// Access UART's record 
+	uartp = uarts+ux;		// Access UART's record
 
 	if ( ux >= UART_MAX || !uartp )
 		return NULL;		// Invalid UART ref
@@ -208,17 +236,17 @@ const void *picon_uart_open(const DEVICE_FILE *devf, int flags)
 	uart_flags[ux] = flags;
 
 	uart_set_irq_enables(uart, false, false);
-	if (uartp->rx_pin >= 0) {
+	if (uartp->cfg.rx >= 0) {
 		uartq_rx[ux] = rtos_queue_create(UART_QUEUE_SIZE, sizeof(char));
 		if (!uartq_rx[ux]) goto failure;
 	}
 
-	if (uartp->tx_pin >= 0) {
+	if (uartp->cfg.tx >= 0) {
 		uartq_tx[ux] = rtos_queue_create(UART_QUEUE_SIZE, sizeof(char));
 		if (!uartq_tx[ux]) goto failure;
 	}
 	// Now enable the UART to send interrupts
-        // since we just opened the dvice there is no items in the TX queue hence 
+        // since we just opened the dvice there is no items in the TX queue hence
 	// we don't want the ISR to be flooding us for being available to send
 	uart_set_irq_enables(uart, uartq_rx[ux]!=NULL, false);
 

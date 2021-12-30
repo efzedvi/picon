@@ -7,6 +7,27 @@
 #define UART_H
 
 #include "picon/dev.h"
+#include "hardware/uart.h"
+
+typedef struct _uart_cfg_t {
+	uint32_t		baud;
+	int8_t			data_bits;
+	int8_t			stop_bits;
+	int8_t			parity;
+	int8_t			rx;
+	int8_t			tx;
+	int8_t			cts;
+	int8_t			rts;
+} uart_cfg_t;
+
+#define PICON_DEFAULT_BAUD_RATE 	115200
+#define PICON_DEFAULT_DATA_BITS 	8
+#define PICON_DEFAULT_PARITY    	UART_PARITY_NONE
+#define PICON_DEFAULT_STOP_BITS 	1
+
+#define PICON_DEFAULT_UART_TX_PIN	0
+#define PICON_DEFAULT_UART_RX_PIN	1
+
 
 int picon_uart_init(uint8_t ux, void *params);
 
