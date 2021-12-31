@@ -302,14 +302,14 @@ void display_gpios(uint8_t start, uint8_t end)
 
 		func_role_to_str(i, func, role, sizeof(role));
 
-		printf(" %2d      %-6s      %d      %c%c    %s    %2d mA     %s\n", i, dir_to_str[dir_out], value,
+		printf(" %2d      %-6s      %d      %c%c    %s     %2d mA    %s\n", i,
+			(func == GPIO_FUNC_SIO || (int) func == 0x1F) ? dir_to_str[dir_out] : "n/a",
+			value,
 			pull_up ? 'U' : ' ', pull_down ? 'D' : ' ',
 			speed_to_str[speed], strength_to_num[strength],
 			role
 			);
 	}
-
-
 }
 
 int shell_gpio(int argc, char *argv[])
