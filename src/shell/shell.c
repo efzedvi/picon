@@ -13,6 +13,10 @@
 #include "pico/unique_id.h"
 #include "pico/version.h"
 #include "pico/bootrom.h"
+#include "pico.h"
+#include "hardware/address_mapped.h"
+#include "hardware/regs/tbman.h"
+#include "hardware/regs/sysinfo.h"
 
 #include "picon.h"
 
@@ -110,6 +114,7 @@ int shell_uname(int argc, char **argv)
 		id[PICO_UNIQUE_BOARD_ID_SIZE_BYTES] = '\0';
 		pico_get_unique_board_id_string(id, sizeof(id));
 		printf("NOR Flash ID: %s\n", id);
+		printf("Chip ID: %x\n", *((io_ro_32*)(SYSINFO_BASE + SYSINFO_CHIP_ID_OFFSET)));
 	}
 
 	return 0;
