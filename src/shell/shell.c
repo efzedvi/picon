@@ -433,6 +433,9 @@ void shell_task(void *args)
 	for(i=0; i<SHELL_HIST_SIZE; i++)
 		hist[i] = hist_line[i];
 
+	// print banner
+	printf("Welcome to Picon version %s, type '?' or 'help' for list of commands.\n\n", PICON_VERSION);
+
 	while (1) {
 		printf(SHELL_PROMPT);
 		n = getline(line, SHELL_MAX_LINE+1, hist, SHELL_HIST_SIZE);
