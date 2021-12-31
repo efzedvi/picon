@@ -271,12 +271,14 @@ static void func_role_to_str(uint8_t gpio, uint8_t func, char *buf, uint8_t buf_
 static void shell_gpio_usage(void)
 {
 	printf( "Options are:\n"
-		"-l\n"
-		"-p <gpio>\n"
-		"-p <gpio> -w <0|1>\n"
-		"-p <gpio> -t\n"
-		"-p <gpio> -c <i|o>\n"
-		"	   -u -d -s <s|f> -a <2|4|8|12>\n"
+		"Lists all gpios    : -l\n"
+		"Read a gpio   : -p <gpio>\n"
+		"Sets a gpio   : -p <gpio> -w <0|1>\n"
+		"Toggle a gpio : -p <gpio> -t\n"
+		"Configure     : -p <gpio> -c <i|o>\n"
+		"	         -u -d -s <s|f> -a <2|4|8|12>\n"
+		"(i: inputm o: output, -u : pull_up -d pull_down -s: speed s=slow f=fast\n"
+                " -a : strength of 2,4,8, or 12 mA)\n"
 		);
 }
 

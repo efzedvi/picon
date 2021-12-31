@@ -167,7 +167,10 @@ int shell_reboot(int argc, char **argv)
 	} else if (strcmp(argv[1], "-b") == 0 ) {
 		reset_usb_boot(0, 0);
 	} else {
-		printf("usage: reboot [-s | -b]\n");
+		printf(	"reboot [-s | -b]\n"
+			"	-s : prints the cause of the last reboot\n"
+			"	-b : boots into BOOTSEL mode. i.e USB mass storage device\n"
+			);
 	}
 
 	return 0;
@@ -230,7 +233,7 @@ int shell_ps(int argc, char **argv)
 
 static void shell_mem_usage(void)
 {
-	printf("[-d <device>] -a address -t <type = 1,2,4> [-l length=1] [<value> to write]\n");
+	printf("mem [-d <device>] -a address -t <type = 1,2,4> [-l length=1] [<value> to write]\n");
 }
 
 
@@ -561,8 +564,9 @@ int shell_date(int argc, char **argv)
 			rtos_task_delay(rtos_ms_to_ticks(500));
 			t = time(NULL);
 		} else {
-			printf( "-s <unixtime>\n"\
-				"-t\n");
+			printf( "date               : displayes date and time \n"
+				"date -s <unixtime> : to set the time\n"
+				"date -t            : to get epoch time\n");
 			return -1;
 		}
 	}
@@ -636,6 +640,7 @@ static void shell_expr_usage(void)
 {
 	printf( "expr <operand>\n"
 		"expr <operand1> <op> <operand2>\n"
+		"	<op> : + - * / & | ^ << >>\n"
 	      );
 }
 
