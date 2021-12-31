@@ -1,2 +1,3 @@
 - After fixing the issue of corrup UART data in SMP mode by adding TX queues now handling control-c and cancelable commands don't work
 - After above ^^ the weird UART data corruption still happens but not as frequently as before
+- Using the mem command without specifying a device file causes a crash
