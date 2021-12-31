@@ -257,7 +257,7 @@ static void func_role_to_str(uint8_t gpio, uint8_t func, char *buf, uint8_t buf_
 
 	func -= 1;
 
-	if (picon_gpios[gpio][func].idx > 0) {
+	if (picon_gpios[gpio][func].idx >= 0) {
 		snprintf(buf, buf_size, "%s%d-%s", func_to_str[func], picon_gpios[gpio][func].idx, role_to_str[picon_gpios[gpio][func].role]);
 	} else if (picon_gpios[gpio][func].role != ROLE_NULL) {
 		snprintf(buf, buf_size, "%s-%s", func_to_str[func], role_to_str[picon_gpios[gpio][func].role]);
