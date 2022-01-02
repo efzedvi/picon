@@ -3,6 +3,11 @@
  * @file        : picon
  * @created     : Sat 18 Dec 2021 05:53:59 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #include "hardware/gpio.h"
 #include "hardware/watchdog.h"

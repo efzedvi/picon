@@ -3,6 +3,12 @@
  * @file        : shell_log
  * @created     : Fri 24 Dec 2021 06:49:57 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #ifndef SHELL_LOG_H
 #define SHELL_LOG_H
 

@@ -3,6 +3,11 @@
  * @file        : console
  * @created     : Fri 17 Dec 2021 07:09:59 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #ifndef CONSOLE_H
 #define CONSOLE_H

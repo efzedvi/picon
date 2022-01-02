@@ -3,6 +3,12 @@
  * @file        : tusb_config
  * @created     : Sunday Dec 26, 2021 18:11:53 EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #ifndef TUSB_CONFIG_H
 #define TUSB_CONFIG_H
 

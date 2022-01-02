@@ -3,6 +3,11 @@
  * @file        : shell_gpio
  * @created     : Wed 29 Dec 2021 11:45:41 AM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #ifndef SHELL_GPIO_H
 #define SHELL_GPIO_H

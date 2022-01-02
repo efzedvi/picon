@@ -3,6 +3,12 @@
  * @file        : uart.h
  * @created     : Tue 21 Dec 2021 05:07:49 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #ifndef UART_H
 #define UART_H
 

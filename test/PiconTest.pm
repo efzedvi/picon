@@ -1,4 +1,6 @@
 package PiconTest;
+# Copyright (c) 2022 Faraz V faraz@fzv.ca.
+# SPDX-License-Identifier: BSD-3-Clause
 use strict;
 use warnings;
 
@@ -29,8 +31,10 @@ sub run {
 		}
 	}
 
-	$result =~ s/$cmd\s*//g;
-	$result =~ s/#//g;
+	$result =~ s/\s*Welcome.*$//m;
+	$result =~ s/\s*$//m;
+	$result =~ s/\s*$cmd\s*//g;
+	$result =~ s/#.*//g;
 
 	return $result;
 }

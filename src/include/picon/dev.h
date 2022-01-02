@@ -3,6 +3,12 @@
  * @file        : dev.h
  * @created     : Fri 17 Dec 2021 07:11:06 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #ifndef DEV_H
 #define DEV_H
 

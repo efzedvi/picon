@@ -3,6 +3,11 @@
  * @file        : picon
  * @created     : Sat 18 Dec 2021 06:17:07 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #ifndef PICON_H 
 #define PICON_H

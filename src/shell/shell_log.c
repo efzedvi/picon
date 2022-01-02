@@ -3,6 +3,11 @@
  * @file        : shell_log
  * @created     : Fri 24 Dec 2021 06:52:08 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #include <stdint.h>
 #include <ctype.h>

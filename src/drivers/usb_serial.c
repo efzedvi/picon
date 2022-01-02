@@ -3,6 +3,11 @@
  * @file        : usb_serial.c
  * @created     : Sun 26 Dec 2021 06:15:16 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #include <stdlib.h>
 #include <string.h>

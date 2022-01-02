@@ -3,6 +3,11 @@
  * @file        : shell_gpio.c
  * @created     : Wed 29 Dec 2021 11:47:51 AM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #include <stdint.h>
 #include <ctype.h>

@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+# Copyright (c) 2022 Faraz V faraz@fzv.ca.
+#
+# SPDX-License-Identifier: BSD-3-Clause
 use strict;
 use warnings;
 

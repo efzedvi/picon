@@ -3,6 +3,11 @@
  * @file        : io.c
  * @created     : Fri 17 Dec 2021 07:24:39 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #include "picon/dev.h"
 #include "picon/io.h"

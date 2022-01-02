@@ -3,6 +3,11 @@
  * @file        : mem
  * @created     : Fri 17 Dec 2021 07:27:59 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #include <string.h>
 #include <errno.h>

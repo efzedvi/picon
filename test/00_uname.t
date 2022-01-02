@@ -1,4 +1,6 @@
 use Test::More tests => 2;
+# Copyright (c) 2022 Faraz V faraz@fzv.ca.
+# SPDX-License-Identifier: BSD-3-Clause
 use warnings;
 use strict;
 

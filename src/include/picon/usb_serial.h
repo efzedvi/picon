@@ -3,6 +3,12 @@
  * @file        : usb_serial.h
  * @created     : Sun 26 Dec 2021 06:14:20 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #ifndef USB_SERIAL_H
 #define USB_SERIAL_H
 

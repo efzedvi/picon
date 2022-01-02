@@ -3,6 +3,11 @@
  * @file        : printf
  * @created     : Friday Feb 14, 2020 15:40:19 EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #ifndef PRINTF_H
 #define PRINTF_H

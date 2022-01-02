@@ -3,6 +3,12 @@
  * @file        : log.h
  * @created     : Fri 17 Dec 2021 07:17:23 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 #ifndef LOG_H
 #define LOG_H
 
