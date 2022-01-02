@@ -94,7 +94,7 @@ static void __time_critical_func(picon_uart_common_isr)(uint8_t ux)
 	if ( ux >=UART_MAX || !uartp)
 		return;				// Not open for ISR receiving!
 
-	while (uartq_rx[ux] && uart_is_readable(uart)) {
+	if (uartq_rx[ux] && uart_is_readable(uart)) {
 		ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
 
 		// This is a lame way to handle control-c, but we keep it for now until I think
@@ -112,13 +112,13 @@ static void __time_critical_func(picon_uart_common_isr)(uint8_t ux)
 	}
 
 	if (uartq_tx[ux]) {
-		while (uart_is_writable(uart) && rtos_queue_messages_waiting_from_isr(uartq_tx[ux])) {
+		if (uart_is_writable(uart) && rtos_queue_messages_waiting_from_isr(uartq_tx[ux])) {
 			rv = rtos_queue_receive_from_isr(uartq_tx[ux], &ch, &higher_priority_task_woken);
 
 			if (rv == RTOS_TRUE) {
 				uart_get_hw(uart)->dr = ch;
 
-				if (!must_yield && higher_priority_task_woken == RTOS_TRUE) {
+				if (higher_priority_task_woken == RTOS_TRUE) {
 					must_yield = 1;
 				}
 			}
