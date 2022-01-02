@@ -105,7 +105,7 @@ int shell_clear(int argc, char **argv)
 
 int shell_uname(int argc, char **argv)
 {
-	printf("picon Version: %s\nFreeRTOS version: %s\nPICO SDK: %s\nbuilt: %s, %s\n",
+	printf("Picon Version: %s\nFreeRTOS version: %s\nPICO SDK: %s\nbuilt: %s, %s\n",
 		PICON_VERSION, RTOS_TSK_KERNEL_VERSION_NUMBER, PICO_SDK_VERSION_STRING,
 		PICON_BUILD_DATE, PICON_BUILD_TIME);
 
