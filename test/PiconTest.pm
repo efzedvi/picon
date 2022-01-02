@@ -6,32 +6,39 @@ use warnings;
 
 use Device::SerialPort;
 
-my $port = Device::SerialPort->new($ENV{"PICON_TTY"});
-
-$port->baudrate(115200);
-$port->databits(8);
-$port->parity("none");
-$port->stopbits(1);
-
 sub run {
 	my ($cmd) = @_;
 
 	return undef unless $cmd;
 
+	my $port = Device::SerialPort->new($ENV{"PICON_TTY"});
+	return undef unless $port;
+
+	$port->baudrate(115200);
+	$port->databits(8);
+	$port->parity("none");
+	$port->stopbits(1);
+
+	$port->read_char_time(20);
+	$port->read_const_time(100);
+
+	# get rid of anything that's in the buffer before issuing the command
+	while (1) {
+		my ($nread, $char) = $port->read(1);
+		last if ($nread != 1);
+	}
+
 	$port->write("$cmd\n");
 
 	my $result = '';
 	while (1) {
-		my $byte=$port->read(1);
-		next if $byte eq "\r";
+		my $char=$port->read(1);
+		next if $char eq "\r"; # get rid of CR
 
-		$result .= $byte;
-		if ($byte eq '#') {
-			last;
-		}
+		$result .= $char;
+		last  if ($char eq '#');
 	}
 
-	$result =~ s/\s*Welcome.*$//m;
 	$result =~ s/\s*$//m;
 	$result =~ s/\s*$cmd\s*//g;
 	$result =~ s/#.*//g;
