@@ -52,8 +52,7 @@ int picon_init()
 
 	bi_decl(bi_program_description("Picon (Pico Console) program. Author: Faraz Vahabzadeh (faraz@fzv.ca)"));
 	bi_decl(bi_program_version_string(PICON_VERSION));
-	bi_decl(bi_program_url("<github url here>")); //TODO
-
+	bi_decl(bi_program_url("https://github.com/efzedvi/picon.git"));
 
 #ifdef CONFIG_HEART_BEAT
 	gpio_init(CONFIG_HEART_BEAT_PIN);
