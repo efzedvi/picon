@@ -95,7 +95,7 @@ static void __time_critical_func(picon_uart_common_isr)(uint8_t ux)
 		return;				// Not open for ISR receiving!
 
 	if (uartq_rx[ux] && uart_is_readable(uart)) {
-		//ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
+		//ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data 
 		ch = (uint8_t) uart_getc(uart);
 
 		// This is a lame way to handle control-c, but we keep it for now until I think
