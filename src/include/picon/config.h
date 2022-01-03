@@ -36,6 +36,9 @@
 #define CONFIG_HEART_BEAT_PRIORITY	(6)
 #define CONFIG_HEART_BEAT_STACK_SIZE	(48)
 
+// define below macro to make UART driver use TX queue
+#define CONFIG_UART_TX_QUEUE
+
 #define CONFIG_SHELL_CMD_PRIORITY	(8)
 
 #define PICON_LOGGING			(1)
