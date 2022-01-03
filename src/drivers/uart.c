@@ -95,7 +95,8 @@ static void __time_critical_func(picon_uart_common_isr)(uint8_t ux)
 		return;				// Not open for ISR receiving!
 
 	if (uartq_rx[ux] && uart_is_readable(uart)) {
-		ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
+		//ch = (uint8_t) uart_get_hw(uart)->dr;	// Read data ... don't use uart_getc(uart)
+		ch = (uint8_t) uart_getc(uart);
 
 		// This is a lame way to handle control-c, but we keep it for now until I think
 		// of a better and more ellegant way
@@ -116,7 +117,8 @@ static void __time_critical_func(picon_uart_common_isr)(uint8_t ux)
 			rv = rtos_queue_receive_from_isr(uartq_tx[ux], &ch, &higher_priority_task_woken);
 
 			if (rv == RTOS_TRUE) {
-				uart_get_hw(uart)->dr = ch;
+				//uart_get_hw(uart)->dr = ch;
+				uart_putc_raw(uart, ch);
 
 				if (higher_priority_task_woken == RTOS_TRUE) {
 					must_yield = 1;
@@ -178,6 +180,8 @@ int picon_uart_init(uint8_t ux, void *params)
 	if (uartp->cfg.rx < 0 && uartp->cfg.tx < 0)
 		return -EINVAL;			// Invalid cfg
 
+	uart_init(uart, uartp->cfg.baud);
+
 	if (uartp->cfg.rx >= 0) {
 		uartp->cfg.rx &= 0x1f;
 		gpio_init(uartp->cfg.rx);
@@ -204,15 +208,13 @@ int picon_uart_init(uint8_t ux, void *params)
 		gpio_set_function(uartp->cfg.cts, GPIO_FUNC_UART);
 	}
 
-	uart_init(uart, uartp->cfg.baud);
-
 	uart_irq = (uart == uart0) ? UART0_IRQ : UART1_IRQ;
-
-	// Set our data format
-	uart_set_format(uart, uartp->cfg.data_bits, uartp->cfg.stop_bits, uartp->cfg.parity);
 
 	// set hw flow control
 	uart_set_hw_flow(uart, uartp->cfg.cts >= 0, uartp->cfg.rts >= 0);
+
+	// Set our data format
+	uart_set_format(uart, uartp->cfg.data_bits, uartp->cfg.stop_bits, uartp->cfg.parity);
 
 	// Turn off FIFO's - we want to do this character by character
 	uart_set_fifo_enabled(uart, false);
