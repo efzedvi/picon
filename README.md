@@ -10,7 +10,7 @@ Picon is built using Pico SDK, and FreeRTOS with SMP support
 See [Getting Started with the Raspberry Pi Pico](https://rptl.io/pico-get-started) for information on how to setup the Pico SDK and your
 hardware. Once it's done, simply follow these commands:
 
-	```$ git clone https://github/efzedvi/picon --recursive
+	$ git clone https://github/efzedvi/picon --recursive
 	$ cd picon
 	$ mkdir build
 	$ cd build
