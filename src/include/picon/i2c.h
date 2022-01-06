@@ -18,6 +18,9 @@ typedef struct _uart_cfg_t {
 	int8_t		sda;
 } i2c_cfg_t;
 
+// Addresses of the form 000 0xxx or 111 1xxx are reserved. No slave should
+// have these addresses.
+#define I2C_RESERVED_ADDR(addr) 	(((addr) & 0x78) == 0 || ((addr) & 0x78) == 0x78)
 
 int picon_i2c_init(uint8_t ux, void *params);
 

@@ -61,10 +61,6 @@ i2c_t i2c_devs[PICON_I2C_MAX] = {
 
 // some helper functions
 
-// Addresses of the form 000 0xxx or 111 1xxx are reserved. No slave should
-// have these addresses.
-#define I2C_RESERVED_ADDR(addr) 	(((addr) & 0x78) == 0 || ((addr) & 0x78) == 0x78)
-
 // this is basically a copy of the static i2c_write_blocking_internal function.
 // copied here so that instead of blocking in the spinlock by calling
 // tight_loop_contents we could yield
