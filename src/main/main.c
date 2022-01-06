@@ -12,6 +12,7 @@
 #include "picon/console.h"      
 #include "picon/ioctl.h"        
 #include "picon/uart.h"
+#include "picon/i2c.h"
 #include "picon/usb_serial.h"
 #include "picon/mem.h"
 #include "shell/shell.h"
@@ -22,20 +23,28 @@
 #include "rtos.h"
 
 const uart_cfg_t picon_uart_cfg = {
-		.baud = PICON_DEFAULT_BAUD_RATE,
-		.data_bits = PICON_DEFAULT_DATA_BITS,
-		.stop_bits = PICON_DEFAULT_STOP_BITS,
-		.parity    = PICON_DEFAULT_PARITY,
-		.rx  = PICON_DEFAULT_UART_RX_PIN,
-		.tx  = PICON_DEFAULT_UART_TX_PIN,
-		.cts = -1,
-		.rts = -1,
-		};
+	.baud = PICON_DEFAULT_BAUD_RATE,
+	.data_bits = PICON_DEFAULT_DATA_BITS,
+	.stop_bits = PICON_DEFAULT_STOP_BITS,
+	.parity    = PICON_DEFAULT_PARITY,
+	.tx  = PICON_DEFAULT_UART_TX_PIN, //gpio 0
+	.rx  = PICON_DEFAULT_UART_RX_PIN, //gpio 1
+	.cts = -1,
+	.rts = -1,
+	};
+
+const i2c_cfg_t picon_i2c_cfg = {
+	.speed = PICON_I2C_STANDARD_100K,
+	.sda = PICO_DEFAULT_I2C_SDA_PIN,	//gpio 4
+	.scl = PICO_DEFAULT_I2C_SCL_PIN		//gpio 5
+	};
+
 
 static const DEVICE_FILE *dt[] = {
 	DEV_ENTRY("/dev/usbcdc",  USB_SERIAL_DEV, 0, NULL)
 	DEV_ENTRY("/dev/mem", MEM_DEV, 0, NULL)
-        DEV_ENTRY("/dev/uart0", UART_DEV, 0, (void *) &picon_uart_cfg)
+	DEV_ENTRY("/dev/uart0", UART_DEV, 0, (void *) &picon_uart_cfg)
+	DEV_ENTRY("/dev/i2c0", I2C_DEV, 0, (void*) (&picon_i2c_cfg))
         NULL
 };
 

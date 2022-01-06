@@ -12,7 +12,7 @@
 #define PICON_I2C_STANDARD_100K		(100000)
 #define PICON_I2C_FAST_400K		(400000)
 
-typedef struct _uart_cfg_t {
+typedef struct _i2c_cfg_t {
 	uint32_t	speed;
 	int8_t		scl;
 	int8_t		sda;

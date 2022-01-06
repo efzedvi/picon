@@ -31,7 +31,7 @@
 #define PICON_I2C_TIMEOUT	(100)
 
 // PICO_DEFAULT_I2C_SDA_PIN (on Pico this is GP4 (pin 6))
-// PICO_DEFAULT_I2C_SCK_PIN (on Pico this is GP5 (pin 7))
+// PICO_DEFAULT_I2C_SCL_PIN (on Pico this is GP5 (pin 7))
 
 typedef struct _picon_i2c_def {
 	i2c_inst_t		*dev;
@@ -44,8 +44,8 @@ i2c_t i2c_devs[PICON_I2C_MAX] = {
 	.dev=i2c0,
 	.cfg = {
 		.speed = PICON_I2C_STANDARD_100K,
-		.scl=4,
-		.sda=5,
+		.scl=PICO_DEFAULT_I2C_SCL_PIN,
+		.sda=PICO_DEFAULT_I2C_SDA_PIN,
 		}
 	},
 	{
