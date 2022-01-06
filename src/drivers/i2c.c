@@ -3,6 +3,11 @@
  * @file        : i2c.c
  * @created     : Wed 05 Jan 2022 06:18:02 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +22,7 @@
 #include "picon/utils.h"
 #include "picon/ioctl.h"
 #include "picon/i2c.h"
+#include "picon/log.h"
 
 #include "pico.h"
 #include "hardware/gpio.h"
@@ -268,7 +274,8 @@ int picon_i2c_init(uint8_t ux, void *params)
 	i2c_inst_t  	*i2c;
 	i2c_cfg_t	*cfg;
 
-	if (ux >= PICON_I2C_MAX || i2cp) return -EINVAL;
+
+	if (ux >= PICON_I2C_MAX || !i2cp) return -EINVAL;
 
 	i2c = i2c_devs[ux].dev;
 
@@ -277,7 +284,7 @@ int picon_i2c_init(uint8_t ux, void *params)
 		i2cp->cfg = *cfg;
 	}
 
-	if (!IS_PIN_VALID(i2cp->cfg.scl) && !IS_PIN_VALID(i2cp->cfg.sda))
+	if (!IS_PIN_VALID(i2cp->cfg.scl) || !IS_PIN_VALID(i2cp->cfg.sda))
 		return -EINVAL;
 
 	if (i2cp->cfg.speed != PICON_I2C_STANDARD_100K &&

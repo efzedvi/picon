@@ -3,6 +3,11 @@
  * @file        : i2c.h
  * @created     : Wed 05 Jan 2022 06:16:46 PM EST
  */
+/*
+ * Copyright (c) 2022 Faraz V faraz@fzv.ca.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
 #ifndef I2C_H
 #define I2C_H

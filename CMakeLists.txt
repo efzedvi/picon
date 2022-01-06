@@ -33,6 +33,7 @@ target_sources(picon_common INTERFACE
 	src/shell/shell.c
 	src/shell/shell_log.c
 	src/shell/shell_gpio.c
+	src/shell/shell_i2c.c
         )
 target_include_directories(picon_common INTERFACE
 	src/include

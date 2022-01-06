@@ -44,8 +44,9 @@ void log_init(uint16_t size)
 	if (!log_mtx)
 		log_mtx = rtos_semaphore_create_mutex();
 
-	log_clear();
 	if (log_buf) return;
+
+	log_clear();
 
 	log_buf = (LOG_REC*) rtos_port_malloc(size * LOG_REC_SIZE);
 
