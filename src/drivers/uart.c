@@ -156,6 +156,10 @@ int picon_uart_init(uint8_t ux, void *params)
 	int uart_irq;
 	uart_cfg_t	*cfg;
 
+
+	if ( ux >=UART_MAX || !uartp)
+		return -EINVAL;			// Invalid UART ref
+
 	if (params) {
 		cfg = (uart_cfg_t *) params;
 		uartp->cfg = *cfg;
@@ -173,10 +177,6 @@ int picon_uart_init(uint8_t ux, void *params)
 	if (uartp->cfg.parity < 0)
 		uartp->cfg.parity = PICON_DEFAULT_PARITY;
 
-
-	if ( ux >=UART_MAX || !uartp)
-		return -EINVAL;			// Invalid UART ref
-
 	if (uartq_rx[ux])
 		return -EINVAL;			// already initialized
 
@@ -187,12 +187,12 @@ int picon_uart_init(uint8_t ux, void *params)
 
 	uart_sems[ux] = NULL;
 
-	if (uartp->cfg.rx < 0 && uartp->cfg.tx < 0)
+	if (!IS_PIN_VALID(uartp->cfg.rx) && !IS_PIN_VALID(uartp->cfg.tx) )
 		return -EINVAL;			// Invalid cfg
 
 	uart_init(uart, uartp->cfg.baud);
 
-	if (uartp->cfg.rx >= 0) {
+	if (IS_PIN_VALID(uartp->cfg.rx)) {
 		uartp->cfg.rx &= 0x1f;
 		gpio_init(uartp->cfg.rx);
 		gpio_set_dir(uartp->cfg.rx, GPIO_IN);
@@ -200,7 +200,7 @@ int picon_uart_init(uint8_t ux, void *params)
 		gpio_pull_up(uartp->cfg.rx); // input pull up mode
 	}
 
-	if (uartp->cfg.tx >= 0) {
+	if (IS_PIN_VALID(uartp->cfg.tx)) {
 		uartp->cfg.tx &= 0x1f;
 		gpio_init(uartp->cfg.tx);
 		gpio_set_dir(uartp->cfg.tx, GPIO_OUT);
@@ -208,12 +208,12 @@ int picon_uart_init(uint8_t ux, void *params)
 		gpio_set_pulls(uartp->cfg.tx, true, true);	// pushpull
 	}
 
-	if (uartp->cfg.cts >= 0) {
+	if (IS_PIN_VALID(uartp->cfg.cts)) {
 		uartp->cfg.cts  &= 0x1f;
 		gpio_set_function(uartp->cfg.cts, GPIO_FUNC_UART);
 	}
 
-	if (uartp->cfg.rts >= 0) {
+	if (IS_PIN_VALID(uartp->cfg.rts)) {
 		uartp->cfg.rts  &= 0x1f;
 		gpio_set_function(uartp->cfg.cts, GPIO_FUNC_UART);
 	}
@@ -229,7 +229,7 @@ int picon_uart_init(uint8_t ux, void *params)
 	// Turn off FIFO's - we want to do this character by character
 	uart_set_fifo_enabled(uart, false);
 
-	if (uartp->cfg.rx >= 0 || uartp->cfg.tx >= 0) {
+	if (IS_PIN_VALID(uartp->cfg.rx) || IS_PIN_VALID(uartp->cfg.tx)) {
 		if (ux == 0) {
 			irq_set_exclusive_handler(uart_irq, picon_uart0_isr);
 		} else {
@@ -268,13 +268,13 @@ const void *picon_uart_open(const DEVICE_FILE *devf, int flags)
 	uart_flags[ux] = flags;
 
 	uart_set_irq_enables(uart, false, false);
-	if (uartp->cfg.rx >= 0) {
+	if (IS_PIN_VALID(uartp->cfg.rx)) {
 		uartq_rx[ux] = rtos_queue_create(UART_QUEUE_SIZE, sizeof(char));
 		if (!uartq_rx[ux]) goto failure;
 	}
 
 #ifdef CONFIG_UART_TX_QUEUE
-	if (uartp->cfg.tx >= 0) {
+	if (IS_PIN_VALID(uartp->cfg.tx)) {
 		uartq_tx[ux] = rtos_queue_create(UART_QUEUE_SIZE, sizeof(char));
 		if (!uartq_tx[ux]) goto failure;
 	}

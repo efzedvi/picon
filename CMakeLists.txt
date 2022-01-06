@@ -27,6 +27,7 @@ target_sources(picon_common INTERFACE
         src/core/log.c
         src/core/picon.c
 	src/drivers/uart.c
+	src/drivers/i2c.c
 	src/drivers/usb_serial.c
 	src/drivers/mem.c
 	src/shell/shell.c
@@ -48,11 +49,11 @@ target_link_libraries(picon_common INTERFACE
 	pico_bootrom
 	pico_malloc
         tinyusb_device_unmarked
-#        pico_stdio_usb
 	hardware_regs
 	hardware_gpio
 	hardware_uart
 	hardware_irq
+	hardware_i2c
 	hardware_watchdog
 	hardware_rtc
         pico_multicore)

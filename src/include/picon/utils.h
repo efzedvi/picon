@@ -18,6 +18,8 @@
 #define UNUSED(x) (void)(x)
 #endif
 
+#define IS_PIN_VALID(a)	((a)>=0 && (a)<=30)
+
 #define BIT(n)          (1u<<(n))
 #define SET(a,b)        (a |=  BIT(b))
 #define CLR(a,b)        (a &= ~BIT(b))
