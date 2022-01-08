@@ -1,14 +1,14 @@
 TODO:
 -Replace the current printf with a better one (make pico_printf work probably?)
--I2C
+-I2C (done)
 -SPI
--GPIO
+-GPIO (done)
 -PWM
 -ADC
 -PIO
 -SD Card support (FatFS)
 -Ethernet support
--FS on flash?!
+-FatFS on flash?!
 -VFS and procfs
 -Look into the possibility of having a host side Fuse FS to access Picon
 - More highlevel drivers :
@@ -18,5 +18,5 @@ TODO:
 	- RF ASK driver
 	- micro servo
 	- stepper
--Doxify the code
 -Add readme.md and more documentation
+-Like CircuitPython get rid of CMake crap :)

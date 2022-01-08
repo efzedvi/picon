@@ -1,3 +1,7 @@
-- After fixing the issue of corrup UART data in SMP mode by adding TX queues now handling control-c and cancelable commands don't work
-- After above ^^ the weird UART data corruption still happens but not as frequently as before
+- After adding TX queues now handling control-c and cancelable commands don't work
 - Using the mem command without specifying a device file causes a crash
+- Looks like there might be a bug in I2C HW periphral that doesn't accept short writes!
+  I noticed it when examining MicroPython's code. There is a comment in matchine_i2c.c file that reads:
+  "// Workaround issue with hardware I2C not accepting short writes." They use bitbanging/SW-I2C for short
+  writes. I might have to do the same here too :(
+
