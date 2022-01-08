@@ -43,6 +43,12 @@ typedef struct _uart_t {
 	uart_cfg_t		cfg;
 } uart_t;
 
+// we use stream buffers instead of queues and it's safe because
+// access to the device is already serialized by a mutex, otherwise
+// queue would have made more sense to handle priority based access
+// by using stream buffers we turn this into a first come first serve
+// regardless of task priorities
+
 // UART receive queues
 rtos_stream_buffer_handle_t uartq_rx[UART_MAX];
 #ifdef CONFIG_UART_TX_QUEUE

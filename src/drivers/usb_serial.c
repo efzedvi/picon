@@ -34,9 +34,14 @@
 
 #define MIN_WAIT_TIME			(100)
 
+// we use stream buffers instead of queues and it's safe because
+// access to the device is already serialized by a mutex, otherwise
+// queue would have made more sense to handle priority based access
+// by using stream buffers we turn this into a first come first serve
+// regardless of task priorities
 
-static rtos_queue_handle_t usb_txq;		// USB transmit queue
-static rtos_queue_handle_t usb_rxq;		// USB receive queue
+static rtos_stream_buffer_handle_t usb_txq;		// USB transmit queue
+static rtos_stream_buffer_handle_t usb_rxq;		// USB receive queue
 static int usbs_flags = 0;
 
 #define USB_DELAY_TICKS		(5)
@@ -177,8 +182,8 @@ static void usb_serial_task(void *arg)
 			if (tud_cdc_available()) {
 				rc = (int) tud_cdc_read(&ch, (uint32_t) 1);
 				if (rc == 1) {
-					if (rtos_queue_spaces_available(usb_rxq) > 0) {
-						rtos_queue_send(usb_rxq, &ch, 0);
+					if (rtos_stream_buffer_spaces_available(usb_rxq) > 0) {
+						rtos_stream_buffer_send(usb_rxq, &ch, 1, 0);
 					}
 				}
 			}
@@ -186,12 +191,12 @@ static void usb_serial_task(void *arg)
 			tud_task();
 
 			// slurp the tx queue data into a buffer
-			txlen = MIN(rtos_queue_messages_waiting(usb_txq), tud_cdc_write_available());
+			txlen = MIN(rtos_stream_buffer_bytes_available(usb_txq), tud_cdc_write_available());
 			txlen = MIN(txlen, sizeof(txbuf));
 
 			if (txlen > 0) {
 				for(n=0; n<txlen; n++) {
-					if (rtos_queue_receive(usb_txq, txbuf+n, 0) != RTOS_PASS)
+					if (rtos_stream_buffer_receive(usb_txq, txbuf+n, 1, 0) != 1)
 						break;
 				}
 
@@ -211,8 +216,8 @@ int picon_usb_serial_init(uint8_t ux, void *params)
 	UNUSED(ux);
 	UNUSED(params);
 
-	usb_txq = rtos_queue_create(USB_TX_QUEUE_SIZE, sizeof(char));
-	usb_rxq = rtos_queue_create(USB_RX_QUEUE_SIZE, sizeof(char));
+	usb_txq = rtos_stream_buffer_create(USB_TX_QUEUE_SIZE, 1);
+	usb_rxq = rtos_stream_buffer_create(USB_RX_QUEUE_SIZE, 1);
 
 	tusb_init();
 
@@ -235,7 +240,7 @@ int picon_usb_serial_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned 
 		wait_time = MIN_WAIT_TIME;
 
 	for(n=0; n<count; n++) {
-		if ( rtos_queue_receive(usb_rxq, buf+n, wait_time) != RTOS_PASS)
+		if ( rtos_stream_buffer_receive(usb_rxq, buf+n, 1, wait_time) != 1)
 			break;
 	}
 
@@ -251,7 +256,7 @@ int picon_usb_serial_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned
 	if (!buf) return -1;
 
 	for(n=0; n<count; n++) {
-		if (rtos_queue_send(usb_txq, buf+n, USB_DELAY_TICKS) != RTOS_PASS)
+		if (rtos_stream_buffer_send(usb_txq, buf+n, 1, USB_DELAY_TICKS) != 1)
 			break;
 	}
 
