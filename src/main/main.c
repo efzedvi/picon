@@ -15,6 +15,9 @@
 #include "picon/i2c.h"
 #include "picon/usb_serial.h"
 #include "picon/mem.h"
+#include "picon/log.h"
+#include "picon/env.h"
+#include "picon/flash.h"
 #include "shell/shell.h"
 
 #include "FreeRTOS.h"
@@ -45,6 +48,7 @@ static const DEVICE_FILE *dt[] = {
 	DEV_ENTRY("/dev/mem", MEM_DEV, 0, NULL)
 	DEV_ENTRY("/dev/uart0", UART_DEV, 0, (void *) &picon_uart_cfg)
 	DEV_ENTRY("/dev/i2c0", I2C_DEV, 0, (void*) (&picon_i2c_cfg))
+	DEV_ENTRY("/dev/flash", FLASH_DEV, 0, NULL)
         NULL
 };
 
@@ -54,6 +58,7 @@ int main()
 	picon_init();
 	io_init();
         dev_init(dt);
+	env_init();
 
         CONSOLE_CREATE("/dev/uart0", "ttyS0");
         CONSOLE_CREATE("/dev/usbcdc", "ttyCDC");

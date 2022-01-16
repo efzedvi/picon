@@ -20,6 +20,8 @@ typedef enum {
 	ADC_C,
 	CONSOLE_C,
 	DEV_C,
+	ENV_C,
+	FLASH_C,
 	I2C_C,
 	IO_C,
 	LOG_C,
@@ -33,7 +35,7 @@ typedef enum {
 	MAX_SOURCE_FILE,
 } LOG_SRC_FILE;
 
-#define LOG_DATA_SIZE           (13)
+#define LOG_DATA_SIZE           (29)
 
 #ifdef PICON_LOGGING
 #define LOG(file, log_fmt, log_arg...)\

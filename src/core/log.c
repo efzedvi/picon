@@ -27,15 +27,15 @@ typedef struct
 } __attribute((__packed__)) LOG_REC;
 
 #define LOG_REC_SIZE            sizeof(LOG_REC)
-#define LOG_DEFAULT_SIZE	(256)
+#define LOG_DEFAULT_SIZE	(128)
 
 
 rtos_semaphore_handle_t log_mtx = NULL;
 uint8_t			log_enabled = 0;
 LOG_REC			*log_buf = NULL;
-uint16_t			log_idx = 0;
+uint16_t		log_idx = 0;
 uint16_t		log_size = 0;
-uint16_t			log_count = 0;
+uint16_t		log_count = 0;
 
 void log_init(uint16_t size)
 {

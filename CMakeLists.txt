@@ -26,14 +26,17 @@ target_sources(picon_common INTERFACE
         src/core/printf-stdarg.c
         src/core/log.c
         src/core/picon.c
+	src/core/env.c
 	src/drivers/uart.c
 	src/drivers/i2c.c
 	src/drivers/usb_serial.c
 	src/drivers/mem.c
+	src/drivers/flash.c
 	src/shell/shell.c
 	src/shell/shell_log.c
 	src/shell/shell_gpio.c
 	src/shell/shell_i2c.c
+	src/shell/shell_env.c
         )
 target_include_directories(picon_common INTERFACE
 	src/include
@@ -57,6 +60,8 @@ target_link_libraries(picon_common INTERFACE
 	hardware_i2c
 	hardware_watchdog
 	hardware_rtc
+	hardware_flash
+	hardware_sync
         pico_multicore)
 
 add_executable(picon src/main/main.c)

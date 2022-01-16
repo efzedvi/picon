@@ -35,6 +35,7 @@
 #include "shell/shell.h"
 #include "shell/shell_gpio.h"
 #include "shell/shell_i2c.h"
+#include "shell/shell_env.h"
 //#include "shell/shell_adc.h"
 //#include "shell/shell_dac.h"
 //#include "shell/shell_timer.h"
@@ -52,6 +53,7 @@ const SHELL_COMMAND  shell_commands[] = {
 	SHELL_LOG_COMMAND
 	SHELL_GPIO_COMMAND
 	SHELL_I2C_COMMAND
+	SHELL_ENV_COMMAND
 //	SHELL_ADC_COMMAND
 //	//SHELL_DAC_COMMAND
 //	SHELL_BOARD_REGDUMP

@@ -41,10 +41,11 @@
 
 #define CONFIG_SHELL_CMD_PRIORITY	(8)
 
+#define PICON_ENV			(1)
 #define PICON_LOGGING			(1)
-
 #define CONFIG_SHELL_EXPR		(1)
-
 #define CONFIG_LOGGING			(1)
+#define CONFIG_ENV			(1)
+
 
 #endif /* end of include guard CONFIG_H */

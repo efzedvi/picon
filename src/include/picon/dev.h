@@ -20,7 +20,8 @@
 #define DEV_FLAG_SERIALIZE	(1<<0)
 #define DEV_FLAG_SOCKET         (1<<1)
 #define DEV_FLAG_MEMORY		(1<<2)
-#define DEV_FLAG_NONBLOCK	(1<<3)
+#define DEV_FLAG_BLOCKDEV	(1<<3)
+#define DEV_FLAG_NONBLOCK	(1<<4)
 
 typedef char            DEV_NAME[DEV_NAME_SIZE+1];
 

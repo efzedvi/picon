@@ -39,6 +39,14 @@ typedef enum {
 
 	//ASK
 
+	//Flash
+	PICON_IOC_STORAGE_READ,
+	PICON_IOC_STORAGE_ERASE,
+	PICON_IOC_STORAGE_WRITE,
+	PICON_IOC_STORAGE_ERASE_WRITE,
+	PICON_IOC_STORAGE_GET_SIZE,
+	PICON_IOC_STORAGE_NUM_SECTORS,
+
 	PICON_IOC_MAX,
 } PICON_IOCTL_REQ;
 
@@ -66,5 +74,12 @@ typedef struct _picon_ioctl_i2c {
 	PICON_I2C_MSG	*msgs;
 	uint8_t		nmsgs;
 } PICON_IOCTL_I2C;
+
+typedef struct _picon_ioctl_storage {
+	uint8_t		*buf;
+	uint32_t	offset;
+	uint16_t	count;		// how many bytes to read/write
+	uint16_t	xfer_count;	// how many bytes read/written
+} PICON_IOCTL_STORAGE;
 
 #endif /* end of include guard GPIO_H */
