@@ -23,4 +23,6 @@ int env_get_by_id(uint8_t id, char *key, uint8_t key_size, char *value, uint8_t 
 
 void env_zap(void);
 
+void env_erase(void);
+
 #endif /* end of include guard ENV_H */

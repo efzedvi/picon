@@ -71,14 +71,15 @@ static int env_save(void)
 	return rc;
 }
 
-static void _env_zap(void)
+static void _env_zap(uint8_t save)
 {
 	uint32_t	sig;
 
 	memset(&env_block, 0, sizeof(env_block));
 	sig = ENV_SIGNATURE;
 	memcpy(env_block.header, &sig, sizeof(sig));
-	env_save();
+	if (save)
+		env_save();
 }
 
 
@@ -101,7 +102,7 @@ static int env_load(void)
 	if (rc < 0) return rc;
 
 	if ( *(uint32_t *) env_block.header != ENV_SIGNATURE ) {
-		_env_zap();
+		_env_zap(1);
 	}
 
 	return rc;
@@ -121,9 +122,24 @@ void env_zap(void)
 {
 	rtos_semaphore_take(env_mtx, RTOS_PORT_MAX_DELAY);
 
-	_env_zap();
+	_env_zap(1);
 
 	rtos_semaphore_give(env_mtx);
+}
+
+void env_erase(void)
+{
+	int	rc=0;
+	PICON_IOCTL_STORAGE storage;
+
+	if (fd < 0) return;
+
+	storage.buf 	= NULL;
+	storage.offset	= ENV_SECTOR * FLASH_SECTOR_SIZE;
+	storage.count   = FLASH_SECTOR_SIZE;
+	storage.xfer_count = 0;
+
+	ioctl(fd, PICON_IOC_STORAGE_ERASE, (void *) &storage);
 }
 
 int env_set(const char *key, const char *value)

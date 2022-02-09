@@ -25,6 +25,7 @@
 
 #include "hardware/flash.h"
 #include "hardware/sync.h"
+#include "pico/time.h"
 
 #define	FLASH_TASK_STACK_SIZE	(256)
 #define	FLASH_TASK_PRIORITY	(12)

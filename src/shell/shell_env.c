@@ -56,6 +56,15 @@ int shell_env(int argc, char **argv)
 				shell_env_usage();
 				return 0;
 			}
+			if (strcmp(argv[1], "-z") == 0) {
+				env_zap();
+				return 0;
+			}
+			if (strcmp(argv[1], "-e") == 0) {
+				env_erase();
+				return 0;
+			}
+
 			if (env_get(argv[1], value, ENV_VALUE_SIZE) != 0) {
 				printf("'%s' not found\n", argv[1]);
 				return 2;
