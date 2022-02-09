@@ -28,7 +28,7 @@
 #include "pico/time.h"
 
 #define	FLASH_TASK_STACK_SIZE	(256)
-#define	FLASH_TASK_PRIORITY	(12)
+#define	FLASH_TASK_PRIORITY	(RTOS_CONFIG_MAX_PRIORITIES - 1)
 
 #define PICON_FLASH_REQ_READ		(0)
 #define PICON_FLASH_REQ_ERASE		(1)
@@ -58,16 +58,12 @@ static void __no_inline_not_in_flash_func(picon_core1_locker_task)(void *args)
 	while (1) {
 		rtos_task_notify_take(RTOS_TRUE, RTOS_PORT_MAX_DELAY);
 
-		rtos_task_suspend_all();
 		interrupt_status = save_and_disable_interrupts();
-		rtos_task_enter_critical();
 
 		while (core1_locked)
 			tight_loop_contents();
 
-		rtos_task_exit_critical();
 		restore_interrupts(interrupt_status);
-		rtos_task_resume_all();
 	}
 }
 
@@ -85,6 +81,7 @@ static void __no_inline_not_in_flash_func(picon_flash_task)(void *args)
 
 			core1_locked = 1;
 			rtos_task_notify_give(core1_locker_task_handle);
+			sleep_ms(2);
 
 			rtos_task_suspend_all();
 			interrupt_status = save_and_disable_interrupts();
@@ -160,7 +157,7 @@ int picon_flash_init(uint8_t ux, void *params)
 
 	// start the core1 locker task
 	rv = rtos_task_create(picon_core1_locker_task, "c1lck", 64,
-			NULL, RTOS_CONFIG_MAX_PRIORITIES - 1, &core1_locker_task_handle);
+			NULL, FLASH_TASK_PRIORITY, &core1_locker_task_handle);
 
 	if (rv != RTOS_PASS || core1_locker_task_handle == NULL) {
 		rtos_semaphore_delete(flash_sem);
@@ -211,7 +208,7 @@ int picon_flash_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data)
 			break;
 
 		case PICON_IOC_STORAGE_WRITE:
-			req.code = PICON_FLASH_REQ_ERASE_WRITE;
+			req.code = PICON_FLASH_REQ_WRITE;
 			break;
 
 		case PICON_IOC_STORAGE_ERASE_WRITE:

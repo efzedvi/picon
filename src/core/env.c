@@ -66,9 +66,12 @@ static int env_save(void)
 	storage.count   = FLASH_SECTOR_SIZE;
 	storage.xfer_count = 0;
 
-	rc = ioctl(fd, PICON_IOC_STORAGE_WRITE, (void *) &storage);
+	//rc = ioctl(fd, PICON_IOC_STORAGE_ERASE_WRITE, (void *) &storage);
 
-	return rc;
+	rc = pwrite(fd, &env_block, FLASH_SECTOR_SIZE, ENV_SECTOR * FLASH_SECTOR_SIZE);
+	if (rc != FLASH_SECTOR_SIZE) return -2;
+
+	return 0;
 }
 
 static void _env_zap(uint8_t save)
@@ -98,14 +101,16 @@ static int env_load(void)
 	storage.count   = FLASH_SECTOR_SIZE;
 	storage.xfer_count = 0;
 
-	rc = ioctl(fd, PICON_IOC_STORAGE_READ, (void *) &storage);
-	if (rc < 0) return rc;
+	//rc = ioctl(fd, PICON_IOC_STORAGE_READ, (void *) &storage);
+	//if (rc < 0) return rc;
+	rc = pread(fd, &env_block, FLASH_SECTOR_SIZE, ENV_SECTOR * FLASH_SECTOR_SIZE);
+	if (rc != FLASH_SECTOR_SIZE) return -2;
 
 	if ( *(uint32_t *) env_block.header != ENV_SIGNATURE ) {
-		_env_zap(1);
+		_env_zap(0);
 	}
 
-	return rc;
+	return 0;
 }
 
 void env_init(void)

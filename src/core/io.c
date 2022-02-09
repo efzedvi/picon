@@ -170,6 +170,7 @@ int pread(int fd, void *buf, uint16_t count, uint32_t offset)
 	DEVICE *dev;
 	int rc;
 
+
 	if (fd < 0 || fd >= MAX_OPEN_FILES) return -EBADF;
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
@@ -178,7 +179,7 @@ int pread(int fd, void *buf, uint16_t count, uint32_t offset)
 
 	dev = open_files[fd].devf->dev;
 
-	if (dev->pread && dev->flags & DEV_FLAG_MEMORY) {
+	if (dev->pread && dev->flags & (DEV_FLAG_MEMORY | DEV_FLAG_BLOCKDEV) ) {
 		rc = dev->pread(open_files[fd].devf, (unsigned char *) buf, count, offset);
 	} else {
 		rc = -EINVAL;
@@ -204,7 +205,7 @@ int pwrite(int fd, const void *buf, uint16_t count, uint32_t offset)
 
 	dev = open_files[fd].devf->dev;
 
-	if (dev->pwrite && dev->flags & DEV_FLAG_MEMORY) {
+	if (dev->pread && dev->flags & (DEV_FLAG_MEMORY | DEV_FLAG_BLOCKDEV) ) {
 		rc = dev->pwrite(open_files[fd].devf, (unsigned char *) buf, count, offset);
 	} else {
 		rc = -EINVAL;
