@@ -73,7 +73,7 @@ typedef struct _shell_cmd_arg {
 	CONSOLE_INFO		*console_info;
 } SHELL_CMD_ARG;
 
-void shell_tokenize(char *line, int *argc, char **argv)
+static void shell_tokenize(char *line, int *argc, char **argv)
 {
 	uint16_t non_space_found = 0;
 	size_t   count;
