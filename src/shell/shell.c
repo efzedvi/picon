@@ -73,11 +73,11 @@ typedef struct _shell_cmd_arg {
 	CONSOLE_INFO		*console_info;
 } SHELL_CMD_ARG;
 
-
-static void shell_tokenize(char *line, int *argc, char **argv)
+void shell_tokenize(char *line, int *argc, char **argv)
 {
 	uint16_t non_space_found = 0;
 	size_t   count;
+	char     quote='\0';
 
 	*argc = 0;
 	argv[0] = line;
@@ -87,12 +87,19 @@ static void shell_tokenize(char *line, int *argc, char **argv)
 	count = strlen(line);
 
 	while ((count > 0) && (*argc < SHELL_MAX_ARG_NUM)) {
-		if (isspace((int)*line)) {
+		if (*line == '"' || *line == '\'') {
+			if (quote == 0) {
+				quote = *line;
+			} else if (quote == *line) {
+				quote = '\0';
+				*line = '\0';
+			}
+		} else if (isspace((int)*line) && !quote) {
 			non_space_found = 0;
 			*line = '\0';
 		} else if (!non_space_found) {
-			non_space_found = 1;
-			argv[(*argc)++] = line;
+			non_space_found = 1;            
+			argv[(*argc)++] = line;         
 		}
 
 		line++;
