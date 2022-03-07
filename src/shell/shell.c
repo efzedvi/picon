@@ -75,7 +75,7 @@ typedef struct _shell_cmd_arg {
 	CONSOLE_INFO		*console_info;
 } SHELL_CMD_ARG;
 
-static void shell_tokenize(char *line, int *argc, char **argv)
+static void shell_tokenize(char *line, int *argc, char **argv, char **inf, char **outf)
 {
 	uint16_t non_space_found = 0;
 	size_t   count;
@@ -84,7 +84,9 @@ static void shell_tokenize(char *line, int *argc, char **argv)
 	*argc = 0;
 	argv[0] = line;
 
-	if (!line || !argc || !argv) return;
+	if (!line || !argc || !argv || !inf || !outf) return;
+
+	*inf = *outf = NULL;
 
 	count = strlen(line);
 
@@ -107,6 +109,27 @@ static void shell_tokenize(char *line, int *argc, char **argv)
 		line++;
 		count--;
 	}
+
+	int ac=0;
+
+	for(int i=0; i<*argc; i++) {
+		if (strcmp(argv[i], "<") == 0)  {
+			if (!ac) ac = i;
+			if ((i < *argc - 1) && !*inf) {
+				*inf = argv[++i];
+			}
+
+		}
+
+		if (strcmp(argv[i], ">") == 0)  {
+			if (!ac) ac = i;
+			if ((i < *argc - 1) && !*outf) {
+				*outf = argv[++i];
+			}
+		}
+	}
+
+	if (ac) *argc = ac;
 }
 
 int shell_clear(int argc, char **argv)
@@ -452,6 +475,7 @@ void shell_task(void *args)
 	rtos_task_handle_t 	child_handle;
 	CONSOLE_INFO 		*console_info, child_console_info;
 	SHELL_CMD_ARG	cmd;
+	char		*inf, *outf;
 
 	sem = rtos_semaphore_create_binary();
 	console_info = TASK_GET_LOCAL_STORAGE();
@@ -472,7 +496,7 @@ void shell_task(void *args)
 
 		if (line[0] == '\0') continue;
 
-		shell_tokenize(line, &argc, argv);
+		shell_tokenize(line, &argc, argv, &inf, &outf);
 		if (!argv[0] || argv[0][0] == 0 || argv[0][0] == '#') continue;
 
 		if (argv[0][0] == '?' || strcmp(argv[0], "help") == 0) {
