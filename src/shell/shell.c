@@ -42,6 +42,7 @@
 //#include "shell/shell_spi.h"
 //#include "shell/shell_rf.h"
 #include "shell/shell_log.h"
+#include "shell/shell_pwm.h"
 
 #define SHELL_PROMPT		"# "
 #define SHELL_MAX_LINE  	(80)
@@ -54,6 +55,7 @@ const SHELL_COMMAND  shell_commands[] = {
 	SHELL_GPIO_COMMAND
 	SHELL_I2C_COMMAND
 	SHELL_ENV_COMMAND
+	SHELL_PWM_COMMAND
 //	SHELL_ADC_COMMAND
 //	//SHELL_DAC_COMMAND
 //	SHELL_BOARD_REGDUMP

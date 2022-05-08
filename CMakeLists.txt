@@ -37,6 +37,7 @@ target_sources(picon_common INTERFACE
 	src/shell/shell_gpio.c
 	src/shell/shell_i2c.c
 	src/shell/shell_env.c
+	src/shell/shell_pwm.c
         )
 target_include_directories(picon_common INTERFACE
 	src/include
@@ -53,15 +54,16 @@ target_link_libraries(picon_common INTERFACE
 	pico_bootrom
 	pico_malloc
         tinyusb_device_unmarked
-	hardware_regs
-	hardware_gpio
-	hardware_uart
-	hardware_irq
-	hardware_i2c
-	hardware_watchdog
-	hardware_rtc
 	hardware_flash
+	hardware_gpio
+	hardware_i2c
+	hardware_irq
+	hardware_pwm
+	hardware_regs
+	hardware_rtc
 	hardware_sync
+	hardware_uart
+	hardware_watchdog
         pico_multicore)
 
 add_executable(picon src/main/main.c)
