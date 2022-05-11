@@ -44,6 +44,7 @@ Current console commands at the moment are:
 	gpio         : GPIO handling command
 	i2c          : Command to scan and xfer data to/from I2C devices
 	env          : sets/gets/lists environment variables
+	pwm          : PWM command
 
 More commands and features will be added in future.
 
