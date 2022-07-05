@@ -26,6 +26,8 @@
 #define PICON_BUILD_DATE		__DATE__
 #define PICON_BUILD_TIME		__TIME__
 
+// debug console uart
+#define CONFIG_DBG_CONSOLE_ENABLED
 
 // configuration macros
 #define CONFIG_HEART_BEAT		(1)

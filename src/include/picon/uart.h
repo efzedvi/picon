@@ -12,6 +12,7 @@
 #ifndef UART_H
 #define UART_H
 
+#include "picon/config.h"
 #include "picon/dev.h"
 #include "hardware/uart.h"
 
@@ -33,7 +34,6 @@ typedef struct _uart_cfg_t {
 
 #define PICON_DEFAULT_UART_TX_PIN	0
 #define PICON_DEFAULT_UART_RX_PIN	1
-
 
 int picon_uart_init(uint8_t ux, void *params);
 

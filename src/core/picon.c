@@ -69,6 +69,8 @@ int picon_init()
 
 #endif
 
+	DBG_UART_INIT();
+
 	return 0;
 }
 
@@ -124,3 +126,15 @@ time_t time(time_t *tloc)
 	return t;
 }
 
+#ifdef CONFIG_DBG_CONSOLE_ENABLED
+void dbg_msg(char *msg)
+{
+	if (!msg) return;
+
+	while (*msg) {
+		if (*msg == '\n')
+			uart_putc_raw(DBG_UART, '\r');
+		uart_putc_raw(DBG_UART, *msg++);
+	}
+}
+#endif
