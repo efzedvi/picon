@@ -28,15 +28,28 @@
 #include <ctype.h>
 #include <time.h>
 
+#ifdef CONFIG_PICO_W
+#include "pico/cyw43_arch.h"
+#endif
 
-#ifdef CONFIG_HEART_BEAT
+#ifdef CONFIG_HEARTBEAT
 static void picon_heart_beat_task(void *args)
 {
 	UNUSED(args);
+#ifdef CONFIG_PICO_W
+	int  pin_level = 1;
+#endif
 
 	while (1) {
-		gpio_xor_mask(1<<CONFIG_HEART_BEAT_PIN);
-		rtos_task_delay(rtos_ms_to_ticks(CONFIG_HEART_BEAT_RATE));
+#ifdef CONFIG_HEARTBEAT_PIN
+		gpio_xor_mask(1<<CONFIG_HEARTBEAT_PIN);
+#else
+	#ifdef CONFIG_PICO_W
+		//cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, pin_level);
+		pin_level ^= 1;
+	#endif
+#endif
+		rtos_task_delay(rtos_ms_to_ticks(CONFIG_HEARTBEAT_RATE));
 
 #ifdef CONFIG_WDG
 		// kick the watchdog
@@ -54,19 +67,25 @@ int picon_init()
 	bi_decl(bi_program_version_string(PICON_VERSION));
 	bi_decl(bi_program_url("https://github.com/efzedvi/picon.git"));
 
-#ifdef CONFIG_HEART_BEAT
-	gpio_init(CONFIG_HEART_BEAT_PIN);
-	gpio_set_dir(CONFIG_HEART_BEAT_PIN, GPIO_OUT);
-	gpio_put(CONFIG_HEART_BEAT_PIN, 0);
-
-	rtos_task_create(picon_heart_beat_task, "hrtbt", CONFIG_HEART_BEAT_STACK_SIZE,
-		    NULL, CONFIG_HEART_BEAT_PRIORITY, NULL);
+#ifdef CONFIG_HEARTBEAT
+#ifdef CONFIG_HEARTBEAT_PIN
+	gpio_init(CONFIG_HEARTBEAT_PIN);
+	gpio_set_dir(CONFIG_HEARTBEAT_PIN, GPIO_OUT);
+	gpio_put(CONFIG_HEARTBEAT_PIN, 0);
+#endif
+	rtos_task_create(picon_heart_beat_task, "hrtbt", CONFIG_HEARTBEAT_STACK_SIZE,
+		    NULL, CONFIG_HEARTBEAT_PRIORITY, NULL);
 #endif
 
 #ifdef CONFIG_WDG
 	// set up the WDG
 	watchdog_enable(CONFIG_WDG_PERIOD, 1);
+#endif
 
+#ifdef CONFIG_PICO_W
+	//if (cyw43_arch_init() !=0) {
+		//TODO: log , set a flag, or something
+	//}
 #endif
 
 	DBG_UART_INIT();
