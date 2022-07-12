@@ -64,12 +64,13 @@ target_link_libraries(picon_common INTERFACE
 	hardware_sync
 	hardware_uart
 	hardware_watchdog
-	#pico_cyw43_arch_lwip_sys_freertos
+	pico_cyw43_arch_lwip_sys_freertos
 	#pico_cyw43_arch_none
         pico_multicore)
 
 if (PICO_CYW43_SUPPORTED) # set by PICO_BOARD=pico_w
 	set(CONFIG_PICO_W 1)
+	set(NO_SYS 0)
 endif()
 
 add_executable(picon src/main/main.c)
