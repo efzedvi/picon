@@ -40,6 +40,12 @@ static void picon_heart_beat_task(void *args)
 	int  pin_level = 1;
 #endif
 
+#ifdef CONFIG_PICO_W
+	if (cyw43_arch_init() !=0) {
+		//TODO: log , set a flag, or something
+	}
+#endif
+
 	while (1) {
 #ifdef CONFIG_HEARTBEAT_PIN
 		gpio_xor_mask(1<<CONFIG_HEARTBEAT_PIN);
@@ -63,12 +69,14 @@ int picon_init()
 {
 	rtc_init();
 
+	DBG_UART_INIT();
+
 	bi_decl(bi_program_description("Picon (Pico Console) program. Author: Faraz Vahabzadeh (faraz@fzv.ca)"));
 	bi_decl(bi_program_version_string(PICON_VERSION));
 	bi_decl(bi_program_url("https://github.com/efzedvi/picon.git"));
 
 #ifdef CONFIG_HEARTBEAT
-#ifdef CONFIG_HEARTBEAT_PIN
+#ifndef CONFIG_PICO_W
 	gpio_init(CONFIG_HEARTBEAT_PIN);
 	gpio_set_dir(CONFIG_HEARTBEAT_PIN, GPIO_OUT);
 	gpio_put(CONFIG_HEARTBEAT_PIN, 0);
@@ -81,14 +89,6 @@ int picon_init()
 	// set up the WDG
 	watchdog_enable(CONFIG_WDG_PERIOD, 1);
 #endif
-
-#ifdef CONFIG_PICO_W
-	//if (cyw43_arch_init() !=0) {
-		//TODO: log , set a flag, or something
-	//}
-#endif
-
-	DBG_UART_INIT();
 
 	return 0;
 }

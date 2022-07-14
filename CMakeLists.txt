@@ -69,8 +69,7 @@ target_link_libraries(picon_common INTERFACE
         pico_multicore)
 
 if (PICO_CYW43_SUPPORTED) # set by PICO_BOARD=pico_w
-	set(CONFIG_PICO_W 1)
-	set(NO_SYS 0)
+	add_compile_definitions(CONFIG_PICO_W=1)
 endif()
 
 add_executable(picon src/main/main.c)
