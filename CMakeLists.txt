@@ -64,18 +64,30 @@ target_link_libraries(picon_common INTERFACE
 	hardware_sync
 	hardware_uart
 	hardware_watchdog
-	pico_cyw43_arch_lwip_sys_freertos
+	#pico_cyw43_arch_lwip_sys_freertos
 	#pico_cyw43_arch_none
+	#pico_util
+	pico_standard_link
+	pico_binary_info
         pico_multicore)
 
 if (PICO_CYW43_SUPPORTED) # set by PICO_BOARD=pico_w
 	add_compile_definitions(CONFIG_PICO_W=1)
+	#add_compile_definitions(CYW43_ARCH_DEBUG_ENABLED=0)
+	#add_compile_definitions(NDEBUG=1)
+	#add_compile_definitions(ENABLE_SPI_DUMPING=0)
+	#add_compile_definitions(_PICO_STDIO_H=1)
+	#add_compile_definitions(LIB_PICO_STDIO_UART=0)
+	#add_compile_definitions(LIB_PICO_STDIO_USB=0)
+	#add_compile_definitions(LIB_PICO_STDIO_SEMIHOSTING=0)
+	#add_compile_definitions(_PICO_STDIO_UART_H)
+	#add_compile_definitions(LIB_PICO_PRINTF_PICO=0)
 endif()
 
 add_executable(picon src/main/main.c)
 
 #pico_enable_stdio_usb(picon 0)
-#pico_enable_stdio_uart(picon 1)
+#pico_enable_stdio_uart(picon 0)
 
 
 target_link_libraries(picon picon_common)

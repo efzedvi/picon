@@ -29,7 +29,9 @@
 #include <time.h>
 
 #ifdef CONFIG_PICO_W
-#include "pico/cyw43_arch.h"
+// NOTE: There seem to be a serious bug in the way CYW43 is supported by PICO-SDK for freertos
+//       We wait for now until we find a workaround for it
+//#include "pico/cyw43_arch.h"
 #endif
 
 #ifdef CONFIG_HEARTBEAT
@@ -41,9 +43,11 @@ static void picon_heart_beat_task(void *args)
 #endif
 
 #ifdef CONFIG_PICO_W
-	if (cyw43_arch_init() !=0) {
+	// NOTE: There seem to be a serious bug in the way CYW43 is supported by PICO-SDK for freertos
+	//       We wait for now until we find a workaround for it
+	//if (cyw43_arch_init() !=0) {
 		//TODO: log , set a flag, or something
-	}
+	//}
 #endif
 
 	while (1) {
@@ -51,6 +55,8 @@ static void picon_heart_beat_task(void *args)
 		gpio_xor_mask(1<<CONFIG_HEARTBEAT_PIN);
 #else
 	#ifdef CONFIG_PICO_W
+		// NOTE: There seem to be a serious bug in the way CYW43 is supported by PICO-SDK for freertos
+		//       We wait for now until we find a workaround for it
 		//cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, pin_level);
 		pin_level ^= 1;
 	#endif
@@ -67,6 +73,8 @@ static void picon_heart_beat_task(void *args)
 
 int picon_init()
 {
+	rtos_task_handle_t hrtbt_task_handle;
+
 	rtc_init();
 
 	DBG_UART_INIT();
@@ -76,13 +84,18 @@ int picon_init()
 	bi_decl(bi_program_url("https://github.com/efzedvi/picon.git"));
 
 #ifdef CONFIG_HEARTBEAT
-#ifndef CONFIG_PICO_W
+	#ifndef CONFIG_PICO_W
 	gpio_init(CONFIG_HEARTBEAT_PIN);
 	gpio_set_dir(CONFIG_HEARTBEAT_PIN, GPIO_OUT);
 	gpio_put(CONFIG_HEARTBEAT_PIN, 0);
-#endif
+	#endif
 	rtos_task_create(picon_heart_beat_task, "hrtbt", CONFIG_HEARTBEAT_STACK_SIZE,
-		    NULL, CONFIG_HEARTBEAT_PRIORITY, NULL);
+		    NULL, CONFIG_HEARTBEAT_PRIORITY, &hrtbt_task_handle);
+
+	#if defined(CONFIG_PICO_W) && configUSE_CORE_AFFINITY && configNUM_CORES > 1
+		// PICO_W is weird
+		rtos_task_core_affinity_set(hrtbt_task_handle, 1 << 0);
+	#endif
 #endif
 
 #ifdef CONFIG_WDG
