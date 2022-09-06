@@ -53,5 +53,4 @@
 #define CONFIG_ENV			(1)
 #define CONFIG_PWM			(1)
 
-
 #endif /* end of include guard CONFIG_H */

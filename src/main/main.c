@@ -18,6 +18,7 @@
 #include "picon/log.h"
 #include "picon/env.h"
 #include "picon/flash.h"
+#include "picon/ateeprom.h"
 #include "shell/shell.h"
 
 #include "FreeRTOS.h"
@@ -42,6 +43,12 @@ const i2c_cfg_t picon_i2c_cfg = {
 	.scl = PICO_DEFAULT_I2C_SCL_PIN		//gpio 5
 	};
 
+const PICON_ATEEPROM_CFG eeprom_config = {
+	.address	= 0x50,
+	.type		= ATEEPROM_24C08,
+	.device_name	= "/dev/i2c0"
+};
+
 
 static const DEVICE_FILE *dt[] = {
 	DEV_ENTRY("/dev/usbcdc",  USB_SERIAL_DEV, 0, NULL)
@@ -49,6 +56,7 @@ static const DEVICE_FILE *dt[] = {
 	DEV_ENTRY("/dev/uart0", UART_DEV, 0, (void *) &picon_uart_cfg)
 	DEV_ENTRY("/dev/i2c0", I2C_DEV, 0, (void*) (&picon_i2c_cfg))
 	DEV_ENTRY("/dev/flash", FLASH_DEV, 0, NULL)
+	//DEV_ENTRY("/dev/nvm", ATEEPROM_DEV, 0, (void *) &eeprom_config)  // uncomment to use the above AT24C08 device
         NULL
 };
 

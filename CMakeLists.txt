@@ -32,6 +32,7 @@ target_sources(picon_common INTERFACE
 	src/drivers/usb_serial.c
 	src/drivers/mem.c
 	src/drivers/flash.c
+	src/drivers/ateeprom.c
 	src/shell/shell.c
 	src/shell/shell_log.c
 	src/shell/shell_gpio.c
