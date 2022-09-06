@@ -340,6 +340,10 @@ int shell_mem(int argc, char **argv)
 			close(fd);
 			return -3;
 		}
+	} else {
+		// if not a dev then we can only access the addressable mapped memory in 32bit mode
+		type = 4;
+		len += (4 - len % 4); // make len multiple of 4;
 	}
 
 	if (value_specified) {	// write
