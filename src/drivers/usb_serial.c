@@ -247,7 +247,7 @@ int picon_usb_serial_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned 
 	return n;
 }
 
-int picon_usb_serial_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count)
+int picon_usb_serial_write(const DEVICE_FILE *devf, const unsigned char *buf, unsigned int count)
 {
 	unsigned int n;
 

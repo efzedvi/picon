@@ -427,7 +427,7 @@ int picon_uart_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data)
 	return rc;
 }
 
-int picon_uart_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count)
+int picon_uart_write(const DEVICE_FILE *devf, const unsigned char *buf, unsigned int count)
 {
 	unsigned char 	ux;
 	const uart_t	*uartp;

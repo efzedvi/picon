@@ -19,7 +19,7 @@ int  picon_usb_serial_ready(void);
 void picon_usb_serial_yield(void);
 
 int picon_usb_serial_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count);
-int picon_usb_serial_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count);
+int picon_usb_serial_write(const DEVICE_FILE *devf, const unsigned char *buf, unsigned int count);
 int picon_usb_serial_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data);
 
 const void *picon_usb_serial_open(const DEVICE_FILE *devf, int flags);

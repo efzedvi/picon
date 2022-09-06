@@ -39,7 +39,7 @@ int picon_uart_init(uint8_t ux, void *params);
 
 const void *picon_uart_open(const DEVICE_FILE *devf, int flags);
 int picon_uart_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count);
-int picon_uart_write(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count);
+int picon_uart_write(const DEVICE_FILE *devf, const unsigned char *buf, unsigned int count);
 int picon_uart_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data);
 int picon_uart_close(const DEVICE_FILE *devf);
 int picon_uart_fsync(const DEVICE_FILE *devf);

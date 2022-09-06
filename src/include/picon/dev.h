@@ -41,7 +41,7 @@ typedef struct _DEV {
 	const void*	(*open)(const DEVICE_FILE *devf, int flags);
 	int		(*close)(const DEVICE_FILE *devf);
 	int		(*read)(const DEVICE_FILE *devf, unsigned char *buf, size_t len);
-	int		(*write)(const DEVICE_FILE *devf, unsigned char *buf, size_t len);
+	int		(*write)(const DEVICE_FILE *devf, const unsigned char *buf, size_t len);
 	int 		(*pread)(const DEVICE_FILE *devf, void *buf, uint16_t count, uint32_t offset);
 	int		(*pwrite)(const DEVICE_FILE *devf, const void *buf, uint16_t count, uint32_t offset);
 	int		(*ioctl)(const DEVICE_FILE *devf, unsigned int req, void *thing);
