@@ -40,6 +40,7 @@ void shell_task(void *args);
 
 int shell_clear(int argc, char **argv);
 int shell_date(int argc, char **argv);
+int shell_echo(int argc, char **argv);
 int shell_free(int argc, char **argv);
 int shell_lsdev(int argc, char **argv);
 int shell_mem(int argc, char **argv);
@@ -72,6 +73,7 @@ int shell_expr(int argc, char **argv);
 	{ CMD(reboot),	SHELL_MIN_CMD_STACK_SIZE, "Reboots the system or goes into BOOTSEL mode", 0 },\
 	{ CMD(uname),	SHELL_MIN_CMD_STACK_SIZE, "Unit name ; displayes build info", 0 },\
 	{ CMD(uptime),	SHELL_MIN_CMD_STACK_SIZE, "Shows uptime", 0 },\
+	{ CMD(echo),	SHELL_MIN_CMD_STACK_SIZE, "Echos its arguments on console", 0 },\
         SHELL_EXPR_CMD_DEF \
 	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, "Test command ; displays prime numbers for testing the terminal", 0 },
 //	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, "Test command ; displays prime numbers for testing the terminal", SHELL_CMD_PROPERTY_CANCELABLE },

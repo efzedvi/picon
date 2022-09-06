@@ -741,3 +741,20 @@ int shell_expr(int argc, char *argv[])
 	return 0;
 }
 
+int shell_echo(int argc, char *argv[])
+{
+	uint8_t		new_line = 1;
+	char		*space = "";
+
+	for(int i=1; i<argc; i++) {
+		if (strcmp(argv[i], "-n") == 0)
+			new_line = 0;
+		else {
+			printf("%s%s", space, argv[i]);
+			space = " ";
+		}
+	}
+
+	if (new_line)
+		printf("\n");
+}
