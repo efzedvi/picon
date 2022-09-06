@@ -15,6 +15,8 @@
 #include "picon/i2c.h"
 #include "picon/usb_serial.h"
 #include "picon/mem.h"
+#include "picon/null.h"
+#include "picon/zero.h"
 #include "picon/log.h"
 #include "picon/env.h"
 #include "picon/flash.h"
@@ -52,6 +54,8 @@ const PICON_ATEEPROM_CFG eeprom_config = {
 
 static const DEVICE_FILE *dt[] = {
 	DEV_ENTRY("/dev/usbcdc",  USB_SERIAL_DEV, 0, NULL)
+	DEV_ENTRY("/dev/null", NULL_DEV, 0, NULL)
+	DEV_ENTRY("/dev/zero", ZERO_DEV, 0, NULL)
 	DEV_ENTRY("/dev/mem", MEM_DEV, 0, NULL)
 	DEV_ENTRY("/dev/uart0", UART_DEV, 0, (void *) &picon_uart_cfg)
 	DEV_ENTRY("/dev/i2c0", I2C_DEV, 0, (void*) (&picon_i2c_cfg))
