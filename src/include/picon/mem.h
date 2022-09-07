@@ -19,7 +19,6 @@
 int picon_mem_init(uint8_t ux, void *params);
 
 const void *picon_mem_open(const DEVICE_FILE *devf, int flags);
-int picon_mem_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data);
 int picon_mem_close(const DEVICE_FILE *devf);
 int picon_mem_pread(const DEVICE_FILE *devf, void *buf, uint16_t count, uint32_t offset);
 int picon_mem_pwrite(const DEVICE_FILE *devf, const void *buf, uint16_t count, uint32_t offset);
@@ -33,7 +32,7 @@ int picon_mem_pwrite(const DEVICE_FILE *devf, const void *buf, uint16_t count, u
   .write = NULL,\
   .pread = picon_mem_pread,\
   .pwrite= picon_mem_pwrite,\
-  .ioctl = picon_mem_ioctl,\
+  .ioctl = NULL,\
   .lseek = NULL,\
   .sendto   = NULL,\
   .recvfrom = NULL,\

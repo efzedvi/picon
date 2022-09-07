@@ -591,6 +591,9 @@ void shell_task(void *args)
 				console_info->stdfd[STDOUT_FILENO] = fds[STDOUT_FILENO];
 				console_info->stdfd[STDERR_FILENO] = fds[STDERR_FILENO];
 
+				if (new_stdin >= 0) close(new_stdin);
+				if (new_stdout >= 0) close(new_stdout);
+
 				break;
 			}
 		}

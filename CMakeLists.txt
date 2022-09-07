@@ -31,6 +31,7 @@ target_sources(picon_common INTERFACE
 	src/drivers/i2c.c
 	src/drivers/usb_serial.c
 	src/drivers/mem.c
+	src/drivers/tmp.c
 	src/drivers/flash.c
 	src/drivers/ateeprom.c
 	src/drivers/null.c

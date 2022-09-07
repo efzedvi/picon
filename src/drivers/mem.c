@@ -47,16 +47,6 @@ int picon_mem_close(const DEVICE_FILE *devf)
 	return 0;
 }
 
-
-int picon_mem_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data)
-{
-	UNUSED(devf);
-	UNUSED(request);
-	UNUSED(data);
-
-	return 0;
-}
-
 int picon_mem_pread(const DEVICE_FILE *devf, void *buf, uint16_t count, uint32_t offset)
 {
 	UNUSED(devf);
