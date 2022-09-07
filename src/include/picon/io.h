@@ -27,7 +27,11 @@
 #define O_RDWR		3
 #endif
 
-#define PICON_IO_NONBLOCK	4
+#ifndef O_TRUNC
+#define O_TRUNC		4
+#endif
+
+#define PICON_IO_NONBLOCK	16
 
 void io_init(void);
 

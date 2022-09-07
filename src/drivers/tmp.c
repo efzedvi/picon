@@ -46,7 +46,7 @@ const void *picon_tmp_open(const DEVICE_FILE *devf, int flags)
 {
 	UNUSED(devf);
 
-	if (flags == O_WRONLY) {
+	if (flags == O_TRUNC) {
 		memset(tmp_buf, 0, sizeof(tmp_buf));
 		size = 0;
 	}
@@ -68,35 +68,39 @@ int picon_tmp_close(const DEVICE_FILE *devf)
 
 int picon_tmp_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count)
 {
-	unsigned int cnt = MIN(count, (size - pos));
+	uint16_t i=0;
 
 	UNUSED(devf);
+
 	if (!buf) return -EINVAL;
+	if (!count) return 0;
 
-	if (pos >= size) return 0;
+	while (i < count && i < size) {
+		buf[i++] = tmp_buf[pos];
+		pos = (pos + 1) % sizeof(tmp_buf);
+	}
 
-	memcpy(buf, (void *) tmp_buf + MIN(pos, size), cnt);
-	pos += cnt;
-
-	return (int) cnt;
+	return (int) i;
 }
 
 
 int picon_tmp_write(const DEVICE_FILE *devf, const unsigned char *buf, unsigned int count)
 {
-	unsigned int cnt = MIN(count, (sizeof(tmp_buf) - pos));
+	uint16_t i=0;
 
 	UNUSED(devf);
+
 	if (!buf) return -EINVAL;
+	if (!count) return 0;
 
-	if (pos >= sizeof(tmp_buf)) return 0; 
+	while (i < count) {
+		tmp_buf[pos] = buf[i++];
+		pos = (pos + 1) % sizeof(tmp_buf);
+	}
 
-	memcpy((void *) tmp_buf + MIN(pos, sizeof(tmp_buf)), buf, cnt);
+	size = (size + count) % sizeof(tmp_buf);
 
-	pos  += cnt;
-	size += cnt;
-
-	return (int) cnt;
+	return (int) count;
 }
 
 
