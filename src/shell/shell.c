@@ -536,6 +536,7 @@ void shell_task(void *args)
 					}
 				}
 
+				new_stdin = new_stdout = -1;
 				if (inf) {
 					new_stdout = open(outf, O_RDONLY);
 					if (new_stdin >= 0) {
