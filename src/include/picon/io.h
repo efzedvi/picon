@@ -14,7 +14,20 @@
 
 #include <stdint.h>
 
-#define PICON_IO_NONBLOCK	(0x01)
+
+#ifndef O_RDONLY
+#define O_RDONLY	1
+#endif
+
+#ifndef O_WRONLY
+#define O_WRONLY	2
+#endif
+
+#ifndef O_RDWR
+#define O_RDWR		3
+#endif
+
+#define PICON_IO_NONBLOCK	4
 
 void io_init(void);
 

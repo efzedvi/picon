@@ -225,7 +225,7 @@ int shell_i2c(int argc, char *argv[])
 		return -1;
 	}
 
-	fd = open(argv[1], 0);
+	fd = open(argv[1], O_RDWR);
 	if (fd < 0) {
 		printf("Failed to open %s\n", argv[1]);
 		return -2;

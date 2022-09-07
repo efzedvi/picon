@@ -117,7 +117,7 @@ void env_init(void)
 {
 	memset(&env_block, 0, sizeof(env_block));
 
-	fd = open(FLASH_DEVICE, 0);
+	fd = open(FLASH_DEVICE, O_RDWR);
 	if (fd < 0) return;
 
 	env_mtx = rtos_semaphore_create_mutex();

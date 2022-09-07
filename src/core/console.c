@@ -97,7 +97,7 @@ int console_create(const char *dev, const char *name, rtos_task_function_t conso
 
 	if (!dev) return -ENOMEM;
 
-	console_fd = open(dev, PICON_IO_NONBLOCK);
+	console_fd = open(dev, PICON_IO_NONBLOCK | O_RDWR);
 	if (console_fd < 0) return -EINVAL;
 
 	console_info = (CONSOLE_INFO *) rtos_port_malloc(sizeof(CONSOLE_INFO));

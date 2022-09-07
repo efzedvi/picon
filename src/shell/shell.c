@@ -350,7 +350,7 @@ int shell_mem(int argc, char **argv)
 	}
 
 	if (is_dev) {
-		fd = open(mem_device, 0);
+		fd = open(mem_device, O_RDWR);
 		if (fd < 0) {
 			printf("Failed reading %s\n", mem_device);
 			return -2;
@@ -475,7 +475,9 @@ void shell_task(void *args)
 	rtos_task_handle_t 	child_handle;
 	CONSOLE_INFO 		*console_info, child_console_info;
 	SHELL_CMD_ARG	cmd;
-	char		*inf, *outf;
+	char		*inf = NULL, *outf = NULL;
+	int8_t		fds[3];
+	int8_t		new_stdin = -1, new_stdout = -1;
 
 	sem = rtos_semaphore_create_binary();
 	console_info = TASK_GET_LOCAL_STORAGE();
@@ -496,6 +498,9 @@ void shell_task(void *args)
 
 		if (line[0] == '\0') continue;
 
+		inf  = NULL;
+		outf = NULL;
+
 		shell_tokenize(line, &argc, argv, &inf, &outf);
 		if (!argv[0] || argv[0][0] == 0 || argv[0][0] == '#') continue;
 
@@ -513,6 +518,33 @@ void shell_task(void *args)
 		for(i=0; commands[i].cmd; i++) {
 			if (strcmp(argv[0], commands[i].cmd) == 0) {
 				found = 1;
+
+				// backup the std fds
+				fds[STDIN_FILENO]  = console_info->stdfd[STDIN_FILENO];
+				fds[STDOUT_FILENO] = console_info->stdfd[STDOUT_FILENO];
+				fds[STDERR_FILENO] = console_info->stdfd[STDERR_FILENO];
+
+				if (outf) {
+					new_stdout = open(outf, O_WRONLY);
+					if (new_stdout >= 0) {
+						console_info->stdfd[STDOUT_FILENO] = new_stdout;
+						console_info->stdfd[STDERR_FILENO] = new_stdout;
+					} else {
+						printf("failed opening %s for writing\n", outf);
+						break;
+					}
+				}
+
+				if (inf) {
+					new_stdout = open(outf, O_RDONLY);
+					if (new_stdin >= 0) {
+						console_info->stdfd[STDIN_FILENO] = new_stdin;
+					} else {
+						printf("failed opening %s for reading\n", inf);
+						break;
+					}
+				}
+
 				if (sem && (commands[i].property & SHELL_CMD_PROPERTY_CANCELABLE) &&
 				    console_fd >=0 ) {
 
@@ -525,30 +557,40 @@ void shell_task(void *args)
 					if (rc < 0) {
 						//ioctl failed, so we fall back to traditional method
 						commands[i].func(argc, argv);
-						break;
+					} else {
+						console_create_child(commands[i].cmd, shell_command_runner_task,
+								  commands[i].stack_size, CONFIG_SHELL_CMD_PRIORITY,
+								  (void *) &cmd, &child_handle, &child_console_info);
+
+						if (!child_handle) {
+							printf("Failed running %s\n", commands[i].cmd);
+							break;
+						}
+
+						rtos_semaphore_take(sem, RTOS_PORT_MAX_DELAY);
+
+						ioctl(console_fd, PICON_IOC_TTY_SET_INT, NULL);
+
+						// if there are any allocated memory free them up
+						picon_free_all(&child_console_info);
+
+						rtos_task_delete(child_handle);
 					}
+					// backup the std fds
+					fds[STDIN_FILENO]  = console_info->stdfd[STDIN_FILENO];
+					fds[STDOUT_FILENO] = console_info->stdfd[STDOUT_FILENO];
+					fds[STDERR_FILENO] = console_info->stdfd[STDERR_FILENO];
 
-					console_create_child(commands[i].cmd, shell_command_runner_task,
-							  commands[i].stack_size, CONFIG_SHELL_CMD_PRIORITY,
-							  (void *) &cmd, &child_handle, &child_console_info);
-
-					if (!child_handle) {
-						printf("Failed running %s\n", commands[i].cmd);
-						break;
-					}
-
-					rtos_semaphore_take(sem, RTOS_PORT_MAX_DELAY);
-
-					ioctl(console_fd, PICON_IOC_TTY_SET_INT, NULL);
-
-					// if there are any allocated memory free them up
-					picon_free_all(&child_console_info);
-
-					rtos_task_delete(child_handle);
 
 				} else {
 					commands[i].func(argc, argv);
 				}
+
+				// restore the std fds
+				console_info->stdfd[STDIN_FILENO]  = fds[STDIN_FILENO];
+				console_info->stdfd[STDOUT_FILENO] = fds[STDOUT_FILENO];
+				console_info->stdfd[STDERR_FILENO] = fds[STDERR_FILENO];
+
 				break;
 			}
 		}

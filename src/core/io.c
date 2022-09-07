@@ -27,6 +27,7 @@
 typedef struct _open_file {
 	const DEVICE_FILE	*devf;  //TODO: maybe keep an index to devs instead?
 	volatile unsigned char	use_count;
+	uint16_t		flags;
 	rtos_semaphore_handle_t	mtx;
 } OPEN_FILE;
 
@@ -98,6 +99,7 @@ int open(const char *name, int flags)
 			rc = i;
 			open_files[i].devf = devf;
 			open_files[i].use_count = 1;
+			open_files[i].flags = flags;
 
 			break;
 		}
@@ -121,6 +123,9 @@ int read(int fd, const void *buf, unsigned int count)
 
 	if (fd < 0 || fd >= MAX_OPEN_FILES) return -EBADF;
 	if (open_files[fd].devf == NULL) return -EINVAL;
+
+	if (open_files[fd].flags & (O_RDONLY | O_RDWR) == 0 )
+		return -EACCES;
 
 	if (open_files[fd].mtx)
 		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
@@ -146,6 +151,9 @@ int write(int fd, const void *buf, unsigned int count)
 
 	if (fd < 0 || fd >= MAX_OPEN_FILES) return -EBADF;
 	if (open_files[fd].devf == NULL) return -EINVAL;
+
+	if (open_files[fd].flags & (O_WRONLY | O_RDWR) == 0 )
+		return -EACCES;
 
 	if (open_files[fd].mtx)
 		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
@@ -174,6 +182,9 @@ int pread(int fd, void *buf, uint16_t count, uint32_t offset)
 	if (fd < 0 || fd >= MAX_OPEN_FILES) return -EBADF;
 	if (open_files[fd].devf == NULL) return -EINVAL;
 
+	if (open_files[fd].flags & (O_RDONLY | O_RDWR) == 0 )
+		return -EACCES;
+
 	if (open_files[fd].mtx)
 		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
 
@@ -199,6 +210,9 @@ int pwrite(int fd, const void *buf, uint16_t count, uint32_t offset)
 
 	if (fd < 0 || fd >= MAX_OPEN_FILES) return -EBADF;
 	if (open_files[fd].devf == NULL) return -EINVAL;
+
+	if (open_files[fd].flags & (O_WRONLY | O_RDWR) == 0 )
+		return -EACCES;
 
 	if (open_files[fd].mtx)
 		rtos_semaphore_take(open_files[fd].mtx, RTOS_PORT_MAX_DELAY);
