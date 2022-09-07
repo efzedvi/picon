@@ -403,7 +403,8 @@ int shell_mem(int argc, char **argv)
 
 			switch (type) {
 				case 1:
-					printf("%02X", (uint8_t) (result & 0xff));
+					result &= 0xff;
+					printf("%02X", (uint8_t) result);
 
 					if (result < ' ' || result > 0x7f)
 						buf[i % 16] = '.';

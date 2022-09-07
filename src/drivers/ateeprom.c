@@ -200,3 +200,14 @@ int picon_ateeprom_pwrite(const DEVICE_FILE *devf, const void *buf, uint16_t cou
 }
 
 
+int picon_ateeprom_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count)
+{
+	return picon_ateeprom_pread(devf, buf, (uint16_t) count, 0);
+}
+
+int picon_ateeprom_write(const DEVICE_FILE *devf, const unsigned char *buf, unsigned int count)
+{
+	return picon_ateeprom_pwrite(devf, buf, (uint16_t) count, 0);
+}
+
+

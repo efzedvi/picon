@@ -32,6 +32,8 @@ int picon_ateeprom_init(uint8_t ux, void *params);
 const void *picon_ateeprom_open(const DEVICE_FILE *devf, int flags);
 int picon_ateeprom_ioctl(const DEVICE_FILE *devf, unsigned int request, void *data);
 int picon_ateeprom_close(const DEVICE_FILE *devf);
+int picon_ateeprom_read(const DEVICE_FILE *devf, unsigned char *buf, unsigned int count);
+int picon_ateeprom_write(const DEVICE_FILE *devf, const unsigned char *buf, unsigned int count);
 int picon_ateeprom_pread(const DEVICE_FILE *devf, void *buf, uint16_t count, uint32_t offset);
 int picon_ateeprom_pwrite(const DEVICE_FILE *devf, const void *buf, uint16_t count, uint32_t offset);
 
@@ -40,8 +42,8 @@ int picon_ateeprom_pwrite(const DEVICE_FILE *devf, const void *buf, uint16_t cou
 { .init  = picon_ateeprom_init,\
   .open  = picon_ateeprom_open,\
   .close = picon_ateeprom_close,\
-  .read  = NULL,\
-  .write = NULL,\
+  .read  = picon_ateeprom_read,\
+  .write = picon_ateeprom_write,\
   .pread = picon_ateeprom_pread,\
   .pwrite= picon_ateeprom_pwrite,\
   .ioctl = picon_ateeprom_ioctl,\
