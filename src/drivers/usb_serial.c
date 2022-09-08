@@ -26,6 +26,12 @@
 #include "tusb.h"
 #include "pico/unique_id.h"
 
+//#define USB_TTY_CONTROL_C     1
+#ifdef USB_TTY_CONTROL_C
+static rtos_semaphore_handle_t  task_sem;       // used to handle control-c
+#endif
+
+
 #define PICON_USB_SERIAL_PRIORITY	(9)
 
 #define USB_RX_QUEUE_SIZE		CFG_TUD_CDC_RX_BUFSIZE
@@ -182,6 +188,14 @@ static void usb_serial_task(void *arg)
 			if (tud_cdc_available()) {
 				rc = (int) tud_cdc_read(&ch, (uint32_t) 1);
 				if (rc == 1) {
+
+					#ifdef USB_TTY_CONTROL_C
+					if (task_sem != NULL && ch == CONTROL('C')) {
+						// signal the shell to terminate the running command child
+						rtos_semaphore_give(task_sem);
+					} else
+					#endif
+
 					if (rtos_stream_buffer_spaces_available(usb_rxq) > 0) {
 						rtos_stream_buffer_send(usb_rxq, &ch, 1, 0);
 					}
