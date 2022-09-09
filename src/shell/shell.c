@@ -523,13 +523,11 @@ void shell_task(void *args)
 				// backup the std fds
 				fds[STDIN_FILENO]  = console_info->stdfd[STDIN_FILENO];
 				fds[STDOUT_FILENO] = console_info->stdfd[STDOUT_FILENO];
-				fds[STDERR_FILENO] = console_info->stdfd[STDERR_FILENO];
 
 				if (outf) {
 					new_stdout = open(outf, O_WRONLY);
 					if (new_stdout >= 0) {
 						console_info->stdfd[STDOUT_FILENO] = new_stdout;
-						console_info->stdfd[STDERR_FILENO] = new_stdout;
 					} else {
 						printf("failed opening %s for writing\n", outf);
 						break;
@@ -581,8 +579,6 @@ void shell_task(void *args)
 					// backup the std fds
 					fds[STDIN_FILENO]  = console_info->stdfd[STDIN_FILENO];
 					fds[STDOUT_FILENO] = console_info->stdfd[STDOUT_FILENO];
-					fds[STDERR_FILENO] = console_info->stdfd[STDERR_FILENO];
-
 
 				} else {
 					commands[i].func(argc, argv);
