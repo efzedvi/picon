@@ -14,8 +14,8 @@
 
 #include "picon/config.h"
 
-#define SHELL_MIN_CMD_STACK_SIZE	(96)
-#define SHELL_DM_CMD_STACK_SIZE		(256)
+#define SHELL_MIN_CMD_STACK_SIZE	(256)
+#define SHELL_DM_CMD_STACK_SIZE		(280)
 
 #define	SHELL_CMD_PROPERTY_CANCELABLE		(1<<0)
 
@@ -75,7 +75,7 @@ int shell_expr(int argc, char **argv);
 	{ CMD(uptime),	SHELL_MIN_CMD_STACK_SIZE, "Shows uptime", 0 },\
 	{ CMD(echo),	SHELL_MIN_CMD_STACK_SIZE, "Echos its arguments on console", 0 },\
         SHELL_EXPR_CMD_DEF \
-	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, "Test command ; displays prime numbers for testing the terminal", 0 },
-//	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, "Test command ; displays prime numbers for testing the terminal", SHELL_CMD_PROPERTY_CANCELABLE },
+	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, "Test command ; displays prime numbers for testing the terminal", SHELL_CMD_PROPERTY_CANCELABLE },
+//	{ CMD(primes),	SHELL_MIN_CMD_STACK_SIZE, "Test command ; displays prime numbers for testing the terminal", 0 },
 
 #endif /* end of include guard SHELL_H */

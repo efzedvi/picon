@@ -366,7 +366,7 @@ int picon_uart_fsync(const DEVICE_FILE *devf)
 		return 0; // nothing to be done
 
 	// stop receiving interrupts
-	uart_set_irq_enables(uart, false ,false);
+	//uart_set_irq_enables(uart, false ,false);
 
 	// block until all TX data is transmitted
 	while (rtos_stream_buffer_bytes_available(uartq_tx[ux]))

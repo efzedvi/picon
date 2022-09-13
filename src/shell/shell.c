@@ -32,6 +32,7 @@
 #include "picon/io.h"
 #include "picon/ioctl.h"
 #include "picon/utils.h"
+#include "picon/log.h"
 #include "shell/shell.h"
 #include "shell/shell_gpio.h"
 #include "shell/shell_i2c.h"
@@ -455,8 +456,6 @@ static void shell_command_runner_task(void *args)
 
 	cmd->rc = cmd->func(cmd->argc, cmd->argv);
 
-	fsync(cmd->console_info->stdfd[STDOUT_FILENO]);
-
 	rtos_semaphore_give(cmd->sem);
 
 	rtos_task_suspend(NULL);
@@ -566,10 +565,9 @@ void shell_task(void *args)
 							printf("Failed running %s\n", commands[i].cmd);
 							break;
 						}
-
 						rtos_semaphore_take(sem, RTOS_PORT_MAX_DELAY);
-
 						ioctl(console_fd, PICON_IOC_TTY_SET_INT, NULL);
+						rtos_task_suspend(child_handle);
 
 						// if there are any allocated memory free them up
 						picon_free_all(&child_console_info);
