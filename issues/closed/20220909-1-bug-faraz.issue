@@ -1,0 +1,9 @@
+summary: Control-C sometimes causes hanging
+component: 
+version: 
+due: 
+assignedName:
+priority: 
+severity:
+comments: Control-C sometimes causes hanging
+status: For this to work mutexes as well as dynamically allocated memory needs to be freed afer task is suspended. This is not efficiently possible in FreeRTOS, as it's not designed for it. The severity of this issue is reduced now, and current implementation is considered okay-ish. Hence the case is considered close while it's not really resolved, but rather what have will do and not worth more effert spent on it kinda situation.
