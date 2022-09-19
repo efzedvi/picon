@@ -1,0 +1,12 @@
+https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf
+
+sudo openocd -f interface/picoprobe.cfg -f target/rp2040.cfg -s tcl
+
+connect gdb-multiarch with this:
+
+target remote localhost:3333
+
+
+sudo openocd -f interface/picoprobe.cfg -f target/rp2040.cfg -c "program build/picon.elf verify reset exit"
+
+

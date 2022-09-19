@@ -1,5 +1,3 @@
-- After adding TX queues now handling control-c and cancelable commands don't work
-- Using the mem command without specifying a device file causes a crash
 - Looks like there might be a bug in I2C HW periphral that doesn't accept short writes!
   I noticed it when examining MicroPython's code. There is a comment in matchine_i2c.c file that reads:
   "// Workaround issue with hardware I2C not accepting short writes." They use bitbanging/SW-I2C for short

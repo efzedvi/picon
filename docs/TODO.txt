@@ -3,12 +3,12 @@ TODO:
 -I2C (done)
 -SPI
 -GPIO (done)
--PWM
+-PWM (done)
 -ADC
 -PIO
 -SD Card support (FatFS)
 -Ethernet support
--FatFS on flash?!
+-LFS on flash
 -VFS and procfs
 -Look into the possibility of having a host side Fuse FS to access Picon
 - More highlevel drivers :
