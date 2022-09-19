@@ -1,4 +1,6 @@
 https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf
+https://www.mathaelectronics.com/how-to-debug-and-upload-programs-to-the-raspberry-pi-pico-using-swd/
+-DCMAKE_BUILD_TYPE=Debug
 
 sudo openocd -f interface/picoprobe.cfg -f target/rp2040.cfg -s tcl
 
