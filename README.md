@@ -29,6 +29,7 @@ Enter '?' or 'help' to get a list of available commands.
 
 Current console commands at the moment are:
 
+
 	clear        : Clears the terminal screen
 	date         : Displays and sets date and time
 	free         : Shows amount of unused heap memory
@@ -38,6 +39,7 @@ Current console commands at the moment are:
 	reboot       : Reboots the system or goes into BOOTSEL mode
 	uname        : Unit name ; displayes build info
 	uptime       : Shows uptime
+	echo         : Echos its arguments on console
 	expr         : A very simple calculator
 	primes       : Test command ; displays prime numbers for testing the terminal
 	log          : Log command used for debugging
@@ -45,6 +47,8 @@ Current console commands at the moment are:
 	i2c          : Command to scan and xfer data to/from I2C devices
 	env          : sets/gets/lists environment variables
 	pwm          : PWM command
+	adc          : ADC comman
+
 
 More commands and features will be added in future.
 
