@@ -17,7 +17,7 @@
 
 #define PICON_VERSION_MAJOR	0
 #define PICON_VERSION_MINOR	7
-#define PICON_VERSION_PATCH	0
+#define PICON_VERSION_PATCH	1
 
 #define PICON_VERSION	STR(PICON_VERSION_MAJOR) "." \
 			STR(PICON_VERSION_MINOR) "." \
@@ -53,5 +53,6 @@
 #define CONFIG_LOGGING			(1)
 #define CONFIG_ENV			(1)
 #define CONFIG_PWM			(1)
+#define CONFIG_ADC			(1)
 
 #endif /* end of include guard CONFIG_H */

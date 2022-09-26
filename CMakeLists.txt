@@ -42,6 +42,7 @@ target_sources(picon_common INTERFACE
 	src/shell/shell_i2c.c
 	src/shell/shell_env.c
 	src/shell/shell_pwm.c
+	src/shell/shell_adc.c
         )
 target_include_directories(picon_common INTERFACE
 	src/include
@@ -57,12 +58,15 @@ target_link_libraries(picon_common INTERFACE
 	pico_unique_id
 	pico_bootrom
 	pico_malloc
+	pico_float
+	pico_double
         tinyusb_device_unmarked
 	hardware_flash
 	hardware_gpio
 	hardware_i2c
 	hardware_irq
 	hardware_pwm
+	hardware_adc
 	hardware_regs
 	hardware_rtc
 	hardware_sync

@@ -79,7 +79,7 @@ int shell_pwm(int argc, char *argv[])
 	int 		rv = 0;
 	enum gpio_function	func;
 
-	if (argc < 3 | argc > 11) {
+	if (argc < 3 || argc > 11) {
 		shell_pwm_usage();
 		return -1;
 	}

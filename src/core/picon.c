@@ -12,6 +12,7 @@
 #include "hardware/gpio.h"
 #include "hardware/watchdog.h"
 #include "hardware/rtc.h"
+#include "hardware/adc.h"
 #include "pico/types.h"
 #include "pico/binary_info.h"
 
@@ -96,6 +97,10 @@ int picon_init()
 		// PICO_W is weird
 		rtos_task_core_affinity_set(hrtbt_task_handle, 1 << 0);
 	#endif
+#endif
+
+#ifdef CONFIG_ADC
+	adc_init();
 #endif
 
 #ifdef CONFIG_WDG
