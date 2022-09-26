@@ -1,5 +1,5 @@
 TODO:
--Replace the current printf with a better one (make pico_printf work probably?)
+-Replace the current printf with a better one (make pico_printf work probably?) (done)
 -I2C (done)
 -SPI
 -GPIO (done)

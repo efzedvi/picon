@@ -193,6 +193,10 @@ int getchar(void)
 	return -1;
 }
 
+void _putchar(char character)
+{
+	putchar((int) character);
+}
 
 /*********************************************************************
  * A very simple line editing routine. It supports:

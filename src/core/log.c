@@ -84,7 +84,8 @@ void log_record(uint8_t from_isr, LOG_SRC_FILE file, uint16_t line, const char* 
 	s	    = rec.data;
 
 	va_start(args, fmt);
-	vprint(&s, fmt, args);
+	//vprint(&s, fmt, args);
+	vsnprintf(rec.data, LOG_DATA_SIZE, fmt, args);
 	va_end(args);
 
 	// no scheduler? then don't bother

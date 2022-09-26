@@ -23,7 +23,8 @@ target_sources(picon_common INTERFACE
         src/core/io.c
         src/core/console.c
         src/core/utils.c
-        src/core/printf-stdarg.c
+        #src/core/printf-stdarg.c
+        src/core/printf.c
         src/core/log.c
         src/core/picon.c
 	src/core/env.c
